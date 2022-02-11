@@ -1,0 +1,8 @@
+!Male
+!Default
+How much does this cost?
+I'll buy it.
+!Male
+!Merchant
+A 100 coins.
+Thank you very much.

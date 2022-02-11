@@ -1,0 +1,34 @@
+The NPC has many script components inside. These are:
+Character Stats
+NPC
+Attacked Take Damage
+Attacked Scrolling Text
+On Death Ragdoll
+Animation Update
+Animation Controller(On the character model)
+
+All of the NPC Ai is executed on the NPC component. Rest can be replaced with your own scripts if you need. 
+But errors will occur if you just remove them because NPC componment uses those scripts. 
+
+If you wish to change the character model just copy paste all the components to your model. Then change the animtion in the Animator for the default NPC.
+Or you can add animations to the Animation Controller. For detailed information go to the file that contains Animation Controller.
+Above only works for legacy and generic models. If your model is a humanoid you will have to change the Animation Controller to execute humanoid animations.
+The Animation Controller uses CrossFade( ) to play animations which does not work for humaniods. Change the CrossFade( ) to something that can execute humanoid animations.
+
+The NPC component has variables you can alter:
+NPC Name
+Vision Range
+Vision Layers(What layers the npc can see)
+Age
+Job(Used to choose which interaction to play)
+Gender(Used to choose which interaction to play)
+Home(Where the NPC will go for the night)
+Work(Where the NPC will go for the day)
+Current State(Current state of the NPC)
+Movement & Running variables
+Work Script(Script that executes when the NPC is in the 'work' state)
+Conver Choose (How likely the NPC will start a conversation. Per frame) 
+
+To see how to add in new conversations go to NPC dialogues/npc-npc dialogues
+
+To get support ask questions in our forums: https://1stmanleader.wixsite.com/website/forum

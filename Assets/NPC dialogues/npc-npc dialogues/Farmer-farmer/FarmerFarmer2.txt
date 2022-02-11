@@ -1,0 +1,9 @@
+!Male
+!Farmer
+Are your crops healthy?
+Nah, you know how things go.
+Exactly.
+!Male
+!Farmer
+Not really. I wonder what I'm doing wrong.
+Yeah, it doesn't always go my way.

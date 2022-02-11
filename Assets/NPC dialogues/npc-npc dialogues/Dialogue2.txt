@@ -1,0 +1,10 @@
+!Female
+!Rich
+Good morning friend
+It is so warm today
+See you later
+!Default
+!Default
+Hi
+Yeah
+Bye

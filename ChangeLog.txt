@@ -1,0 +1,21 @@
+----------------------------------------------
+Format 
+--------
+[DD.MM][Your Name]: Updates made
+
+-----------------------------------------------
+
+[25.11][Jose Britto]:
+Created NpcData.cs
+Made it the base class of Npc
+Added NpcTag.cs to change the text above the npc change according to its data
+Added a custom attribute [InspectorReadOnly] to make a variable readonly in inspector
+
+
+[14.11][Jose Britto]:
+Created EnemyBase.cs
+Created SkeletonAi.cs
+Added a variable 'ShowDebugMessages' to Npc.cs to control the messages shown in the console
+Added EnemyState to Enums.cs
+Added Health.cs to Player and all npcs to manage their health.
+Upgraded postprocess stack from version 2.2.2 to 2.3.0 since the older one had a bug which shows random error messages.

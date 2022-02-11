@@ -1,0 +1,10 @@
+!Male
+!Farmer
+Hello
+How are you doing?
+Bye
+!Male
+!Farmer
+Hi
+I am fine
+Goodbye

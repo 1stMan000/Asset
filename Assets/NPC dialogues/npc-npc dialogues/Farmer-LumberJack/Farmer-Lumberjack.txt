@@ -1,0 +1,11 @@
+!Male
+!Farmer
+Hey wood chopper.
+Any difficulties in wood chopping?
+Well you know what they say. Be strong as a tree.
+Yeah, it would make your job harder for you.
+!Male
+!Lumberjack
+Yes?
+Well trees are stubborn which means it takes some effort to cut them down.
+I wouldn't say that to trees themselves.

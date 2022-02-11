@@ -1,0 +1,8 @@
+Animation Controller calls animations. You can use it by adding ChangeAnimation(\AnimationController.animationName, AnimationLayers.layer, bool block) in other scripts.
+You can define a new animation by declaring:
+public static readonly string animationName = "actualAnimationNameInsideAnimator"
+
+Layer means which layer will the animation play on. Put two layers named 'LowerBody', 'UpperBody'. To play only the first layer put AnimationLayers.LowerBody
+To play the second put AnimationLayers.UpperBody. To play all layers type put AnimationLayers.All
+
+Block means that no other animations can be played while the animation is being played. If the bool is false another animation can be called and overrride the previous animation.
