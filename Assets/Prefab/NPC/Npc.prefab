@@ -369,9 +369,6 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_outlineColor:
-    serializedVersion: 2
-    rgba: 4278190080
   m_fontSize: 0.2
   m_fontSizeBase: 0.2
   m_fontWeight: 400
@@ -382,7 +379,6 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_isAlignmentEnumConverted: 0
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -392,10 +388,8 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
-  m_isTextTruncated: 0
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -403,30 +397,17 @@ MonoBehaviour:
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
-  m_ignoreCulling: 1
   m_horizontalMapping: 0
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
   m_IsTextObjectScaleStatic: 0
   m_VertexBufferAutoSizeReduction: 1
-  m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 1.652806, z: 0, w: 2.8394973}
-  m_textInfo:
-    textComponent: {fileID: 699092561439016892}
-    characterCount: 14
-    spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
-    linkCount: 0
-    lineCount: 2
-    pageCount: 1
-    materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_spriteAnimator: {fileID: 0}
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
@@ -502,6 +483,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092561442045776}
   m_ConnectedBody: {fileID: 699092562902023536}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
@@ -733,6 +715,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092561489834332}
   m_ConnectedBody: {fileID: 699092562749554701}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
@@ -874,6 +857,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092561570048236}
   m_ConnectedBody: {fileID: 699092562021860519}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
@@ -1179,6 +1163,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092561756758943}
   m_ConnectedBody: {fileID: 699092563299098037}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
@@ -1691,6 +1676,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092562021860521}
   m_ConnectedBody: {fileID: 699092562749554701}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
@@ -1800,6 +1786,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092562028392404}
   m_ConnectedBody: {fileID: 699092563261028783}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
@@ -1971,7 +1958,6 @@ GameObject:
   m_Component:
   - component: {fileID: 699092562332647552}
   - component: {fileID: 699092562332647614}
-  - component: {fileID: 699092562332647615}
   - component: {fileID: 458185429801109861}
   m_Layer: 8
   m_Name: Character
@@ -2006,7 +1992,7 @@ Animator:
   m_GameObject: {fileID: 699092562332647553}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e3aa00ad6ef327c418255257a47a24be, type: 3}
-  m_Controller: {fileID: 9100000, guid: f984797f99fb9ae46926962fa0c345f4, type: 2}
+  m_Controller: {fileID: 9100000, guid: c0ecf631f016b6b49ac6cc6693ba1b5c, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2015,20 +2001,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &699092562332647615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699092562332647553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26ccfa2bc13c4ed43895d3249fd62c75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Block: 
-  animator: {fileID: 699092562332647614}
 --- !u!136 &458185429801109861
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2609,6 +2581,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092562749554703}
   m_ConnectedBody: {fileID: 699092562818111790}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
@@ -2874,6 +2847,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092562902023538}
   m_ConnectedBody: {fileID: 699092562818111790}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
@@ -3056,6 +3030,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &699092562942792971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3195,11 +3170,10 @@ GameObject:
   - component: {fileID: 699092563044135193}
   - component: {fileID: 699092563044135194}
   - component: {fileID: 699092563044135195}
-  - component: {fileID: 699092563044135196}
+  - component: {fileID: 3533866932084139170}
   - component: {fileID: 699092563044135392}
   - component: {fileID: 699092563044135393}
   - component: {fileID: 699092563044135394}
-  - component: {fileID: 699092563044135395}
   m_Layer: 8
   m_Name: Npc
   m_TagString: Npc
@@ -3295,7 +3269,7 @@ MonoBehaviour:
     BaseValue: 0
   isInvincible: 0
   isDead: 0
---- !u!114 &699092563044135196
+--- !u!114 &3533866932084139170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3307,31 +3281,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096c17a238bc7e946806a109840208bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcName: Npc
+  npcName: 
   VisionRange: 10
   VisionLayers:
     serializedVersion: 2
-    m_Bits: 768
-  age: 25
-  job: 65
-  Gender: 5
+    m_Bits: 0
+  age: 0
+  job: 0
+  Gender: 0
   home: {fileID: 0}
   work: {fileID: 0}
   _currentState: 0
   OnNpcDataInspectorChanged:
     m_PersistentCalls:
       m_Calls: []
+  ShowDebugMessages: 0
+  movementSpeed: 0
   Attacker: {fileID: 0}
   isAttacked: 0
-  movement:
-    movementSpeed: 2
-    normalAcceleration: 1
-    scaredRunningSpeed: 5
-    scaredAcceleration: 2
-    runningDistance: 10
-    runningTime: 5
+  normalAcceleration: 0
+  scaredRunningSpeed: 0
+  scaredAcceleration: 0
+  runningDistance: 0
+  runningTime: 0
   workScript: {fileID: 0}
-  converChoose: 149
+  converChoose: 0
 --- !u!114 &699092563044135392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3369,18 +3343,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8be2294942a3d464eac4271fb8a08cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &699092563044135395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699092563044135396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7dbe2982fec2824bbe4f5e21e7ca81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &699092563138296178
@@ -3700,6 +3662,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092563261028785}
   m_ConnectedBody: {fileID: 699092562818111790}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
@@ -3840,6 +3803,7 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699092563299098039}
   m_ConnectedBody: {fileID: 699092562749554701}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1

@@ -5,30 +5,23 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.IO;
 using TMPro;
+using UnityEditor;
 
-[System.Serializable]
-public class MovementModifiers
+public class NPC : NpcData, IAttackable, IDestructible
 {
+    public bool ShowDebugMessages;
+    
+    //Navigation
+    public NavMeshAgent agent { get; private set; }
     public float movementSpeed;
+
+    public GameObject Attacker;
+    public bool isAttacked;
     public float normalAcceleration;
     public float scaredRunningSpeed;
     public float scaredAcceleration;
     public float runningDistance;
     public float runningTime;
-}
-
-public class NPC : NpcData, IAttackable, IDestructible
-{
-    //Navigation
-    public NavMeshAgent agent { get; private set; }
-
-    [HideInInspector]
-    public GameObject Attacker;
-    [HideInInspector]
-    public bool isAttacked;
-
-    [ExecuteInEditMode]
-    public MovementModifiers movement = new MovementModifiers();
     private float runTimeLeft;
 
     //NPC-NPC interaction
@@ -37,6 +30,8 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     public Behaviour workScript;
 
+    Animator anim;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -44,6 +39,8 @@ public class NPC : NpcData, IAttackable, IDestructible
 
         FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork; 
         FindObjectOfType<DayAndNightControl>().OnEveningHandler += GoHome;
+
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -51,6 +48,7 @@ public class NPC : NpcData, IAttackable, IDestructible
         //Decrease run time after hit
         if (runTimeLeft > 0)
             runTimeLeft -= Time.deltaTime;
+        anim.SetFloat("Speed", agent.velocity.magnitude);
 
         WatchEnvironment();
     }
@@ -61,7 +59,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
         foreach (Collider col in cols)
         {
-            if (col.gameObject.GetComponent<NPC>()) //If the NPC is looking at another attacked NPC, run
+            if (col.gameObject.GetComponent<NPC>()) // If the NPC is looking at another attacked NPC, run
             {
                 NPC npc = col.gameObject.GetComponent<NPC>();
                 if (npc.isAttacked)
@@ -164,7 +162,7 @@ public class NPC : NpcData, IAttackable, IDestructible
     //Set agent destination to work position, and change state to "Working" as it is reached
     IEnumerator GoToWorkCoroutine() 
     {
-        agent.speed = movement.movementSpeed;
+        agent.speed = movementSpeed;
         SetMoveTarget(work);
         yield return new WaitUntil(() => Vector3.Distance(transform.position, work.position) <= agent.stoppingDistance);
         
@@ -202,7 +200,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     IEnumerator GoHomeCoroutine()
     {
-        agent.speed = movement.movementSpeed;
+        agent.speed = movementSpeed;
         ChangeState(NpcStates.GoingHome);
 
         SetMoveTarget(home);
@@ -214,9 +212,17 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     private void OnDestroy()
     {
-        DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
-        control.OnMorningHandler -= GoToWork;
-        control.OnEveningHandler -= GoHome;
+        try
+        {
+            DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
+            control.OnMorningHandler -= GoToWork;
+            control.OnEveningHandler -= GoHome;
+        }
+        catch
+        {
+            if (ShowDebugMessages) 
+                Debug.LogWarning("DayAndNightControl object is not found. This is ok if the scene is unloaded.");
+        }
     }
 
     public void StartConversation(bool IsFirst, GameObject talker, Tuple<List<string>,List<string>> text = null)
@@ -348,7 +354,7 @@ public class NPC : NpcData, IAttackable, IDestructible
         if (NPCscript.currentState == NpcStates.Scared || NPCscript.currentState == NpcStates.Talking)
             return;
 
-        if (UnityEngine.Random.Range(1, 1000) <= converChoose) //At a chance starts a conversation
+        if (UnityEngine.Random.Range(0, 1000) <= converChoose) //At a chance starts a conversation
         {
             //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
             //Can stop bug for when both scripts decide to have a conversation at the same time
@@ -394,8 +400,8 @@ public class NPC : NpcData, IAttackable, IDestructible
     //Run from "attacker" in opposite direction
     public IEnumerator Run(GameObject attacker)
     {
-        agent.speed = movement.scaredRunningSpeed;
-        runTimeLeft = movement.runningTime;
+        agent.speed = scaredRunningSpeed;
+        runTimeLeft = runningTime;
         agent.ResetPath();
    
         //Agent gets running acceleration at the first iteration
@@ -424,10 +430,10 @@ public class NPC : NpcData, IAttackable, IDestructible
                 angleX += index * Math.Pow(-1.0f, index) * Math.PI / 6.0f;
                 angleY -= index * Math.Pow(-1.0f, index) * Math.PI / 6.0f;
                 distance = new Vector2((float)Math.Cos(angleX), (float)Math.Sin(angleY));
-                goal = new Vector3(transform.position.x - distance.x * movement.runningDistance, transform.position.y, transform.position.z - distance.y * movement.runningDistance);
+                goal = new Vector3(transform.position.x - distance.x * runningDistance, transform.position.y, transform.position.z - distance.y * runningDistance);
 
                 //Check if NPC can reach this point
-                bool samplePosition = NavMesh.SamplePosition(goal, out NavMeshHit hit, movement.runningDistance / 5, agent.areaMask);
+                bool samplePosition = NavMesh.SamplePosition(goal, out NavMeshHit hit, runningDistance / 5, agent.areaMask);
                 //Calculate path if the point is reachable
                 if (samplePosition)
                 {
@@ -438,7 +444,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
                 isPathValid = (samplePosition && 
                                path.status != NavMeshPathStatus.PathPartial && 
-                               agent.remainingDistance <= movement.runningDistance);
+                               agent.remainingDistance <= runningDistance);
                 
                 //Stop loop if it is impossible to find way after "limit" iterations
                 if (++index > limit)
@@ -448,14 +454,14 @@ public class NPC : NpcData, IAttackable, IDestructible
                 }
             } while (!isPathValid);
 
-            yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= movement.runningDistance / 1.2);
+            yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= runningDistance / 1.2);
             
             if (++iteration == 1)
-                agent.acceleration = movement.scaredAcceleration;
+                agent.acceleration = scaredAcceleration;
 
             //Return to the default acceleration
             if (runTimeLeft < 2f)
-                agent.acceleration = movement.normalAcceleration;
+                agent.acceleration = normalAcceleration;
         }
 
         ChangeState(NpcStates.Idle);
@@ -464,7 +470,7 @@ public class NPC : NpcData, IAttackable, IDestructible
     void StopRunning()
     {
         StopCoroutine(nameof(Run));
-        agent.acceleration = movement.normalAcceleration;
+        agent.acceleration = normalAcceleration;
     }
 
     //Rotate to the target
@@ -493,5 +499,10 @@ public class NPC : NpcData, IAttackable, IDestructible
     public void OnDestruction(GameObject destroyer)
     {
         enabled = false;
+    }
+
+    public void EnableCombat()
+    {
+        this.enabled = false;
     }
 }
