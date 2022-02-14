@@ -173,7 +173,6 @@ public class FirstPersonAIO : MonoBehaviour {
     #endregion
 
     private Animator anim;
-    private AnimationController controller;
     public CharacterStats stats;
     public float attackCooldown = 0f;
 
@@ -278,7 +277,6 @@ public class FirstPersonAIO : MonoBehaviour {
         #endregion
 
         anim = GetComponentInChildren<Animator>();
-        controller = GetComponentInChildren<AnimationController>();
         stats = GetComponent<CharacterStats>();
     }
 

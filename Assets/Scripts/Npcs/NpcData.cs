@@ -26,7 +26,7 @@ public class NpcData : MonoBehaviour
 
     public Transform work;
 
-    [InspectorReadOnly][SerializeField]
+    [SerializeField]
     private NpcStates _currentState;
 
 

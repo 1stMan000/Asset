@@ -5,14 +5,12 @@ using UnityEngine.AI;
 
 public class OnDeathRagdoll : MonoBehaviour, IDestructible
 {
-    AnimationController controller;
     NavMeshAgent agent;
     Rigidbody[] rig;
     SkinnedMeshRenderer[] skin;
 
     void Start()
     {
-        controller = GetComponent<AnimationController>();
         agent = GetComponent<NavMeshAgent>();
         skin = GetComponentsInChildren<SkinnedMeshRenderer>();
 
@@ -46,7 +44,6 @@ public class OnDeathRagdoll : MonoBehaviour, IDestructible
             skinned.updateWhenOffscreen = true; //Stops character from disrendering
         }
 
-        GetComponentInChildren<AnimationController>().enabled = false; //Have to turn it off before executing ragdoll
         GetComponentInChildren<Animator>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Destroy(GetComponent<CapsuleCollider>());

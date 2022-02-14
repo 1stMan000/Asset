@@ -17,9 +17,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     public GameObject Attacker;
     public bool isAttacked;
-    public float normalAcceleration;
     public float scaredRunningSpeed;
-    public float scaredAcceleration;
     public float runningDistance;
     public float runningTime;
     private float runTimeLeft;
@@ -404,8 +402,6 @@ public class NPC : NpcData, IAttackable, IDestructible
         runTimeLeft = runningTime;
         agent.ResetPath();
    
-        //Agent gets running acceleration at the first iteration
-        int iteration = 0;
         while (runTimeLeft > 0)
         {
             Vector3 goal;
@@ -455,13 +451,6 @@ public class NPC : NpcData, IAttackable, IDestructible
             } while (!isPathValid);
 
             yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= runningDistance / 1.2);
-            
-            if (++iteration == 1)
-                agent.acceleration = scaredAcceleration;
-
-            //Return to the default acceleration
-            if (runTimeLeft < 2f)
-                agent.acceleration = normalAcceleration;
         }
 
         ChangeState(NpcStates.Idle);
@@ -470,7 +459,6 @@ public class NPC : NpcData, IAttackable, IDestructible
     void StopRunning()
     {
         StopCoroutine(nameof(Run));
-        agent.acceleration = normalAcceleration;
     }
 
     //Rotate to the target
