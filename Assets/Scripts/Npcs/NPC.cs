@@ -9,13 +9,13 @@ using UnityEditor;
 
 public class NPC : NpcData, IAttackable, IDestructible
 {
-    public bool ShowDebugMessages;
-    
     //Navigation
     public NavMeshAgent agent { get; private set; }
     public float movementSpeed;
 
+    [HideInInspector]
     public GameObject Attacker;
+    [HideInInspector]
     public bool isAttacked;
     public float scaredRunningSpeed;
     public float runningDistance;
@@ -210,17 +210,9 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     private void OnDestroy()
     {
-        try
-        {
-            DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
-            control.OnMorningHandler -= GoToWork;
-            control.OnEveningHandler -= GoHome;
-        }
-        catch
-        {
-            if (ShowDebugMessages) 
-                Debug.LogWarning("DayAndNightControl object is not found. This is ok if the scene is unloaded.");
-        }
+        DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
+        control.OnMorningHandler -= GoToWork;
+        control.OnEveningHandler -= GoHome;
     }
 
     public void StartConversation(bool IsFirst, GameObject talker, Tuple<List<string>,List<string>> text = null)

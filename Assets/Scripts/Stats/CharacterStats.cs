@@ -9,7 +9,6 @@ public class CharacterStats : MonoBehaviour, IDestructible
     public Stat Damage;
     public Stat Armor;
 
-    public bool isInvincible = false;
     public bool isDead = false;
 
     public event Action OnHealthValueChanged;

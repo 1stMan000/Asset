@@ -1,0 +1,39 @@
+The NPC has many script components inside. These are:
+Character Stats
+NPC
+Attacked Take Damage
+Attacked Scrolling Text
+On Death Ragdoll
+
+Class CharacterStats is for handling the health of the npc. These are the following variables that are used.
+MaxHealth : Maximum health of the npc. It is assigned to the currentHealth on Start.
+CurrentHealth : Actual health of the npc currently. If reaches 0 npc will be considered dead. Damage is given from void TakeDamage(GameObject attacker, float damage) method inside class CharacterStats.
+Armour : Reduces damage. Used by CreateAttack(CharacterStats attacker, CharacterStats defender, bool bashAttack = false) method inside class AttackDefinition.
+IsDead : If true npc it means the npc is dead. You can use it to indicate if an npc has been killed.
+
+Class NPC is where the npc Ai is done. The script is a state machine which changes the behaviour of the npc by changing the states. It's required to be used with Character stats. 
+Idle, walk, run is obtained in one blend tree. The animations change depending on the velecoty.magnitude of the navmeshagent.
+Every update() the npc checks if all npcs near it has been attacked. If it finds out if one one of them are attacked it will change to the scared state and run for it's life.
+It is considered as the first priority above all states.
+Every state will go back to the idle state once it's finished. Once in the idle state the npc will automatically goto work or head home,
+depending on the time given by the Class DayAndNightControl. The GoToWork() and GoHome() method is executed.
+Each npc has a capsule collider that covers the areas near it.
+
+
+The NPC component has variables you can alter:
+NPC Name
+Vision Range
+Vision Layers(What layers the npc can see)
+Age
+Job(Used to choose which interaction to play)
+Gender(Used to choose which interaction to play)
+Home(Where the NPC will go for the night)
+Work(Where the NPC will go for the day)
+Current State(Current state of the NPC)
+Movement & Running variables
+Work Script(Script that executes when the NPC is in the 'work' state)
+Conver Choose (How likely the NPC will start a conversation. Per frame) 
+
+To see how to add in new conversations go to NPC dialogues/npc-npc dialogues
+
+To get support ask questions in our forums: https://1stmanleader.wixsite.com/website/forum

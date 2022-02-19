@@ -235,6 +235,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.x
       value: -0.0009984924
       objectReference: {fileID: 0}
+    - target: {fileID: 699092562942792970, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_RootOrder
@@ -313,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 699092563299098036, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}

@@ -29,7 +29,6 @@ public class NpcData : MonoBehaviour
     [SerializeField]
     private NpcStates _currentState;
 
-
     public NpcStates currentState
     {
         get
