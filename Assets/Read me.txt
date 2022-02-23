@@ -1,3 +1,8 @@
+Controls for the player when you run the game.
+Mouse : Can rotate the camera.
+WASD : Movement controls.
+Mouse1 : Attack
+
 The NPC has many script components inside. These are:
 Character Stats
 NPC
@@ -35,20 +40,28 @@ The conversations are stored inside a specific file and chosen from there when i
 inside the scene. In the sample scene it is attached to the text manager gameobject. There is a public variable named Path inside the text loader which should be assigned the following
 Path : Assign the path to the folder where the conversations are loaded. For instance in the sample scene it is "Assets/NPC dialogues/npc-npc dialogues".
 
-The NPC component has variables you can alter:
-NPC Name
-Vision Range
-Vision Layers(What layers the npc can see)
-Age
-Job(Used to choose which interaction to play)
-Gender(Used to choose which interaction to play)
-Home(Where the NPC will go for the night)
-Work(Where the NPC will go for the day)
-Current State(Current state of the NPC)
-Movement & Running variables
-Work Script(Script that executes when the NPC is in the 'work' state)
-Conver Choose (How likely the NPC will start a conversation. Per frame) 
+If you follow the path and head over to the file you'll see the examples of some conversations we've written. All the conversation are in and should be in .txt format. Below is one of the examples.
+!Male(Gender of npc)
+!Farmer(Job of npc)
+Hello
+How are you doing?
+Bye
+!Male(Gender of npc2)
+!Farmer(Job of npc2)
+Hi
+I am fine
+Goodbye
 
-To see how to add in new conversations go to NPC dialogues/npc-npc dialogues
+If one of the npcs is a male farmer and the other a male farmer and both have chosen to have a conversation it will go like this :
+MaleFarmer1 : Hello.
+MaleFarmer2 : Hi.
+MaleFarmer1 : How are you doing?
+MaleFarmer2 : I am fine.
+MaleFarmer1 : Bye.
+MaleFarmer2 : Goodbye. 
+
+Class AttackedTakeDamage, AttackedScrollingText are for when the npc is attacked. Both inheritances from Interface IAttackable. When the player attacks an npc OnAttack() will be executed which is stored 
+inside Interface IAttackable. AttackedTakeDamage gives damage to the npcs while AttackedScrollingText pops up a text of the occured attack.
 
 To get support ask questions in our forums: https://1stmanleader.wixsite.com/website/forum
+Or our email : 1stmanleader@gmail.com

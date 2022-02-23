@@ -176,9 +176,6 @@ public class FirstPersonAIO : MonoBehaviour {
     public CharacterStats stats;
     public float attackCooldown = 0f;
 
-    public float bashTime = 1f;
-    bool readyBash = false;
-
     private void Awake()
     {
         #region Look Settings - Awake
@@ -312,36 +309,7 @@ public class FirstPersonAIO : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
                 GameObject attackable = hit.collider.gameObject;
-                if (bashTime > 0) //bashTime is the variable for how much the player needs to wait to execute bash
-                {
-                    bashTime = attackCooldown * 2;
-                    readyBash = false;
-                    AttackTarget(attackable);
-                }
-                else
-                {
-                    bashTime = attackCooldown * 2;
-                    readyBash = false;
-                    AttackTarget(attackable, true); //if 'true' executes bash
-                }
-            }
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            readyBash = true;
-        }
-
-        if (readyBash)
-        {
-            bashTime -= Time.deltaTime;
-            if (staminaInternal > 0) //consumes stamina per bashTime
-            {
-                staminaInternal -= (staminaDepletionSpeed * 2) * Time.deltaTime;
-                if (drawStaminaMeter)
-                {
-                    StaminaMeterBG.color = Vector4.MoveTowards(StaminaMeterBG.color, new Vector4(0, 0, 0, 0.5f), 0.15f); 
-                    StaminaMeter.color = Vector4.MoveTowards(StaminaMeter.color, new Vector4(1, 1, 1, 1), 0.15f);
-                }
+                AttackTarget(attackable);
             }
         }
     }
@@ -734,12 +702,7 @@ public class FirstPersonAIO : MonoBehaviour {
         var attackables = target.GetComponentsInChildren(typeof(IAttackable)); //IAttackable has OnAttack() when executed player's attack
         foreach (IAttackable attackable in attackables)
         {
-            if (!bashAttack)
-            {
-                attackable.OnAttack(gameObject, attack);
-            }
-            else
-                attackable.OnAttack(gameObject, attack, true);
+            attackable.OnAttack(gameObject, attack);
         }
     }
 
