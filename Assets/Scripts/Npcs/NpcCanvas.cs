@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class NpcCanvas : MonoBehaviour
 {
-    public TMP_Text text;
+    public TextMesh text;
 
     public Canvas canvas;
     public Camera PlayerCam;
+
     private void Awake()
     {
         if(text == null)
-            text = GetComponentInChildren<TMP_Text>();
+            text = GetComponentInChildren<TextMesh>();
         if(canvas == null)
             canvas = GetComponent<Canvas>();
         if (PlayerCam == null)

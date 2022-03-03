@@ -24,7 +24,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     //NPC-NPC interaction
     GameObject Talker;
-    private TMP_Text Text;
+    private TextMesh Text;
 
     public Behaviour workScript;
 
@@ -33,7 +33,7 @@ public class NPC : NpcData, IAttackable, IDestructible
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        Text = GetComponentInChildren<TMP_Text>();
+        Text = GetComponentInChildren<TextMesh>();
 
         FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork; 
         FindObjectOfType<DayAndNightControl>().OnEveningHandler += GoHome;
@@ -316,7 +316,7 @@ public class NPC : NpcData, IAttackable, IDestructible
             npc.ChangeState(NpcStates.Idle);
         Talker = null;
         
-        GetComponentInChildren<TMP_Text>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
+        GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
     }
 
     //Start NPC-NPC interaction with nearby NPCs with 
