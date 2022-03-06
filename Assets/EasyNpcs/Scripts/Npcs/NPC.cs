@@ -344,7 +344,7 @@ public class NPC : NpcData, IAttackable, IDestructible
         if (NPCscript.currentState == NpcStates.Scared || NPCscript.currentState == NpcStates.Talking)
             return;
 
-        if (UnityEngine.Random.Range(0, 1000) <= converChoose) //At a chance starts a conversation
+        if (UnityEngine.Random.Range(0, 1000) < converChoose) //At a chance starts a conversation
         {
             //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
             //Can stop bug for when both scripts decide to have a conversation at the same time
