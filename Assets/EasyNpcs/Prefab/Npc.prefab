@@ -3257,7 +3257,7 @@ MonoBehaviour:
   VisionRange: 10
   VisionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 768
   age: 0
   job: 0
   Gender: 0
@@ -3274,7 +3274,7 @@ MonoBehaviour:
   runningDistance: 10
   runningTime: 5
   workScript: {fileID: 0}
-  converChoose: 0
+  converChoose: 1
 --- !u!114 &699092563044135392
 MonoBehaviour:
   m_ObjectHideFlags: 0

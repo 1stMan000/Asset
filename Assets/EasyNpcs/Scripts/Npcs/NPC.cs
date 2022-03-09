@@ -249,7 +249,7 @@ public class NPC : NpcData, IAttackable, IDestructible
             Npc.Talker = gameObject;
             Npc.ChangeState(NpcStates.Talking);
 
-            StartTalk(text.Item1, 4); //1st speaks then 2nd npc speaks after 4secs
+            StartTalk(text.Item1); //1st speaks then 2nd npc speaks after 4secs
             Npc.Text.text = null;
             yield return new WaitForSeconds(4);
             Npc.StartTalk(text.Item2);
@@ -260,7 +260,7 @@ public class NPC : NpcData, IAttackable, IDestructible
 
     public void StartTalk(List<string> text, int waitSeconds = 0)
     {
-        StartCoroutine(nameof(Talk), new object[] { text, waitSeconds });
+        StartCoroutine(nameof(Talk), new object[] { text, waitSeconds});
     }
 
     IEnumerator Talk(object[] parameters)
@@ -284,7 +284,7 @@ public class NPC : NpcData, IAttackable, IDestructible
                 }
             }
         }
-        GetComponentInChildren<TMP_Text>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
+        
         yield return new WaitForSeconds(waitSeconds);
         ChangeState(NpcStates.Idle);
     }
@@ -299,8 +299,6 @@ public class NPC : NpcData, IAttackable, IDestructible
                 yield return new WaitForSeconds(4);
             }
         }
-
-        GetComponentInChildren<TMP_Text>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
     }
 
     //Stops conversation and removes all behaviours from it
