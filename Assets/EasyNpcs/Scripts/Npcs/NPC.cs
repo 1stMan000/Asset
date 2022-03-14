@@ -35,8 +35,17 @@ public class NPC : NpcData, IAttackable, IDestructible
         agent = GetComponent<NavMeshAgent>();
         Text = GetComponentInChildren<TextMesh>();
 
-        FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork; 
-        FindObjectOfType<DayAndNightControl>().OnEveningHandler += GoHome;
+        DayAndNightControl dayAndNightControl = FindObjectOfType<DayAndNightControl>();
+
+        if (dayAndNightControl != null)
+        {
+            FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork;
+            FindObjectOfType<DayAndNightControl>().OnEveningHandler += GoHome;
+        }
+        else
+        {
+            Debug.Log("Add in dayAndNight control to scene for use of npc's life cycle");
+        }
 
         anim = GetComponentInChildren<Animator>();
     }
