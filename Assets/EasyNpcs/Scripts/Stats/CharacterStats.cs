@@ -5,8 +5,10 @@ public class CharacterStats : MonoBehaviour, IDestructible
 {
     public Stat maxHealth;
     public Stat currentHealth { get; private set; }
-
+    
+    [HideInInspector]
     public Stat Damage;
+    [HideInInspector]
     public Stat Armor;
 
     public bool isDead = false;
