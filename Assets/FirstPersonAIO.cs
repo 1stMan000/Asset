@@ -695,7 +695,7 @@ public class FirstPersonAIO : MonoBehaviour {
         playerCamera.transform.localPosition = cameraStartingPosition;
     }
 
-    void AttackTarget(GameObject target, bool bashAttack = false) //decides and creates attack on target
+    void AttackTarget(GameObject target) //decides and creates attack on target
     {
         Attack attack = CreateAttack(gameObject.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
 
@@ -713,15 +713,12 @@ public class FirstPersonAIO : MonoBehaviour {
             baseDamage += 5;
         else
             baseDamage += 5 * 2;
-        bool isCritical = Random.value < 10;
-        if (isCritical)
-            baseDamage *= 2;
 
         if (defender != null)
             baseDamage -= defender.GetArmor().GetValue();
 
         if (baseDamage < 0)
             baseDamage = 0;
-        return new Attack((int)baseDamage, isCritical);
+        return new Attack((int)baseDamage);
     }
 }

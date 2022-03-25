@@ -12,8 +12,6 @@ On Death Ragdoll
 
 Class CharacterStats is for handling the status of the npc. These are the following variables that are used.
 MaxHealth : Maximum health of the npc. It is assigned to the currentHealth on Start.
-CurrentHealth : Actual health of the npc currently. If reaches 0 npc will be considered dead. Damage is given from void TakeDamage(GameObject attacker, float damage) method inside class CharacterStats.
-Armour : Reduces damage. Used by CreateAttack(CharacterStats attacker, CharacterStats defender, bool bashAttack = false) method inside class AttackDefinition.
 IsDead : If true npc it means the npc is dead. You can use it to indicate if an npc has been killed.
 
 Class NPC is where the npc Ai is done. The script is a state machine which changes the behaviour of the npc by changing the states. It's required to be used with Character stats. 

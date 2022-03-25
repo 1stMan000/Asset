@@ -14,22 +14,15 @@ public class AttackDefinition : ScriptableObject
     public float criticalChance;
     public float Range;
 
-    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender, bool bashAttack = false)
+    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender)
     {
         float baseDamage = attacker.GetDamage().GetValue();
-        if (!bashAttack)
-            baseDamage += Random.Range(minDamage, maxDamage);
-        else
-            baseDamage += Random.Range(minDamage, maxDamage) * 2;
-        bool isCritical = Random.value < criticalChance;
-        if (isCritical)
-            baseDamage *= criticalMultipliyer;
 
         if (defender != null)
             baseDamage -= defender.GetArmor().GetValue();
 
         if (baseDamage < 0)
             baseDamage = 0;
-        return new Attack((int)baseDamage, isCritical);
+        return new Attack((int)baseDamage);
     }
 }

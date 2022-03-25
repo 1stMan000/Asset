@@ -29,14 +29,14 @@ public class NPC : NpcData, IAttackable, IDestructible
     public Behaviour workScript;
 
     Animator anim;
-
+    
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         Text = GetComponentInChildren<TextMesh>();
 
         DayAndNightControl dayAndNightControl = FindObjectOfType<DayAndNightControl>();
-
+        
         if (dayAndNightControl != null)
         {
             FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork;
@@ -56,7 +56,7 @@ public class NPC : NpcData, IAttackable, IDestructible
         if (runTimeLeft > 0)
             runTimeLeft -= Time.deltaTime;
         anim.SetFloat("Speed", agent.velocity.magnitude);
-
+        
         WatchEnvironment();
     }
 
@@ -250,8 +250,10 @@ public class NPC : NpcData, IAttackable, IDestructible
                 text = TextLoader.GetDialgoue(genders, jobs);
             }
             if (text == null)
+            {
                 yield break;
-
+            }
+            
             ChangeState(NpcStates.Talking);
             agent.SetDestination(Npc.transform.position);
 

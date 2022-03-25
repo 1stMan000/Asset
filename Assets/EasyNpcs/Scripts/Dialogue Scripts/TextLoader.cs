@@ -29,6 +29,7 @@ public class TextLoader : MonoBehaviour
         // Iterate through all the files and read dialogues to the list
         foreach (var name in names)
         {
+            Debug.Log(name);    
             currentFile = name;
             dialogueTexts.Add(FillDialogueText());
         }
@@ -37,7 +38,7 @@ public class TextLoader : MonoBehaviour
     List<DialogueText> FillDialogueText()
     {
         var strings = ReadText(currentFile);
-
+        
         return new List<DialogueText>() { Fill(strings), Fill(strings)};
     }
 
@@ -115,7 +116,6 @@ public class TextLoader : MonoBehaviour
         job = job ?? new Job[] { Job.Default, Job.Default };
 
         List<List<DialogueText>> list = new List<List<DialogueText>>();
-
         List<List<DialogueText>> validTexts = new List<List<DialogueText>>();
         // Fills the list with dialogues with suitable tags
         foreach (var text in dialogueTexts)
@@ -138,7 +138,7 @@ public class TextLoader : MonoBehaviour
 
         if (list.Count < 1)
             return null;
-
+        
         // Pick random dialogue from the list
         var chosenText = list[random.Next(0, list.Count)];
 

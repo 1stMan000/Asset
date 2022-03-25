@@ -4,10 +4,9 @@ public class Attack
     private readonly int _damage;
     private readonly bool _critical;
 
-    public Attack(int dam, bool crit)
+    public Attack(int dam)
     {
         _damage = dam;
-        _critical = crit;
     }
 
     public int Damage
