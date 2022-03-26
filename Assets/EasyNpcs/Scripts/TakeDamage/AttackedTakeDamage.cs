@@ -13,7 +13,7 @@ public class AttackedTakeDamage : MonoBehaviour, IAttackable
         stats = GetComponent<CharacterStats>();
     }
 
-    public void OnAttack(GameObject attacker, Attack attack, bool bashAttack = false)
+    public void OnAttack(GameObject attacker, Attack attack)
     {
         stats.TakeDamage(attacker, attack.Damage);
 

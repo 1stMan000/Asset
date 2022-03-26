@@ -1081,22 +1081,22 @@ PrefabInstance:
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: job
-      value: 32
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: home
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 491524135}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: work
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 430153658}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: Gender
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}

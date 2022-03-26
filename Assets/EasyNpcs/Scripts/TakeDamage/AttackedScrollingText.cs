@@ -14,7 +14,7 @@ public class AttackedScrollingText : MonoBehaviour, IAttackable
         stats = GetComponent<CharacterStats>();
     }
 
-    public void OnAttack(GameObject attacker, Attack attack, bool bashAttack = false)
+    public void OnAttack(GameObject attacker, Attack attack)
     {
         var text = attack.Damage.ToString();
 

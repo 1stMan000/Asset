@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IAttackable
 {
-    void OnAttack(GameObject attacker, Attack attack, bool bashAttack = false);
+    void OnAttack(GameObject attacker, Attack attack);
 }

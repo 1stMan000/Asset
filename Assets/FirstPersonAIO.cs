@@ -697,7 +697,7 @@ public class FirstPersonAIO : MonoBehaviour {
 
     void AttackTarget(GameObject target) //decides and creates attack on target
     {
-        Attack attack = CreateAttack(gameObject.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+        Attack attack = new Attack(10);
 
         var attackables = target.GetComponentsInChildren(typeof(IAttackable)); //IAttackable has OnAttack() when executed player's attack
         foreach (IAttackable attackable in attackables)
@@ -706,13 +706,9 @@ public class FirstPersonAIO : MonoBehaviour {
         }
     }
 
-    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender, bool bashAttack = false)
+    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender)
     {
         float baseDamage = attacker.GetDamage().GetValue();
-        if (!bashAttack)
-            baseDamage += 5;
-        else
-            baseDamage += 5 * 2;
 
         if (defender != null)
             baseDamage -= defender.GetArmor().GetValue();

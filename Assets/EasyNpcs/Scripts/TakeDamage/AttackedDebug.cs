@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackedDebug : MonoBehaviour, IAttackable
 {
-    public void OnAttack(GameObject attacker, Attack attack, bool bashAttack = false)
+    public void OnAttack(GameObject attacker, Attack attack)
     {
         if (attack.isCritical)
             Debug.Log("Critical Damage");

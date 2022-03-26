@@ -378,7 +378,7 @@ public class NPC : NpcData, IAttackable, IDestructible
     }
 
     //Called when NPC is attacked
-    public void OnAttack(GameObject attacker, Attack attack, bool bashAttack = false)
+    public void OnAttack(GameObject attacker, Attack attack)
     {
         if (this.enabled == false)
             return;
