@@ -14,7 +14,7 @@ public class AttackDefinition : ScriptableObject
     public float criticalChance;
     public float Range;
 
-    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender)
+    public Attack CreateAttack(CharacterManager attacker, CharacterManager defender)
     {
         float baseDamage = attacker.GetDamage().GetValue();
 

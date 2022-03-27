@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackedScrollingText : MonoBehaviour, IAttackable
+public class AttackedScrollingText : MonoBehaviour, IDestructible
 {
     public ScrollingText Text;
     public Color color;
 
-    CharacterStats stats;
+    CharacterManager stats;
 
     void Start()
     {
-        stats = GetComponent<CharacterStats>();
+        stats = GetComponent<CharacterManager>();
     }
 
     public void OnAttack(GameObject attacker, Attack attack)
@@ -21,5 +21,10 @@ public class AttackedScrollingText : MonoBehaviour, IAttackable
         var scrollingText = Instantiate(Text, transform.position + new Vector3(0, 1f, 0), Quaternion.identity);
         scrollingText.SetText(text);
         scrollingText.SetColor(color);
+    }
+
+    public void OnDestruction(GameObject destroyer)
+    {
+        
     }
 }

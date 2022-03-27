@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour, IDestructible
+public class CharacterManager : MonoBehaviour, IDestructible
 {
     public Stat maxHealth;
     public Stat currentHealth { get; private set; }
     
-    [HideInInspector]
     public Stat Damage;
-    [HideInInspector]
     public Stat Armor;
 
     public bool isDead = false;
@@ -49,6 +47,23 @@ public class CharacterStats : MonoBehaviour, IDestructible
     public Stat GetMaxHealth()
     {
         return maxHealth;
+    }
+
+    public void OnAttack(GameObject attacker, Attack attack)
+    {
+        TakeDamage(attacker, attack.Damage);
+
+        if (GetCurrentHealth().GetValue() <= 0)
+        {
+            if (gameObject.layer == 8)
+            {
+                IDestructible[] destructibles = GetComponents<IDestructible>();
+                foreach (IDestructible destructible in destructibles)
+                {
+                    destructible.OnDestruction(attacker);
+                }
+            }
+        }
     }
 
     public void OnDestruction(GameObject destroyer)

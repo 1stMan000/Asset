@@ -28,8 +28,7 @@ public class TextLoader : MonoBehaviour
 
         // Iterate through all the files and read dialogues to the list
         foreach (var name in names)
-        {
-            Debug.Log(name);    
+        {   
             currentFile = name;
             dialogueTexts.Add(FillDialogueText());
         }

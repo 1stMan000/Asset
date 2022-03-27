@@ -173,7 +173,7 @@ public class FirstPersonAIO : MonoBehaviour {
     #endregion
 
     private Animator anim;
-    public CharacterStats stats;
+    public CharacterManager stats;
     public float attackCooldown = 0f;
 
     private void Awake()
@@ -274,7 +274,7 @@ public class FirstPersonAIO : MonoBehaviour {
         #endregion
 
         anim = GetComponentInChildren<Animator>();
-        stats = GetComponent<CharacterStats>();
+        stats = GetComponent<CharacterManager>();
     }
 
     private void Update()
@@ -699,14 +699,14 @@ public class FirstPersonAIO : MonoBehaviour {
     {
         Attack attack = new Attack(10);
 
-        var attackables = target.GetComponentsInChildren(typeof(IAttackable)); //IAttackable has OnAttack() when executed player's attack
-        foreach (IAttackable attackable in attackables)
+        var attackables = target.GetComponentsInChildren(typeof(IDestructible)); //IAttackable has OnAttack() when executed player's attack
+        foreach (IDestructible attackable in attackables)
         {
             attackable.OnAttack(gameObject, attack);
         }
     }
 
-    public Attack CreateAttack(CharacterStats attacker, CharacterStats defender)
+    public Attack CreateAttack(CharacterManager attacker, CharacterManager defender)
     {
         float baseDamage = attacker.GetDamage().GetValue();
 

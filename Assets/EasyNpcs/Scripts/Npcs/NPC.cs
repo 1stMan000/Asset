@@ -7,7 +7,7 @@ using System.IO;
 using TMPro;
 using UnityEditor;
 
-public class NPC : NpcData, IAttackable, IDestructible
+public class NPC : NpcData, IDestructible
 {
     //Navigation
     public NavMeshAgent agent { get; private set; }

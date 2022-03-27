@@ -32,6 +32,11 @@ public class OnDeathRagdoll : MonoBehaviour, IDestructible
         GetComponent<CapsuleCollider>().enabled = true;
     }
 
+    public void OnAttack(GameObject attacker, Attack attack)
+    {
+
+    }
+
     public void OnDestruction(GameObject destoyer)
     {
         foreach (SkinnedMeshRenderer skinned in skin)
