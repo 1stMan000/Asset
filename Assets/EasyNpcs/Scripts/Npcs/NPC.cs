@@ -30,7 +30,7 @@ public class NPC : NpcData, IDestructible
 
     Animator anim;
     
-    void Awake()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         Text = GetComponentInChildren<TextMesh>();
@@ -84,7 +84,6 @@ public class NPC : NpcData, IDestructible
             return;
 
         NpcStates PrevState = currentState; 
-
         currentState = newState; 
         OnStateChanged(PrevState, newState);
     }
@@ -298,18 +297,6 @@ public class NPC : NpcData, IDestructible
         
         yield return new WaitForSeconds(waitSeconds);
         ChangeState(NpcStates.Idle);
-    }
-
-    public IEnumerator Speach(List<string> text)
-    {
-        for (int i = 0; i < text.Count; i++)
-        {
-            if (!text[i].StartsWith(" ")) //Displays sentece for 4 secs
-            {
-                Text.text = text[i];
-                yield return new WaitForSeconds(4);
-            }
-        }
     }
 
     //Stops conversation and removes all behaviours from it
