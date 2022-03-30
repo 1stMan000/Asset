@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Npc_Manager;
 
-public class PlayerStats : CharacterManager
+namespace Stats_Player
 {
-    public Slider slider;
-
-    public float experienceForLevelup = 0;
-
-    public void AddExperience()
+    public class PlayerStats : CharacterManager
     {
-        experienceForLevelup = experienceForLevelup + 0.05f;
-        slider.value = experienceForLevelup;
+        public Slider slider;
+
+        public float experienceForLevelup = 0;
+
+        public void AddExperience()
+        {
+            experienceForLevelup = experienceForLevelup + 0.05f;
+            slider.value = experienceForLevelup;
+        }
     }
 }

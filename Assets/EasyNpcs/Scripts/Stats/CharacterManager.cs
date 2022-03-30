@@ -1,73 +1,77 @@
 ﻿using System;
 using UnityEngine;
 
-public class CharacterManager : MonoBehaviour, IDestructible
+namespace Npc_Manager
 {
-    public Stat maxHealth;
-    public Stat currentHealth { get; private set; }
-    
-    public Stat Damage;
-    public Stat Armor;
-
-    public bool isDead = false;
-
-    public event Action OnHealthValueChanged;
-
-    protected virtual void Start()
+    public class CharacterManager : MonoBehaviour, IDestructible
     {
-        currentHealth = new Stat();
-        currentHealth.SetValue(maxHealth.GetValue());
-    }
+        public Stat maxHealth;
+        public Stat currentHealth { get; private set; }
 
-    public void TakeDamage(GameObject attacker, float damage)
-    {
-        Debug.Log("attacked" + damage + this.gameObject);
-        if (damage <= 0f) return;
-        currentHealth.SetValue(currentHealth.GetValue() - damage);
+        public Stat Damage;
+        public Stat Armor;
 
-        OnHealthValueChanged?.Invoke();
-    }
+        public bool isDead = false;
 
-    public Stat GetArmor()
-    {
-        return Armor;
-    }
+        public event Action OnHealthValueChanged;
 
-    public Stat GetDamage()
-    {
-        return Damage;
-    }
-
-    public Stat GetCurrentHealth()
-    {
-        Debug.Log(currentHealth.GetValue());
-        return currentHealth;
-    }
-
-    public Stat GetMaxHealth()
-    {
-        return maxHealth;
-    }
-
-    public void OnAttack(GameObject attacker, Attack attack)
-    {
-        TakeDamage(attacker, attack.Damage);
-
-        if (GetCurrentHealth().GetValue() <= 0)
+        protected virtual void Start()
         {
-            if (gameObject.layer == 8)
+            currentHealth = new Stat();
+            currentHealth.SetValue(maxHealth.GetValue());
+        }
+
+        public void TakeDamage(GameObject attacker, float damage)
+        {
+            Debug.Log("attacked" + damage + this.gameObject);
+            if (damage <= 0f) return;
+            currentHealth.SetValue(currentHealth.GetValue() - damage);
+
+            OnHealthValueChanged?.Invoke();
+        }
+
+        public Stat GetArmor()
+        {
+            return Armor;
+        }
+
+        public Stat GetDamage()
+        {
+            return Damage;
+        }
+
+        public Stat GetCurrentHealth()
+        {
+            Debug.Log(currentHealth.GetValue());
+            return currentHealth;
+        }
+
+        public Stat GetMaxHealth()
+        {
+            return maxHealth;
+        }
+
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            TakeDamage(attacker, attack.Damage);
+
+            if (GetCurrentHealth().GetValue() <= 0)
             {
-                IDestructible[] destructibles = GetComponents<IDestructible>();
-                foreach (IDestructible destructible in destructibles)
+                if (gameObject.layer == 8)
                 {
-                    destructible.OnDestruction(attacker);
+                    IDestructible[] destructibles = GetComponents<IDestructible>();
+                    foreach (IDestructible destructible in destructibles)
+                    {
+                        destructible.OnDestruction(attacker);
+                    }
                 }
             }
         }
-    }
 
-    public void OnDestruction(GameObject destroyer)
-    {
-        isDead = true;
+        public void OnDestruction(GameObject destroyer)
+        {
+            isDead = true;
+        }
     }
 }
+

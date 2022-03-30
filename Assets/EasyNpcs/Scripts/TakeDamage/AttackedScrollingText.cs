@@ -1,30 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Npc_Manager;
 
-public class AttackedScrollingText : MonoBehaviour, IDestructible
+namespace Debug_Attack
 {
-    public ScrollingText Text;
-    public Color color;
-
-    CharacterManager stats;
-
-    void Start()
+    public class AttackedScrollingText : MonoBehaviour, IDestructible
     {
-        stats = GetComponent<CharacterManager>();
-    }
+        public ScrollingText Text;
+        public Color color;
 
-    public void OnAttack(GameObject attacker, Attack attack)
-    {
-        var text = attack.Damage.ToString();
+        CharacterManager stats;
 
-        var scrollingText = Instantiate(Text, transform.position + new Vector3(0, 1f, 0), Quaternion.identity);
-        scrollingText.SetText(text);
-        scrollingText.SetColor(color);
-    }
+        void Start()
+        {
+            stats = GetComponent<CharacterManager>();
+        }
 
-    public void OnDestruction(GameObject destroyer)
-    {
-        
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            var text = attack.Damage.ToString();
+
+            var scrollingText = Instantiate(Text, transform.position + new Vector3(0, 1f, 0), Quaternion.identity);
+            scrollingText.SetText(text);
+            scrollingText.SetColor(color);
+        }
+
+        public void OnDestruction(GameObject destroyer)
+        {
+
+        }
     }
 }

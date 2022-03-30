@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Npc_Manager;
 
-public class HealthBar : MonoBehaviour
+namespace Debug_Health
 {
-    [SerializeField] private CharacterManager character;
-    [SerializeField] private Image healthImage;
-
-    void Start()
+    public class HealthBar : MonoBehaviour
     {
-        character.OnHealthValueChanged += HandleHealthValueChanged;
+        [SerializeField] private CharacterManager character;
+        [SerializeField] private Image healthImage;
 
-        HandleHealthValueChanged();
-    }
+        void Start()
+        {
+            character.OnHealthValueChanged += HandleHealthValueChanged;
 
-    private void HandleHealthValueChanged()
-    {
-        Debug.Log($"Health: {character.GetCurrentHealth().GetValue()}/{character.GetMaxHealth().GetValue()}");
+            HandleHealthValueChanged();
+        }
 
-        healthImage.fillAmount = character.GetCurrentHealth().GetValue() / character.GetMaxHealth().GetValue();
+        private void HandleHealthValueChanged()
+        {
+            Debug.Log($"Health: {character.GetCurrentHealth().GetValue()}/{character.GetMaxHealth().GetValue()}");
+
+            healthImage.fillAmount = character.GetCurrentHealth().GetValue() / character.GetMaxHealth().GetValue();
+        }
     }
 }

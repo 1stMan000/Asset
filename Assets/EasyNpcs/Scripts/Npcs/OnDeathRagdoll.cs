@@ -3,63 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class OnDeathRagdoll : MonoBehaviour, IDestructible
+namespace Ragdoll
 {
-    NavMeshAgent agent;
-    Rigidbody[] rig;
-    SkinnedMeshRenderer[] skin;
-
-    void Start()
+    public class OnDeathRagdoll : MonoBehaviour, IDestructible
     {
-        agent = GetComponent<NavMeshAgent>();
-        skin = GetComponentsInChildren<SkinnedMeshRenderer>();
+        NavMeshAgent agent;
+        Rigidbody[] rig;
+        SkinnedMeshRenderer[] skin;
 
-        foreach (SkinnedMeshRenderer skinned in skin)
+        void Start()
         {
-            skinned.updateWhenOffscreen = false; //has to be enabled when ragdoll is in. Otherwise the character sometimes does not render
-        }
+            agent = GetComponent<NavMeshAgent>();
+            skin = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        rig = GetComponentsInChildren<Rigidbody>();
-        foreach (Rigidbody rigidbody in rig)
-        {
-            Rigidbody ownRigidbody = GetComponent<Rigidbody>();
-            if (rigidbody != ownRigidbody)
+            foreach (SkinnedMeshRenderer skinned in skin)
             {
-                rigidbody.GetComponent<Collider>().enabled = false;
-                rigidbody.isKinematic = true;
+                skinned.updateWhenOffscreen = false; //has to be enabled when ragdoll is in. Otherwise the character sometimes does not render
             }
-        }
-        GetComponent<CapsuleCollider>().enabled = true;
-    }
 
-    public void OnAttack(GameObject attacker, Attack attack)
-    {
-
-    }
-
-    public void OnDestruction(GameObject destoyer)
-    {
-        foreach (SkinnedMeshRenderer skinned in skin)
-        {
-            skinned.updateWhenOffscreen = true; //Stops character from disrendering
-        }
-
-        foreach (SkinnedMeshRenderer skinned in GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            skinned.updateWhenOffscreen = true; //Stops character from disrendering
-        }
-
-        GetComponentInChildren<Animator>().enabled = false;
-        GetComponent<NavMeshAgent>().enabled = false;
-        Destroy(GetComponent<CapsuleCollider>());
-        Destroy(GetComponent<Rigidbody>());
-
-        foreach (Rigidbody rigidbody in GetComponentsInChildren<Rigidbody>())
-        {
-            if (rigidbody != this.GetComponent<Rigidbody>())
+            rig = GetComponentsInChildren<Rigidbody>();
+            foreach (Rigidbody rigidbody in rig)
             {
-                rigidbody.GetComponent<Collider>().enabled = true;
-                rigidbody.isKinematic = false;
+                Rigidbody ownRigidbody = GetComponent<Rigidbody>();
+                if (rigidbody != ownRigidbody)
+                {
+                    rigidbody.GetComponent<Collider>().enabled = false;
+                    rigidbody.isKinematic = true;
+                }
+            }
+            GetComponent<CapsuleCollider>().enabled = true;
+        }
+
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+
+        }
+
+        public void OnDestruction(GameObject destoyer)
+        {
+            foreach (SkinnedMeshRenderer skinned in skin)
+            {
+                skinned.updateWhenOffscreen = true; //Stops character from disrendering
+            }
+
+            foreach (SkinnedMeshRenderer skinned in GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                skinned.updateWhenOffscreen = true; //Stops character from disrendering
+            }
+
+            GetComponentInChildren<Animator>().enabled = false;
+            GetComponent<NavMeshAgent>().enabled = false;
+            Destroy(GetComponent<CapsuleCollider>());
+            Destroy(GetComponent<Rigidbody>());
+
+            foreach (Rigidbody rigidbody in GetComponentsInChildren<Rigidbody>())
+            {
+                if (rigidbody != this.GetComponent<Rigidbody>())
+                {
+                    rigidbody.GetComponent<Collider>().enabled = true;
+                    rigidbody.isKinematic = false;
+                }
             }
         }
     }
