@@ -804,6 +804,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 0.00020385633
       objectReference: {fileID: 0}
+    - target: {fileID: 699092562942792970, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_RootOrder
@@ -898,6 +903,11 @@ PrefabInstance:
         type: 3}
       propertyPath: npcName
       value: Brian
+      objectReference: {fileID: 0}
+    - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
@@ -1006,6 +1016,46 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1318102573 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1024623119}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1318102574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318102573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed380bb6152c304386132a9ce269659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  manager: {fileID: 0}
+  PatrolArea: {fileID: 0}
+  attackPoint: {fileID: 0}
+  ShowDebugMessages: 0
+  VisualiseAgentActions: 0
+  VisionMask:
+    serializedVersion: 2
+    m_Bits: 256
+  VisionRange: 10
+  WhatCanThisEnemyAttack:
+    serializedVersion: 2
+    m_Bits: 256
+  Tags:
+  - Npc
+  Protects: []
+  CurrentState: 0
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
+  AttackDistance: 1
+  maximumAmountofAttackers: 1
+  changingState: 1
 --- !u!1 &1416470677
 GameObject:
   m_ObjectHideFlags: 0
