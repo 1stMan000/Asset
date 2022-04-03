@@ -91,10 +91,10 @@ namespace Npc_AI
             OnStateChanged(PrevState, newState);
         }
 
-        private void OnStateChanged(NpcStates PrevState, NpcStates NewState)
+        private void OnStateChanged(NpcStates prevState, NpcStates newState)
         {
-            TurnOffBehaviour(PrevState);
-            switch (NewState)
+            TurnOffBehaviour(prevState);
+            switch (newState)
             {
                 case NpcStates.Scared:
                     StartCoroutine(nameof(Run), Attacker);
@@ -128,9 +128,9 @@ namespace Npc_AI
             }
         }
 
-        void TurnOffBehaviour(NpcStates PrevState)
+        void TurnOffBehaviour(NpcStates prevState)
         {
-            switch (PrevState)
+            switch (prevState)
             {
                 case NpcStates.Scared:
                     StopRunning();

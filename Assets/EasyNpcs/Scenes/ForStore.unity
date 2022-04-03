@@ -869,6 +869,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Npc
       objectReference: {fileID: 0}
+    - target: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 699092563261028782, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
@@ -1463,4 +1468,5 @@ PrefabInstance:
     - {fileID: 8258757134532135322, guid: f327ab5017bd77c4ea886b56353da51d, type: 3}
     - {fileID: 8258757134088558149, guid: f327ab5017bd77c4ea886b56353da51d, type: 3}
     - {fileID: 4995884439768303805, guid: f327ab5017bd77c4ea886b56353da51d, type: 3}
+    - {fileID: 5243502095897612480, guid: f327ab5017bd77c4ea886b56353da51d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f327ab5017bd77c4ea886b56353da51d, type: 3}

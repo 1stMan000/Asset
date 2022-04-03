@@ -7,7 +7,7 @@ using Npc_AI;
 
 namespace Enemy_AI
 {
-    public class EnemyAI : MonoBehaviour, IDestructible
+    public class EnemyAI : WhenAttacking, IDestructible
     {
         [HideInInspector]
         public NavMeshAgent agent = null;
@@ -402,7 +402,7 @@ namespace Enemy_AI
 
         public void OnAttack(GameObject attacker, Attack attack)
         {
-
+            AttackTarget(attacker);
         }
 
         public void OnDestruction(GameObject destroyer)

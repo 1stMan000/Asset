@@ -11,7 +11,7 @@ using Npc_Manager;
 
 namespace PlayerController
 {
-    public class FirstPersonAIO : MonoBehaviour
+    public class FirstPersonAIO : WhenAttacking
     {
 
         #region Variables
@@ -735,29 +735,6 @@ namespace PlayerController
                 yield return null;
             }
             playerCamera.transform.localPosition = cameraStartingPosition;
-        }
-
-        void AttackTarget(GameObject target) //decides and creates attack on target
-        {
-            Attack attack = new Attack(10);
-
-            var attackables = target.GetComponentsInChildren(typeof(IDestructible)); //IAttackable has OnAttack() when executed player's attack
-            foreach (IDestructible attackable in attackables)
-            {
-                attackable.OnAttack(gameObject, attack);
-            }
-        }
-
-        public Attack CreateAttack(CharacterManager attacker, CharacterManager defender)
-        {
-            float baseDamage = attacker.GetDamage().GetValue();
-
-            if (defender != null)
-                baseDamage -= defender.GetArmor().GetValue();
-
-            if (baseDamage < 0)
-                baseDamage = 0;
-            return new Attack((int)baseDamage);
         }
     }
 }
