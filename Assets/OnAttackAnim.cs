@@ -22,8 +22,9 @@ public class OnAttackAnim : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Attack attack = new Attack(10);
-        enemyAI.OnAttack(enemyAI.currentTarget.gameObject, attack);
+        enemyAI.WhenAttacking(enemyAI.currentTarget.gameObject);
+
+        animator.SetBool("Attack", false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

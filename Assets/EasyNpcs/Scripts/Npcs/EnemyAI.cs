@@ -296,7 +296,8 @@ namespace Enemy_AI
 
         void Attack(GameObject target)
         {
-            anim.SetTrigger("Attack");
+            if (anim.GetBool("Attack") == false)
+                anim.SetBool("Attack", true);
         }
 
         void ChangeState(EnemyState state)
@@ -400,9 +401,14 @@ namespace Enemy_AI
             }
         }
 
-        public void OnAttack(GameObject attacker, Attack attack)
+        public void WhenAttacking(GameObject attacker)
         {
             AttackTarget(attacker);
+        }
+
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            
         }
 
         public void OnDestruction(GameObject destroyer)
