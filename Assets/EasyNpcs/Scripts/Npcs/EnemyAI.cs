@@ -38,7 +38,6 @@ namespace Enemy_AI
         public EnemyState CurrentState;
         public Transform currentTarget;
 
-        public float attackCooldown = 0;
         public float AttackDistance;
 
         public int maximumAmountofAttackers = 1;
@@ -86,11 +85,6 @@ namespace Enemy_AI
         void Update()
         {
             anim.SetFloat("Speed", agent.velocity.magnitude);
-
-            if (attackCooldown > 0)
-            {
-                attackCooldown -= Time.deltaTime;
-            }
 
             ManageState();
             WatchEnvironment();

@@ -157,7 +157,6 @@ GameObject:
   - component: {fileID: 5604837293089633041}
   - component: {fileID: 5604837293089633046}
   - component: {fileID: 5604837293089633047}
-  - component: {fileID: 5604837293089633044}
   - component: {fileID: 5604837293089633035}
   - component: {fileID: 5604837293089633045}
   - component: {fileID: 5604837293089633034}
@@ -255,40 +254,6 @@ MonoBehaviour:
   Armor:
     BaseValue: 0
   isDead: 0
---- !u!114 &5604837293089633044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5604837293089633032}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 096c17a238bc7e946806a109840208bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcName: Brian
-  VisionRange: 10
-  VisionLayers:
-    serializedVersion: 2
-    m_Bits: 768
-  age: 0
-  job: 1
-  Gender: 1
-  home: {fileID: 0}
-  work: {fileID: 0}
-  _currentState: 0
-  OnNpcDataInspectorChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  movementSpeed: 2
-  Attacker: {fileID: 0}
-  isAttacked: 0
-  scaredRunningSpeed: 4
-  runningDistance: 10
-  runningTime: 5
-  workScript: {fileID: 0}
-  converChoose: 0
 --- !u!114 &5604837293089633035
 MonoBehaviour:
   m_ObjectHideFlags: 0
