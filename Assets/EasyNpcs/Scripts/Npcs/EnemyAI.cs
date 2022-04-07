@@ -113,18 +113,25 @@ namespace Enemy_AI
             switch (CurrentState)
             {
                 case EnemyState.Patroling:
-                    Transform target = CheckForTargets(); //Find new target and start chasing it, else patrol
-                    if (target != null)
+                    if (currentTarget == null)
                     {
-                        currentTarget = target;
-                        ChangeState(EnemyState.Chasing);
+                        Transform target = CheckForTargets(); //Find new target and start chasing it, else patrol
+                        if (target != null)
+                        {
+                            currentTarget = target;
+                            ChangeState(EnemyState.Chasing);
 
-                        return;
+                            return;
+                        }
+
+                        if (agent.remainingDistance <= agent.stoppingDistance)
+                        {
+                            ChangeState(EnemyState.Idle);
+                        }
                     }
-
-                    if (agent.remainingDistance <= agent.stoppingDistance)
+                    else
                     {
-                        ChangeState(EnemyState.Idle);
+                        ChangeState(EnemyState.Chasing);
                     }
                     break;
 
@@ -174,15 +181,6 @@ namespace Enemy_AI
                         if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit1.transform == currentTarget)
                         {
                             Attack(currentTarget.gameObject);
-
-                            if (currentTarget.GetComponent<EnemyAI>())
-                            {
-                                if (currentTarget.GetComponent<EnemyAI>().CurrentState != EnemyState.Attacking)
-                                {
-                                    currentTarget.GetComponent<EnemyAI>().currentTarget = this.transform;
-                                    currentTarget.GetComponent<EnemyAI>().ChangeState(EnemyState.Attacking);
-                                }
-                            }
                         }
                         else
                         {
@@ -408,7 +406,7 @@ namespace Enemy_AI
 
         public void OnAttack(GameObject attacker, Attack attack)
         {
-            
+            currentTarget = attacker.transform;
         }
 
         public void OnDestruction(GameObject destroyer)
