@@ -294,8 +294,7 @@ namespace Enemy_AI
 
         void Attack(GameObject target)
         {
-            if (anim.GetBool("Attack") == false)
-                anim.SetBool("Attack", true);
+            anim.SetTrigger("Attack");
         }
 
         void ChangeState(EnemyState state)

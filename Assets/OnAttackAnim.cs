@@ -23,8 +23,6 @@ public class OnAttackAnim : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         enemyAI.WhenAttacking(enemyAI.currentTarget.gameObject);
-
-        animator.SetBool("Attack", false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
