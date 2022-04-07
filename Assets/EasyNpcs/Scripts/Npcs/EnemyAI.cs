@@ -24,10 +24,7 @@ namespace Enemy_AI
         [HideInInspector]
         public Transform attackPoint; //Npc attacks enemies while going to area 
 
-        #region Debugging
-        public bool ShowDebugMessages;
         public bool VisualiseAgentActions;
-        #endregion
 
         public LayerMask VisionMask;
         public float VisionRange;
@@ -312,36 +309,16 @@ namespace Enemy_AI
             switch (newState)
             {
                 case EnemyState.Attacking:
-                    #region Debug
-
-                    if (ShowDebugMessages)
-                        Debug.Log(transform.name + " is attacking " + currentTarget.name);
-                    #endregion
                     break;
                 case EnemyState.Chasing:
-                    #region Debug
-
-                    if (ShowDebugMessages)
-                        Debug.Log(transform.name + " is chasing " + currentTarget.name);
-                    #endregion
                     break;
                 case EnemyState.Idle:
-                    #region Debug
-
-                    if (ShowDebugMessages)
-                        Debug.Log(name + " is idle");
-                    #endregion
                     break;
                 case EnemyState.Patroling:
                     if (attackPoint)
                     {
                         agent.SetDestination(attackPoint.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
                     }
-                    #region Debug
-
-                    if (ShowDebugMessages)
-                        Debug.Log(name + " is patrolling");
-                    #endregion
                     break;
             }
         }

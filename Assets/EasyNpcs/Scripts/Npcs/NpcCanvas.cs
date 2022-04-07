@@ -41,6 +41,8 @@ public class NpcCanvas : MonoBehaviour
 
     private void updateText()
     {
-        text.text = GetComponentInParent<NpcData>().NpcName + "\nThe " + GetComponentInParent<NpcData>().Job.ToString().ToLower();
+        NpcData data = GetComponentInParent<NpcData>();
+        if (data != null)
+            text.text = data.NpcName + "\nThe " + data.Job.ToString().ToLower();
     }
 }
