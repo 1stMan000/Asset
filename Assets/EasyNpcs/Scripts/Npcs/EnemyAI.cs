@@ -393,7 +393,7 @@ namespace Enemy_AI
         //Check environment to protect if another is being attacked
         private void WatchEnvironment()
         {
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, WhatCanThisEnemyAttack);
+            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
 
             foreach (Collider col in cols)
             {
@@ -407,19 +407,6 @@ namespace Enemy_AI
                             if (npc.tag == protect && currentTarget == null)
                             {
                                 currentTarget = npc.Attacker.transform;
-                                bool doesTagExist = false;
-                                foreach (string tag in Tags)
-                                {
-                                    if (currentTarget.tag == tag)
-                                    {
-                                        doesTagExist = true;
-                                        break;
-                                    }
-                                }
-
-                                if (doesTagExist == false)
-                                    Tags.Add(currentTarget.tag);
-
                                 return;
                             }
                         }
