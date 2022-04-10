@@ -175,7 +175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5604837293089633032}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.73, y: 0, z: -1.79}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5604837295067834896}
@@ -270,7 +270,6 @@ MonoBehaviour:
   manager: {fileID: 0}
   PatrolArea: {fileID: 0}
   attackPoint: {fileID: 0}
-  ShowDebugMessages: 0
   VisualiseAgentActions: 0
   VisionMask:
     serializedVersion: 2
@@ -284,7 +283,6 @@ MonoBehaviour:
   Protects: []
   CurrentState: 0
   currentTarget: {fileID: 0}
-  attackCooldown: 0
   AttackDistance: 1
   maximumAmountofAttackers: 1
   changingState: 1

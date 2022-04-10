@@ -2526,8 +2526,6 @@ GameObject:
   - component: {fileID: 8240761571646830966}
   - component: {fileID: 5530727990225152628}
   - component: {fileID: 8289384338267489600}
-  - component: {fileID: 5243502095897612480}
-  - component: {fileID: 4995884439768303805}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -2598,7 +2596,6 @@ MonoBehaviour:
     BaseValue: 10
   Armor:
     BaseValue: 0
-  isInvincible: 0
   isDead: 0
   slider: {fileID: 0}
   experienceForLevelup: 0
@@ -2744,32 +2741,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e06c6ae1948cafd45a952ab85ebe4fa7, type: 3}
   stats: {fileID: 0}
   attackCooldown: 0
-  bashTime: 1
---- !u!114 &5243502095897612480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8258139131354589574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03893eb6426c5c042a4c5b4f45a5ea84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4995884439768303805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8258139131354589574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5748e25707fe84948abf213f67c9fc77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RagdollOnDeath: 1
 --- !u!1 &8258757134532135324
 GameObject:
   m_ObjectHideFlags: 0
