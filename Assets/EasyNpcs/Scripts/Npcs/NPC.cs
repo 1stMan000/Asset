@@ -165,7 +165,7 @@ namespace Npc_AI
                 return;
 
             ChangeState(NpcStates.GoingToWork);
-            StartCoroutine("GoToWorkCoroutine");
+            StartCoroutine(GoToWorkCoroutine());
         }
 
         //Set agent destination to work position, and change state to "Working" as it is reached
@@ -186,7 +186,7 @@ namespace Npc_AI
         {
             if (agent.isActiveAndEnabled)
                 agent.ResetPath();
-            StopCoroutine("GoToWorkCoroutine");
+            StopCoroutine(GoToWorkCoroutine());
         }
 
         void GoHome()
@@ -197,14 +197,14 @@ namespace Npc_AI
             //States that are more prioritized than 'GoingHome' state
             if (currentState == NpcStates.GoingHome || currentState == NpcStates.Talking || currentState == NpcStates.Scared)
                 return;
-            StartCoroutine("GoHomeCoroutine");
+            StartCoroutine(GoHomeCoroutine());
         }
 
         void StopGoingHome()
         {
             if (agent.isActiveAndEnabled)
                 agent.ResetPath();
-            StopCoroutine("GoHomeCoroutine");
+            StopCoroutine(GoHomeCoroutine());
         }
 
         IEnumerator GoHomeCoroutine()
