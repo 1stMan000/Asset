@@ -27,7 +27,7 @@ namespace Ragdoll
                 Rigidbody ownRigidbody = GetComponent<Rigidbody>();
                 if (rigidbody != ownRigidbody)
                 {
-                    rigidbody.GetComponent<Collider>().enabled = false;
+                    rigidbody.GetComponent<Collider>().enabled = true;
                     rigidbody.isKinematic = true;
                 }
             }

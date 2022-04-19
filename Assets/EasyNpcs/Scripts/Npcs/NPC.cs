@@ -77,6 +77,10 @@ namespace Npc_AI
                         Attacker = npc.Attacker;
                         ChangeState(NpcStates.Scared);
                     }
+                    else
+                    {
+                        TriggerConversation(npc);
+                    }
                 }
             }
         }
@@ -317,7 +321,7 @@ namespace Npc_AI
         }
 
         //Start NPC-NPC interaction with nearby NPCs with 
-        void OnTriggerStay(Collider other)
+        void TriggerConversation(NPC npc)
         {
             if (!enabled)
                 return;
@@ -329,10 +333,7 @@ namespace Npc_AI
             if (currentState == NpcStates.Scared || currentState == NpcStates.Talking)
                 return;
 
-            if (!other.CompareTag("Npc"))
-                return;
-
-            NPC NPCscript = other.GetComponentInParent<NPC>();
+            NPC NPCscript = npc;
 
             if (NPCscript.enabled == false)
                 return;

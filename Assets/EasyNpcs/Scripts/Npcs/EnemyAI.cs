@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using System.Collections;
 using Npc_Manager;
 using Npc_AI;
 
@@ -41,6 +40,11 @@ namespace Enemy_AI
 
         [HideInInspector]
         public bool changingState = true;
+
+        public enum weapon { melee, ranged};
+        public weapon assignedWeapon; 
+        public Projectile projectile;
+        public float launchHight;
 
         #region Editor Only
 
@@ -160,6 +164,7 @@ namespace Enemy_AI
 
                 case EnemyState.Attacking:
                     agent.SetDestination(transform.position);
+                    RotateTo(currentTarget.gameObject);
 
                     if (currentTarget == null)
                     {
@@ -381,12 +386,6 @@ namespace Enemy_AI
 
         public void OnDestruction(GameObject destroyer)
         {
-            if (currentTarget != null)
-            {
-                if (currentTarget.GetComponent<Npc_Manager.CharacterManager>().isDead)
-                    currentTarget = null;
-            }
-
             enabled = false;
         }
 
