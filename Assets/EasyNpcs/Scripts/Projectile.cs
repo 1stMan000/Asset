@@ -5,37 +5,32 @@ public class Projectile : WhenAttacking
 {
     private GameObject Caster;
     private GameObject target;
-    private float horizontalSpeed;
-    private Quaternion Direction;
 
-    Rigidbody rigidbody;
+    Rigidbody rigidBody;
 
     public float rotationSpeed = 0.5f;
     public float GravityFactor = 3f;
     public bool isFlying;
-    private GameObject attachedObject;
 
     [Range(20.0f, 75.0f)] public float LaunchAngle;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     public void Fire(GameObject caster, GameObject getTarget, Quaternion tartgetRotation, float speed, float range)
     {
         Caster = caster;
         target = getTarget;
-        horizontalSpeed = speed;
 
-        isFlying = true;
         Fly();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.LookRotation(rigidbody.velocity);
+        transform.rotation = Quaternion.LookRotation(rigidBody.velocity);
     }
 
     private void Fly()
@@ -65,27 +60,24 @@ public class Projectile : WhenAttacking
         Vector3 globalVelocity = transform.TransformDirection(localVelocity);
 
         // launch the object by setting its initial velocity and flipping its state
-        rigidbody.velocity = globalVelocity;
+        rigidBody.velocity = globalVelocity;
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject == Caster || other.gameObject.transform.root.gameObject == Caster)
         {
+            Destroy(gameObject);
             return;
         }
 
         if (other.gameObject.layer != 14)
         {
+            Destroy(gameObject);
             return;
         }
 
         AttackTarget(target);
-
-        FixedJoint fj = gameObject.AddComponent(typeof(FixedJoint)) as FixedJoint;
-        fj.connectedBody = other.gameObject.GetComponent<Rigidbody>();
-        isFlying = false;
-        attachedObject = other.gameObject;
-        Destroy(GetComponent<CapsuleCollider>());
+        Destroy(gameObject);
     }
 }

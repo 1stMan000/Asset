@@ -170,6 +170,11 @@ namespace Enemy_AI
                     {
                         ChangeState(EnemyState.Idle);
                     }
+                    else if (currentTarget != null && currentTarget.GetComponent<CharacterManager>().isDead == true)
+                    {
+                        currentTarget = null;
+                        ChangeState(EnemyState.Idle);
+                    }
                     else
                     {
                         RaycastHit hit1;

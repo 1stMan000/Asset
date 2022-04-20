@@ -5,7 +5,7 @@ using Enemy_AI;
 
 public class OnAttackAnim : StateMachineBehaviour
 {
-    public EnemyAI enemyAI;
+    EnemyAI enemyAI;
     GameObject thisNpc;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
