@@ -37,7 +37,7 @@ public class Projectile : WhenAttacking
     {
         // think of it as top-down view of vectors: 
         //   we don't care about the y-component(height) of the initial and target position.
-        Vector3 projectileXZPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        Vector3 projectileXZPos = new Vector3(transform.position.x, 1.7f, transform.position.z);
         Vector3 targetXZPos = new Vector3(target.transform.position.x, 0.0f, target.transform.position.z);
         targetXZPos += -0.5f * (projectileXZPos - targetXZPos).normalized;
 

@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 4159233491569455948}
   m_Layer: 8
   m_Name: Projectile_AI
-  m_TagString: Npc
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -360,9 +360,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   Tags:
-  - Npc
-  Protects:
-  - Npc
+  - Enemy
+  Protects: []
   CurrentState: 0
   currentTarget: {fileID: 0}
   AttackDistance: 100
@@ -371,7 +370,7 @@ MonoBehaviour:
   assignedWeapon: 1
   projectile: {fileID: 8054494596401598028, guid: b2c1908cc69dddd449e3d45602542157,
     type: 3}
-  launchHight: 1
+  launchHight: 1.7
 --- !u!114 &4159233491569455955
 MonoBehaviour:
   m_ObjectHideFlags: 0

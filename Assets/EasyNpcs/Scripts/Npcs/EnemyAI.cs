@@ -149,6 +149,11 @@ namespace Enemy_AI
                         ChangeState(EnemyState.Idle);
                         return;
                     }
+                    else if (currentTarget.GetComponent<CharacterManager>().isDead == true)
+                    {
+                        currentTarget = null;
+                        ChangeState(EnemyState.Idle);
+                    }
 
                     RaycastHit hit;
                     Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
@@ -164,19 +169,20 @@ namespace Enemy_AI
 
                 case EnemyState.Attacking:
                     agent.SetDestination(transform.position);
-                    RotateTo(currentTarget.gameObject);
 
                     if (currentTarget == null)
                     {
                         ChangeState(EnemyState.Idle);
                     }
-                    else if (currentTarget != null && currentTarget.GetComponent<CharacterManager>().isDead == true)
+                    else if (currentTarget.GetComponent<CharacterManager>().isDead == true)
                     {
                         currentTarget = null;
                         ChangeState(EnemyState.Idle);
                     }
                     else
                     {
+                        RotateTo(currentTarget.gameObject);
+
                         RaycastHit hit1;
                         Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit1, Mathf.Infinity, VisionMask);
                         if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit1.transform == currentTarget)

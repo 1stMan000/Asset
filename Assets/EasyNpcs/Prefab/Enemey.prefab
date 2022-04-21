@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 5604837293089633034}
   m_Layer: 8
   m_Name: Enemey
-  m_TagString: Npc
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

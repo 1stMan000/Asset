@@ -1,5 +1,4 @@
 ﻿using UnityEngine.Events;
-using TMPro;
 using UnityEngine;
 
 
@@ -21,17 +20,22 @@ public class NpcCanvas : MonoBehaviour
         updateText();
      
     }
+
     private void Start()
     {
         var parent = GetComponentInParent<NpcData>();
         if (parent == null)
+        {
             enabled = false;
+        }  
+        else
+        {
+            var data = parent.OnNpcDataInspectorChanged;
+            if (data == null)
+                data = new UnityEvent();
 
-        var data = parent.OnNpcDataInspectorChanged;
-        if (data == null)
-            data = new UnityEvent();
-
-        data.AddListener(updateText);
+            data.AddListener(updateText);
+        }
     }
 
     private void Update()
