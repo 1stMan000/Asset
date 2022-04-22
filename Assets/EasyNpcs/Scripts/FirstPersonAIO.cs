@@ -136,7 +136,6 @@ namespace PlayerController
 
         Vector3 lastPosition;
         Transform myTransform;
-        bool isMoving;
 
         #endregion
 
@@ -267,7 +266,6 @@ namespace PlayerController
 
             myTransform = transform;
             lastPosition = myTransform.position;
-            isMoving = false;
             #endregion
 
             #region Headbobbing Settings - Start
@@ -518,10 +516,6 @@ namespace PlayerController
                     jumpPowerInternal = jumpPower;
                 }
             }
-            if (System.Math.Round(myTransform.position.x, 2) != System.Math.Round(lastPosition.x, 2) || System.Math.Round(myTransform.position.z, 2) != System.Math.Round(lastPosition.z, 2))
-                isMoving = true;
-            else
-                isMoving = false;
 
             lastPosition = myTransform.position;
             #endregion
