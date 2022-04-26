@@ -8,10 +8,6 @@ public class Projectile : WhenAttacking
 
     Rigidbody rigidBody;
 
-    public float rotationSpeed = 0.5f;
-    public float GravityFactor = 3f;
-    public bool isFlying;
-
     [Range(20.0f, 75.0f)] public float LaunchAngle;
 
     private void Awake()
