@@ -68,7 +68,70 @@ ModelImporter:
     second: Armature|Weapon_draw_sword
   - first:
       74: 56641001084075258
-    second: Armature|Weapon_Run
+    second: Weapon_Run
+  - first:
+      74: 6686309997443928673
+    second: BasePose
+  - first:
+      74: -4628986537433637000
+    second: Bow_Aim_Idle
+  - first:
+      74: 2290340524974406348
+    second: Bow_Idle
+  - first:
+      74: 9164213041980346332
+    second: Bow_Shoot
+  - first:
+      74: -4740183880635623615
+    second: Default_Idle
+  - first:
+      74: -8257090529690435720
+    second: Default_IdleToCross
+  - first:
+      74: 4900019014661271833
+    second: Default_Walk
+  - first:
+      74: -4697540224086880788
+    second: Idle_Cross
+  - first:
+      74: -883832399359306296
+    second: PowerAttack_Charge_Sheild_1
+  - first:
+      74: 5070275108192051993
+    second: PowerAttack_Charge_Sheild_2
+  - first:
+      74: 8461580044461850848
+    second: PowerAttack_Charge_Sword_1
+  - first:
+      74: 5228808134708749769
+    second: PowerAttack_Charge_Sword_2
+  - first:
+      74: 622465896277310473
+    second: SheildBlock_Hit
+  - first:
+      74: 7458614256779686091
+    second: SheildBlock_Idle
+  - first:
+      74: 6639603621985872422
+    second: SheildBlock_Return
+  - first:
+      74: -2486285088249227254
+    second: SheildBlock_Stagger
+  - first:
+      74: 318147814696253186
+    second: SheildBlock_Start
+  - first:
+      74: 1970460594263377210
+    second: Sit
+  - first:
+      74: 1647972636331422352
+    second: Sword_attack1
+  - first:
+      74: 6742710293658367626
+    second: SwordSheild_attack1
+  - first:
+      74: 1416864990733997013
+    second: Weapon_draw_sword
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -98,7 +161,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|BasePose
+      name: BasePose
       takeName: Armature|BasePose
       internalID: 0
       firstFrame: 0
@@ -127,7 +190,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Bow_Aim_Idle
+      name: Bow_Aim_Idle
       takeName: Armature|Bow_Aim_Idle
       internalID: 0
       firstFrame: 0
@@ -156,7 +219,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Bow_Idle
+      name: Bow_Idle
       takeName: Armature|Bow_Idle
       internalID: 0
       firstFrame: 0
@@ -185,7 +248,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Bow_Shoot
+      name: Bow_Shoot
       takeName: Armature|Bow_Shoot
       internalID: 0
       firstFrame: 0
@@ -214,7 +277,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Default_Idle
+      name: Default_Idle
       takeName: Armature|Default_Idle
       internalID: 0
       firstFrame: 0
@@ -243,7 +306,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Default_IdleToCross
+      name: Default_IdleToCross
       takeName: Armature|Default_IdleToCross
       internalID: 0
       firstFrame: 0
@@ -272,7 +335,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Default_Walk
+      name: Default_Walk
       takeName: Armature|Default_Walk
       internalID: 0
       firstFrame: 0
@@ -301,7 +364,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Idle_Cross
+      name: Idle_Cross
       takeName: Armature|Idle_Cross
       internalID: 0
       firstFrame: 0
@@ -330,7 +393,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|PowerAttack_Charge_Sheild_1
+      name: PowerAttack_Charge_Sheild_1
       takeName: Armature|PowerAttack_Charge_Sheild_1
       internalID: 0
       firstFrame: 0
@@ -359,7 +422,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|PowerAttack_Charge_Sheild_2
+      name: PowerAttack_Charge_Sheild_2
       takeName: Armature|PowerAttack_Charge_Sheild_2
       internalID: 0
       firstFrame: 0
@@ -388,7 +451,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|PowerAttack_Charge_Sword_1
+      name: PowerAttack_Charge_Sword_1
       takeName: Armature|PowerAttack_Charge_Sword_1
       internalID: 0
       firstFrame: 0
@@ -417,7 +480,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|PowerAttack_Charge_Sword_2
+      name: PowerAttack_Charge_Sword_2
       takeName: Armature|PowerAttack_Charge_Sword_2
       internalID: 0
       firstFrame: 0
@@ -446,7 +509,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SheildBlock_Hit
+      name: SheildBlock_Hit
       takeName: Armature|SheildBlock_Hit
       internalID: 0
       firstFrame: 0
@@ -475,7 +538,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SheildBlock_Idle
+      name: SheildBlock_Idle
       takeName: Armature|SheildBlock_Idle
       internalID: 0
       firstFrame: 0
@@ -504,7 +567,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SheildBlock_Return
+      name: SheildBlock_Return
       takeName: Armature|SheildBlock_Return
       internalID: 0
       firstFrame: 0
@@ -533,7 +596,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SheildBlock_Stagger
+      name: SheildBlock_Stagger
       takeName: Armature|SheildBlock_Stagger
       internalID: 0
       firstFrame: 0
@@ -562,7 +625,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SheildBlock_Start
+      name: SheildBlock_Start
       takeName: Armature|SheildBlock_Start
       internalID: 0
       firstFrame: 0
@@ -591,7 +654,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Sit
+      name: Sit
       takeName: Armature|Sit
       internalID: 0
       firstFrame: 0
@@ -620,7 +683,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Sword_attack1
+      name: Sword_attack1
       takeName: Armature|Sword_attack1
       internalID: 0
       firstFrame: 0
@@ -649,7 +712,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|SwordSheild_attack1
+      name: SwordSheild_attack1
       takeName: Armature|SwordSheild_attack1
       internalID: 0
       firstFrame: 0
@@ -678,7 +741,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Weapon_draw_sword
+      name: Weapon_draw_sword
       takeName: Armature|Weapon_draw_sword
       internalID: 0
       firstFrame: 0
@@ -707,7 +770,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Weapon_Run
+      name: Weapon_Run
       takeName: Armature|Weapon_Run
       internalID: 0
       firstFrame: 0
