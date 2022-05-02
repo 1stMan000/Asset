@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System.IO;
-using TMPro;
-using UnityEditor;
 using DayandNight;
+using Text_Loader;
 
 namespace Npc_AI
 {
     public class NPC : NpcData, IDestructible
     {
-        //Navigation
+        Animator anim;
+
         public NavMeshAgent agent { get; private set; }
         public float movementSpeed;
 
@@ -29,28 +28,26 @@ namespace Npc_AI
         GameObject Talker;
         private TextMesh Text;
 
+        DayAndNightControl dayAndNightControl;
         public Behaviour workScript;
-
-        Animator anim;
 
         void Start()
         {
+            anim = GetComponentInChildren<Animator>();
             agent = GetComponent<NavMeshAgent>();
             Text = GetComponentInChildren<TextMesh>();
 
-            DayAndNightControl dayAndNightControl = FindObjectOfType<DayAndNightControl>();
+            dayAndNightControl = FindObjectOfType<DayAndNightControl>();
 
             if (dayAndNightControl != null)
             {
-                FindObjectOfType<DayAndNightControl>().OnMorningHandler += GoToWork;
-                FindObjectOfType<DayAndNightControl>().OnEveningHandler += GoHome;
+                dayAndNightControl.OnMorningHandler += GoToWork;
+                dayAndNightControl.OnEveningHandler += GoHome;
             }
             else
             {
                 Debug.Log("Add in dayAndNight control to scene for use of npc's life cycle");
             }
-
-            anim = GetComponentInChildren<Animator>();
         }
 
         void Update()
@@ -63,7 +60,7 @@ namespace Npc_AI
             WatchEnvironment();
         }
 
-        private void WatchEnvironment()
+        void WatchEnvironment()
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, VisionLayers);
 
@@ -90,9 +87,10 @@ namespace Npc_AI
             if (currentState == newState)
                 return;
 
-            NpcStates PrevState = currentState;
+            NpcStates prevState = currentState;
             currentState = newState;
-            OnStateChanged(PrevState, newState);
+
+            OnStateChanged(prevState, newState);
         }
 
         private void OnStateChanged(NpcStates prevState, NpcStates newState)
@@ -101,15 +99,18 @@ namespace Npc_AI
             switch (newState)
             {
                 case NpcStates.Scared:
-                    StartCoroutine(nameof(Run), Attacker);
+                    StartCoroutine(Run(Attacker));
                     break;
+
                 case NpcStates.GoingHome:
                     GoHome();
                     break;
+
                 case NpcStates.GoingToWork:
                     break;
+
                 case NpcStates.Idle:
-                    float time = FindObjectOfType<DayAndNightControl>().currentTime;
+                    float time = dayAndNightControl.currentTime;
                     if (time > .3f && time < .7f)
                     {
                         GoToWork();
@@ -119,15 +120,18 @@ namespace Npc_AI
                         GoHome();
                     }
                     break;
+
                 case NpcStates.Talking:
                     StartCoroutine(nameof(RotateTo), Talker);
                     break;
+
                 case NpcStates.Working:
                     if (workScript == null)
                         SetMoveTarget(work);
                     else
                         workScript.enabled = true;
                     break;
+
                 default: break;
             }
         }
@@ -467,6 +471,7 @@ namespace Npc_AI
         void OnDisable()
         {
             TurnOffBehaviour(currentState);
+            anim.SetFloat("Speed", 0);
         }
 
         private void OnEnable()

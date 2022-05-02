@@ -1,12 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class Dialogue : MonoBehaviour
 {
-    public TMP_Text DialogueText;
-    public TMP_Text _name;
+    [HideInInspector]
+    public Text npcName;
+    [HideInInspector]
+    public Text text;
+
+    [HideInInspector]
     public Button[] button;
+
+    private void Start()
+    {
+        npcName = transform.GetChild(0).GetComponent<Text>();
+        text = transform.GetChild(1).GetComponent<Text>();
+
+        button = new Button[4];
+        button[0] = transform.GetChild(2).GetComponent<Button>();
+        button[1] = transform.GetChild(3).GetComponent<Button>();
+        button[2] = transform.GetChild(4).GetComponent<Button>();
+        button[3] = transform.GetChild(5).GetComponent<Button>();
+    }
 }
