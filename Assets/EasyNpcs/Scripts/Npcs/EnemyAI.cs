@@ -27,7 +27,7 @@ namespace Enemy_AI
 
         public LayerMask VisionMask;
         public float VisionRange;
-        public LayerMask WhatCanThisEnemyAttack;
+        public LayerMask AttackableLayers;
         [TagSelector] public List<string> Tags;
         public List<string> Protects;
 
@@ -36,7 +36,7 @@ namespace Enemy_AI
 
         public float AttackDistance;
 
-        public int maximumAmountofAttackers = 1;
+        public int maximumAttackers = 1;
 
         [HideInInspector]
         public bool changingState = true;
@@ -206,22 +206,19 @@ namespace Enemy_AI
             List<Collider> possibleTargets = new List<Collider>();
 
             //Return all attackable target colliders in sphere
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, WhatCanThisEnemyAttack);
+            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, AttackableLayers);
 
             foreach (Collider col in cols)
             {
-                if (VisualiseAgentActions)
-                    Debug.DrawRay(transform.position, (col.transform.position - transform.position).normalized * VisionRange, Color.red);
-
                 //Make sure the collider is not owned by this Ai
                 if (col.transform == this.transform)
                     continue;
 
                 //Check if AI can see the target 
-                if (Physics.Linecast(transform.position, col.transform.position, out RaycastHit hit, VisionMask))
+                if (Physics.Linecast(transform.position + Vector3.up * 2, col.transform.position + Vector3.up * 2, out RaycastHit hit, VisionMask))
                 {
                     if (hit.collider != col)
-                        continue;
+                         return null;
                 }
                 else
                     continue;
@@ -258,6 +255,7 @@ namespace Enemy_AI
                         {
                             combatBases[a] = combatBases[a + 1]; //Moving elements downwards, to fill the gap at [index]
                         }
+
                         System.Array.Resize(ref combatBases, combatBases.Length - 1);
                     }
                 }
@@ -271,7 +269,7 @@ namespace Enemy_AI
                     }
                 }
 
-                if (howmanyTarget < maximumAmountofAttackers)
+                if (howmanyTarget < maximumAttackers)
                 {
                     return nearestTarget.transform;
                 }
@@ -302,6 +300,11 @@ namespace Enemy_AI
         void Attack(GameObject target)
         {
             anim.SetTrigger("Attack");
+        }
+
+        public void WhenAttacking(GameObject attacker)
+        {
+            AttackTarget(attacker);
         }
 
         void ChangeState(EnemyState state)
@@ -376,30 +379,6 @@ namespace Enemy_AI
             ChangeState(EnemyState.Idle);
         }
 
-        void OnDrawGizmosSelected()
-        {
-            if (VisualiseAgentActions)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(transform.position, VisionRange);
-            }
-        }
-
-        public void WhenAttacking(GameObject attacker)
-        {
-            AttackTarget(attacker);
-        }
-
-        public void OnAttack(GameObject attacker, Attack attack)
-        {
-            currentTarget = attacker.transform;
-        }
-
-        public void OnDestruction(GameObject destroyer)
-        {
-            enabled = false;
-        }
-
         //Check environment to protect if another is being attacked
         private void WatchEnvironment()
         {
@@ -430,6 +409,25 @@ namespace Enemy_AI
             Vector3 direction = new Vector3(target.transform.position.x - transform.position.x, 0f, target.transform.position.z - transform.position.z);
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 2 / (Quaternion.Angle(transform.rotation, lookRotation) / agent.angularSpeed));
+        }
+
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            currentTarget = attacker.transform;
+        }
+
+        public void OnDestruction(GameObject destroyer)
+        {
+            enabled = false;
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (VisualiseAgentActions)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(transform.position, VisionRange);
+            }
         }
     }
 }

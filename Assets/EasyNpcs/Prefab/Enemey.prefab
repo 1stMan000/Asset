@@ -33,6 +33,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5604837295067834896}
   - {fileID: 6795209965344229559}
@@ -129,18 +130,18 @@ MonoBehaviour:
   VisualiseAgentActions: 0
   VisionMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   VisionRange: 10
-  WhatCanThisEnemyAttack:
+  AttackableLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   Tags:
   - Npc
   Protects: []
   CurrentState: 0
   currentTarget: {fileID: 0}
   AttackDistance: 1
-  maximumAmountofAttackers: 1
+  maximumAttackers: 1
   changingState: 1
   assignedWeapon: 0
   projectile: {fileID: 0}
@@ -200,6 +201,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5604837295067834896}
   m_RootOrder: 0
@@ -228,6 +230,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -310,6 +313,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5604837294442777671}
   m_Father: {fileID: 5604837293089633043}

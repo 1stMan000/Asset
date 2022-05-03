@@ -6,20 +6,17 @@ using Player_Actions;
 
 public class DialogueManager : MonoBehaviour
 {
-    Camera dialogueCamera;
-
     GameObject player;
-    FirstPersonAIO firstPersonAIO;
     PlayerActions playerActions;
+
+    Dialogue Buttons_And_Dialogues;
 
     // Start is called before the first frame update
     void Start()
     {
-        dialogueCamera = GetComponentInChildren<Camera>();
-
         player = GameObject.FindWithTag("Player");
-        firstPersonAIO = player.GetComponent<FirstPersonAIO>();
         playerActions = player.GetComponent<PlayerActions>();
+        Buttons_And_Dialogues = playerActions.dialogueWindow.GetComponent<Dialogue>();
 
         rotateTo = false;
     }
@@ -38,6 +35,8 @@ public class DialogueManager : MonoBehaviour
     public void ActivateDialogue()
     {
         rotateTo = true;
+
+
     }
 
     void RotateTo(GameObject target)

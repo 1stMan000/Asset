@@ -177,7 +177,8 @@ namespace PlayerController
         #endregion
 
         private Animator anim;
-        public CharacterManager stats;
+        private CharacterManager stats;
+
         public float attackCooldown = 0f;
 
         private void Awake()

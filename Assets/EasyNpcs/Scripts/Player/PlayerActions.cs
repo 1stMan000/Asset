@@ -1,8 +1,8 @@
-using System.Collections;
 using UnityEngine;
 using Npc_Manager;
 using Npc_AI;
 using Enemy_AI;
+using PlayerController;
 
 namespace Player_Actions
 {
@@ -79,6 +79,8 @@ namespace Player_Actions
 
             currentNpc = npc;
             currentNpc.GetComponent<DialogueManager>().ActivateDialogue();
+
+            GetComponent<FirstPersonAIO>().playerCanMove = false;
         }
     }
 }
