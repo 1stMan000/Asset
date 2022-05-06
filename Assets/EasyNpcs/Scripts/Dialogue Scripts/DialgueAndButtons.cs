@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Dialogue : MonoBehaviour
+public class DialgueAndButtons : MonoBehaviour
 {
     [HideInInspector]
     public Text npcName;

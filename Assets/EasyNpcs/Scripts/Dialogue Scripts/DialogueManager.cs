@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.AI;
-using PlayerController;
 using Player_Actions;
 
 public class DialogueManager : MonoBehaviour
@@ -9,14 +6,14 @@ public class DialogueManager : MonoBehaviour
     GameObject player;
     PlayerActions playerActions;
 
-    Dialogue Buttons_And_Dialogues;
+    DialgueAndButtons Buttons_And_Dialogues;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         playerActions = player.GetComponent<PlayerActions>();
-        Buttons_And_Dialogues = playerActions.dialogueWindow.GetComponent<Dialogue>();
+        Buttons_And_Dialogues = playerActions.dialogueWindow.GetComponent<DialgueAndButtons>();
 
         rotateTo = false;
     }
@@ -32,11 +29,9 @@ public class DialogueManager : MonoBehaviour
     
     bool rotateTo = false;
 
-    public void ActivateDialogue()
+    public void RotateToPlayer()
     {
         rotateTo = true;
-
-
     }
 
     void RotateTo(GameObject target)

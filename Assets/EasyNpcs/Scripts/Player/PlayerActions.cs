@@ -18,6 +18,7 @@ namespace Player_Actions
         public bool isInteracting;
 
         GameObject currentNpc;
+        DialogueManager Npc_Dialogue;
 
         private void Start()
         {
@@ -27,18 +28,25 @@ namespace Player_Actions
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(InteractButton) && !isInteracting)
+            if (Input.GetKeyDown(InteractButton))
             {
-                if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
+                if (!isInteracting)
                 {
-                    GameObject npc = hit.transform.gameObject;
-                    if (npc.GetComponentInParent<CharacterManager>() != null)
+                    if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                     {
-                        if (!npc.GetComponentInParent<CharacterManager>().isDead)
+                        GameObject npc = hit.transform.gameObject;
+                        if (npc.GetComponentInParent<CharacterManager>() != null)
                         {
-                            StartConversation(npc);
+                            if (!npc.GetComponentInParent<CharacterManager>().isDead)
+                            {
+                                StartConversation(npc);
+                            }
                         }
                     }
+                }
+                else
+                {
+                    PressSpeakButton();
                 }
             }
         }
@@ -49,7 +57,8 @@ namespace Player_Actions
             {
                 return;
             }
-            
+            Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
+
             if (npc.GetComponentInParent<NPC>() != null)
             {
                 NPC npcAI = npc.GetComponentInParent<NPC>();
@@ -77,10 +86,20 @@ namespace Player_Actions
             isInteracting = true;
             dialogueWindow.SetActive(true);
 
-            currentNpc = npc;
-            currentNpc.GetComponent<DialogueManager>().ActivateDialogue();
+            FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
+            firstPersonAIO.playerCanMove = false;
+            firstPersonAIO.lockAndHideCursor = false;
+            firstPersonAIO.enableCameraMovement = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
-            GetComponent<FirstPersonAIO>().playerCanMove = false;
+            currentNpc = npc;
+            currentNpc.GetComponent<DialogueManager>().RotateToPlayer();
+        }
+
+        void PressSpeakButton()
+        {
+
         }
     }
 }
