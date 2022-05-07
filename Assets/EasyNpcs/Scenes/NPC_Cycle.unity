@@ -1293,6 +1293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f473c7a8ab7e1484285cb6e61fc68f4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentSentence: {fileID: 11400000, guid: 6f83adb61283b1948b5af0272b854def, type: 2}
 --- !u!1 &1063578459
 GameObject:
   m_ObjectHideFlags: 0

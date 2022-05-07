@@ -17,7 +17,6 @@ namespace Player_Actions
         [HideInInspector]
         public bool isInteracting;
 
-        GameObject currentNpc;
         DialogueManager Npc_Dialogue;
 
         private void Start()
@@ -93,13 +92,17 @@ namespace Player_Actions
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            currentNpc = npc;
-            currentNpc.GetComponent<DialogueManager>().RotateToPlayer();
+            Npc_Dialogue.RotateToPlayer();
+            Debug.Log(dialogueWindow.GetComponent<TextAndButtons>().text);
+            dialogueWindow.GetComponent<TextAndButtons>().text.text = Npc_Dialogue.currentSentence.npcText;
         }
 
         void PressSpeakButton()
         {
-
+            if (Npc_Dialogue.currentSentence.npcText != null)
+            {
+                dialogueWindow.GetComponent<TextAndButtons>().text.text = Npc_Dialogue.currentSentence.npcText;
+            }
         }
     }
 }

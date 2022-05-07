@@ -3,17 +3,19 @@ using Player_Actions;
 
 public class DialogueManager : MonoBehaviour
 {
+    public Sentence currentSentence;
+
     GameObject player;
     PlayerActions playerActions;
 
-    DialgueAndButtons Buttons_And_Dialogues;
+    TextAndButtons Buttons_And_Dialogues;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         playerActions = player.GetComponent<PlayerActions>();
-        Buttons_And_Dialogues = playerActions.dialogueWindow.GetComponent<DialgueAndButtons>();
+        Buttons_And_Dialogues = playerActions.dialogueWindow.GetComponent<TextAndButtons>();
 
         rotateTo = false;
     }

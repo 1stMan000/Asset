@@ -25,7 +25,7 @@ namespace Npc_AI
         private float runTimeLeft;
 
         //NPC-NPC interaction
-        GameObject ConversationBuddy;
+        GameObject conversationBuddy;
         private TextMesh Text;
 
         DayAndNightControl dayAndNightControl;
@@ -66,7 +66,7 @@ namespace Npc_AI
 
             foreach (Collider col in cols)
             {
-                if (col.gameObject.GetComponent<NPC>()) // If the NPC is looking at another attacked NPC, run
+                if (col.gameObject.GetComponent<NPC>()) 
                 {
                     NPC npc = col.gameObject.GetComponent<NPC>();
                     if (npc.isAttacked)
@@ -122,7 +122,7 @@ namespace Npc_AI
                     break;
 
                 case NpcStates.Talking:
-                    StartCoroutine(nameof(RotateTo), ConversationBuddy);
+                    StartCoroutine(nameof(RotateTo), conversationBuddy);
                     break;
 
                 case NpcStates.Working:
@@ -234,59 +234,36 @@ namespace Npc_AI
             control.OnEveningHandler -= GoHome;
         }
 
-        public void StartConversation(bool IsFirst, GameObject talker, Tuple<List<string>, List<string>> ForcedConverstion = null)
+        public void StartConversation(bool isFirst, GameObject talker, Tuple<List<string>, List<string>> forcedConverstion = null)
         {
-            StartCoroutine(nameof(Conversation), new object[] { IsFirst, talker, ForcedConverstion });
+            Conversation(new object[] { isFirst, talker, forcedConverstion });
         }
 
-        public void StartConversation(bool IsFirst, GameObject talker)
+        public void StartConversation(bool isFirst, GameObject talker)
         {
-            StartCoroutine(nameof(Conversation), new object[] { IsFirst, talker});
+            Conversation(new object[] { isFirst, talker });
         }
 
-        IEnumerator Conversation(object[] parameters)
+        void Conversation(object[] isFirst_talker_forcedConversation)
         {
-            bool IsFirstInConversation = (bool)parameters[0];
-            ConversationBuddy = (GameObject)parameters[1];
+            bool IsFirstInConversation = (bool)isFirst_talker_forcedConversation[0];
+            conversationBuddy = (GameObject)isFirst_talker_forcedConversation[1];
 
-            Tuple<List<string>, List<string>> ConversationToSpeak = null;
-            if (ForcedConversationExists(parameters))
+            Tuple<List<string>, List<string>> conversationToSpeak = null;
+            if (ForcedConversationExists(isFirst_talker_forcedConversation))
             {
-                ConversationToSpeak = (Tuple<List<string>, List<string>>)parameters[2];
+                conversationToSpeak = (Tuple<List<string>, List<string>>)isFirst_talker_forcedConversation[2];
             }
 
             if (IsFirstInConversation)
             {
-                var ComponentOfBuddy = ConversationBuddy.GetComponent<NPC>();
-                
-                // If text is not given, get text from the Text Loader script 
-                if (!ForcedConversationExists(parameters))
-                {
-                    Job[] jobs = { job, ComponentOfBuddy.job };
-                    Gender[] genders = { Gender, ComponentOfBuddy.Gender };
-                    ConversationToSpeak = TextLoader.GetDialgoue(genders, jobs);
-                }
-                if (ConversationToSpeak == null)
-                {
-                    yield break;
-                }
-
-                ChangeState(NpcStates.Talking);
-                agent.SetDestination(ComponentOfBuddy.transform.position);
-
-                ComponentOfBuddy.ConversationBuddy = gameObject;
-                ComponentOfBuddy.ChangeState(NpcStates.Talking);
-
-                StartSpeaking(ConversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
-                ComponentOfBuddy.Text.text = null;
-                yield return new WaitForSeconds(4);
-                ComponentOfBuddy.StartSpeaking(ConversationToSpeak.Item2);
+                StartCoroutine(FirstStartOfConversation(isFirst_talker_forcedConversation, conversationToSpeak));
             }
         }
 
-        bool ForcedConversationExists(object[] parameters)
+        bool ForcedConversationExists(object[] isFirst_talker_forcedConversation)
         {
-            if (parameters.Length > 2)
+            if (isFirst_talker_forcedConversation.Length > 2)
             {
                 return true;
             }
@@ -294,6 +271,40 @@ namespace Npc_AI
             {
                 return false;
             }
+        }
+
+        IEnumerator FirstStartOfConversation(object[] isFirst_talker_forcedConversation, Tuple<List<string>, List<string>> conversationToSpeak)
+        {
+            var componentOfBuddy = conversationBuddy.GetComponent<NPC>();
+
+            // If text is not given, get text from the Text Loader script 
+            if (!ForcedConversationExists(isFirst_talker_forcedConversation))
+            {
+                conversationToSpeak = ChooseConversation(componentOfBuddy);
+            }
+            if (conversationToSpeak == null)
+            {
+                yield break;
+            }
+
+            ChangeState(NpcStates.Talking);
+            agent.SetDestination(componentOfBuddy.transform.position);
+
+            componentOfBuddy.conversationBuddy = gameObject;
+            componentOfBuddy.ChangeState(NpcStates.Talking);
+
+            StartSpeaking(conversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
+            componentOfBuddy.Text.text = null;
+            yield return new WaitForSeconds(4);
+            componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
+        }
+
+        Tuple<List<string>, List<string>> ChooseConversation(NPC componentOfBuddy)
+        {
+            Job[] jobs = { job, componentOfBuddy.job };
+            Gender[] genders = { Gender, componentOfBuddy.Gender };
+
+            return TextLoader.GetDialgoue(genders, jobs);
         }
 
         public void StartSpeaking(List<string> text, int waitSeconds = 0)
@@ -335,10 +346,10 @@ namespace Npc_AI
             StopCoroutine(nameof(RotateTo));
             StopCoroutine(nameof(Talk));
 
-            NPC npc = ConversationBuddy.GetComponent<NPC>();
+            NPC npc = conversationBuddy.GetComponent<NPC>();
             if (changeState == true)
                 npc.ChangeState(NpcStates.Idle);
-            ConversationBuddy = null;
+            conversationBuddy = null;
 
             GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
         }
