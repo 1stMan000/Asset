@@ -1,25 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class TextAndButtons : MonoBehaviour
 {
     [HideInInspector]
-    public Text npcName;
-    [HideInInspector]
-    public Text text;
+    public GameObject text;
 
     [HideInInspector]
-    public Button[] button;
+    public GameObject[] buttons;
 
     private void Awake()
     {
-        npcName = transform.GetChild(0).GetComponent<Text>();
-        text = transform.GetChild(1).GetComponent<Text>();
+        text = transform.GetChild(0).gameObject;
         
-        button = new Button[4];
-        button[0] = transform.GetChild(2).GetComponent<Button>();
-        button[1] = transform.GetChild(3).GetComponent<Button>();
-        button[2] = transform.GetChild(4).GetComponent<Button>();
-        button[3] = transform.GetChild(5).GetComponent<Button>();
+        buttons = new GameObject[4];
+        buttons[0] = transform.GetChild(1).gameObject;
+        buttons[1] = transform.GetChild(2).gameObject;
+        buttons[2] = transform.GetChild(3).gameObject;
+        buttons[3] = transform.GetChild(4).gameObject;
     }
 }

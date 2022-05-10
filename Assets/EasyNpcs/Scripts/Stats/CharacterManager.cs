@@ -21,7 +21,24 @@ namespace Npc_Manager
             currentHealth.SetValue(maxHealth.GetValue());
         }
 
-        public void TakeDamage(GameObject attacker, float damage)
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            TakeDamage(attacker, attack.Damage);
+
+            if (GetCurrentHealth().GetValue() <= 0)
+            {
+                if (gameObject.layer == 8)
+                {
+                    IDestructible[] destructibles = GetComponents<IDestructible>();
+                    foreach (IDestructible destructible in destructibles)
+                    {
+                        destructible.OnDestruction(attacker);
+                    }
+                }
+            }
+        }
+
+        void TakeDamage(GameObject attacker, float damage)
         {
             Debug.Log("attacked" + damage + this.gameObject);
             if (damage <= 0f) return;
@@ -49,23 +66,6 @@ namespace Npc_Manager
         public Stat GetMaxHealth()
         {
             return maxHealth;
-        }
-
-        public void OnAttack(GameObject attacker, Attack attack)
-        {
-            TakeDamage(attacker, attack.Damage);
-
-            if (GetCurrentHealth().GetValue() <= 0)
-            {
-                if (gameObject.layer == 8)
-                {
-                    IDestructible[] destructibles = GetComponents<IDestructible>();
-                    foreach (IDestructible destructible in destructibles)
-                    {
-                        destructible.OnDestruction(attacker);
-                    }
-                }
-            }
         }
 
         public void OnDestruction(GameObject destroyer)

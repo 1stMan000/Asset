@@ -52,12 +52,15 @@ namespace Npc_AI
 
         void Update()
         {
-            //Decrease run time after hit
+            Idle_Walk_Run_BlendAnim();
+            WatchEnvironment();
+        }
+
+        void Idle_Walk_Run_BlendAnim()
+        {
             if (runTimeLeft > 0)
                 runTimeLeft -= Time.deltaTime;
             anim.SetFloat("Speed", agent.velocity.magnitude);
-
-            WatchEnvironment();
         }
 
         void WatchEnvironment()
@@ -154,7 +157,7 @@ namespace Npc_AI
                         workScript.enabled = false;
                     break;
                 case NpcStates.Talking:
-                    EndConversation(false);
+                    EndConversation();
                     break;
                 default:
                     break;
@@ -208,13 +211,6 @@ namespace Npc_AI
             StartCoroutine(GoHomeCoroutine());
         }
 
-        void StopGoingHome()
-        {
-            if (agent.isActiveAndEnabled)
-                agent.ResetPath();
-            StopCoroutine(GoHomeCoroutine());
-        }
-
         IEnumerator GoHomeCoroutine()
         {
             agent.speed = movementSpeed;
@@ -227,21 +223,16 @@ namespace Npc_AI
                 ChangeState(NpcStates.Idle);
         }
 
-        private void OnDestroy()
+        void StopGoingHome()
         {
-            DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
-            control.OnMorningHandler -= GoToWork;
-            control.OnEveningHandler -= GoHome;
+            if (agent.isActiveAndEnabled)
+                agent.ResetPath();
+            StopCoroutine(GoHomeCoroutine());
         }
 
         public void StartConversation(bool isFirst, GameObject talker, Tuple<List<string>, List<string>> forcedConverstion = null)
         {
             Conversation(new object[] { isFirst, talker, forcedConverstion });
-        }
-
-        public void StartConversation(bool isFirst, GameObject talker)
-        {
-            Conversation(new object[] { isFirst, talker });
         }
 
         void Conversation(object[] isFirst_talker_forcedConversation)
@@ -263,7 +254,7 @@ namespace Npc_AI
 
         bool ForcedConversationExists(object[] isFirst_talker_forcedConversation)
         {
-            if (isFirst_talker_forcedConversation.Length > 2)
+            if (isFirst_talker_forcedConversation[2] != null)
             {
                 return true;
             }
@@ -282,21 +273,20 @@ namespace Npc_AI
             {
                 conversationToSpeak = ChooseConversation(componentOfBuddy);
             }
+
             if (conversationToSpeak == null)
             {
                 yield break;
             }
 
-            ChangeState(NpcStates.Talking);
-            agent.SetDestination(componentOfBuddy.transform.position);
-
-            componentOfBuddy.conversationBuddy = gameObject;
-            componentOfBuddy.ChangeState(NpcStates.Talking);
+            Change_This_Buddy_toTalkingState(componentOfBuddy);
 
             StartSpeaking(conversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
             componentOfBuddy.Text.text = null;
             yield return new WaitForSeconds(4);
-            componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
+
+            if (currentState != NpcStates.Scared)
+                componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
         }
 
         Tuple<List<string>, List<string>> ChooseConversation(NPC componentOfBuddy)
@@ -305,6 +295,15 @@ namespace Npc_AI
             Gender[] genders = { Gender, componentOfBuddy.Gender };
 
             return TextLoader.GetDialgoue(genders, jobs);
+        }
+
+        void Change_This_Buddy_toTalkingState(NPC componentOfBuddy)
+        {
+            ChangeState(NpcStates.Talking);
+            agent.SetDestination(componentOfBuddy.transform.position);
+
+            componentOfBuddy.conversationBuddy = gameObject;
+            componentOfBuddy.ChangeState(NpcStates.Talking);
         }
 
         public void StartSpeaking(List<string> text, int waitSeconds = 0)
@@ -339,16 +338,12 @@ namespace Npc_AI
         }
 
         //Stops conversation and removes all behaviours from it
-        public void EndConversation(bool changeState = true)
+        public void EndConversation()
         {
             agent.isStopped = false;
-            StopCoroutine(nameof(Conversation));
             StopCoroutine(nameof(RotateTo));
             StopCoroutine(nameof(Talk));
 
-            NPC npc = conversationBuddy.GetComponent<NPC>();
-            if (changeState == true)
-                npc.ChangeState(NpcStates.Idle);
             conversationBuddy = null;
 
             GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
@@ -496,6 +491,13 @@ namespace Npc_AI
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
                 yield return new WaitForEndOfFrame();
             } while (true);
+        }
+
+        void OnDestroy()
+        {
+            DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
+            control.OnMorningHandler -= GoToWork;
+            control.OnEveningHandler -= GoHome;
         }
 
         void OnDisable()

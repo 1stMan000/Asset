@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Npc_Manager;
 using Npc_AI;
 using Enemy_AI;
@@ -12,6 +13,8 @@ namespace Player_Actions
         public GameObject dialogueWindow;
         public KeyCode InteractButton = KeyCode.E;
 
+        TextAndButtons textAndButtons;
+
         public LayerMask mask;
 
         [HideInInspector]
@@ -22,6 +25,7 @@ namespace Player_Actions
         private void Start()
         {
             isInteracting = false;
+            textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
         }
 
         // Update is called once per frame
@@ -29,23 +33,45 @@ namespace Player_Actions
         {
             if (Input.GetKeyDown(InteractButton))
             {
-                if (!isInteracting)
+                OpenOrCloseDialogue();
+            }
+
+            if (isInteracting && Input.GetMouseButtonDown(0))
+            {
+                if (Npc_Dialogue.currentSentence.nextSentence != null)
                 {
-                    if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
+                    Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
+                    textAndButtons.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+                }
+                else if (Npc_Dialogue.currentSentence.choices != null)
+                {
+                    textAndButtons.text.SetActive(false);
+
+                    int choiceNum = 0;
+                    foreach (GameObject button in textAndButtons.buttons)
                     {
-                        GameObject npc = hit.transform.gameObject;
-                        if (npc.GetComponentInParent<CharacterManager>() != null)
-                        {
-                            if (!npc.GetComponentInParent<CharacterManager>().isDead)
-                            {
-                                StartConversation(npc);
-                            }
-                        }
+                        button.SetActive(true);
+                        button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
+                        choiceNum++;
                     }
                 }
-                else
+            }
+        }
+
+        void OpenOrCloseDialogue()
+        {
+            if (!isInteracting)
+            {
+                if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                 {
-                    PressSpeakButton();
+                    GameObject npc = hit.transform.gameObject;
+                    if (npc.GetComponentInParent<CharacterManager>() != null)
+                    {
+                        if (!npc.GetComponentInParent<CharacterManager>().isDead)
+                        {
+                            StartConversation(npc);
+                        }
+                    }
                 }
             }
         }
@@ -92,17 +118,8 @@ namespace Player_Actions
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            Npc_Dialogue.RotateToPlayer();
-            Debug.Log(dialogueWindow.GetComponent<TextAndButtons>().text);
-            dialogueWindow.GetComponent<TextAndButtons>().text.text = Npc_Dialogue.currentSentence.npcText;
-        }
-
-        void PressSpeakButton()
-        {
-            if (Npc_Dialogue.currentSentence.npcText != null)
-            {
-                dialogueWindow.GetComponent<TextAndButtons>().text.text = Npc_Dialogue.currentSentence.npcText;
-            }
+            Npc_Dialogue.enabled = true;
+            dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
         }
     }
 }
