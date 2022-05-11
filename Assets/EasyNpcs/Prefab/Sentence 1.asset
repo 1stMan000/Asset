@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Sentence 1
   m_EditorClassIdentifier: 
   playerText: Fuck you
-  npcText: 
+  npcText: Fuck off
   nextSentence: {fileID: 0}
   choices: []

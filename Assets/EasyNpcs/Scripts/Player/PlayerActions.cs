@@ -41,7 +41,7 @@ namespace Player_Actions
                 if (Npc_Dialogue.currentSentence.nextSentence != null)
                 {
                     Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
-                    textAndButtons.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+                    textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
                 else if (Npc_Dialogue.currentSentence.choices != null)
                 {
@@ -120,6 +120,18 @@ namespace Player_Actions
 
             Npc_Dialogue.enabled = true;
             dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        public void PressButton0()
+        {
+            foreach (GameObject button in textAndButtons.buttons)
+            {
+                button.SetActive(false);
+            }
+            textAndButtons.text.SetActive(true);
+
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[0];
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
         }
     }
 }

@@ -232,23 +232,44 @@ namespace Npc_AI
 
         public void StartConversation(bool isFirst, GameObject talker, Tuple<List<string>, List<string>> forcedConverstion = null)
         {
-            Conversation(new object[] { isFirst, talker, forcedConverstion });
+            Ready_For_Conversation(new object[] { isFirst, talker, forcedConverstion });
         }
 
-        void Conversation(object[] isFirst_talker_forcedConversation)
+        void Ready_For_Conversation(object[] isFirst_talker_forcedConversation)
         {
             bool IsFirstInConversation = (bool)isFirst_talker_forcedConversation[0];
             conversationBuddy = (GameObject)isFirst_talker_forcedConversation[1];
-
             Tuple<List<string>, List<string>> conversationToSpeak = null;
-            if (ForcedConversationExists(isFirst_talker_forcedConversation))
-            {
-                conversationToSpeak = (Tuple<List<string>, List<string>>)isFirst_talker_forcedConversation[2];
-            }
 
             if (IsFirstInConversation)
             {
-                StartCoroutine(FirstStartOfConversation(isFirst_talker_forcedConversation, conversationToSpeak));
+                Initialize_Or_Find_Conversation(isFirst_talker_forcedConversation, conversationToSpeak);
+            }
+        }
+
+        void Initialize_Or_Find_Conversation(object[] isFirst_talker_forcedConversation, Tuple<List<string>, List<string>> conversationToSpeak)
+        {
+            conversationToSpeak = Check_ForcedConversation_And_Choose(isFirst_talker_forcedConversation);
+            if (conversationToSpeak != null)
+            {
+                var componentOfBuddy = conversationBuddy.GetComponent<NPC>();
+                Change_Buddy_toTalkingState(componentOfBuddy);
+
+                object[] componentOfBuddy_conversationToSpeak = { componentOfBuddy, conversationToSpeak };
+                StartCoroutine(nameof(Speak_First_Lines), componentOfBuddy_conversationToSpeak);
+            }
+        }
+
+        Tuple<List<string>, List<string>> Check_ForcedConversation_And_Choose(object[] isFirst_talker_forcedConversation)
+        {
+            // If text is not given, get text from the Text Loader script 
+            if (!ForcedConversationExists(isFirst_talker_forcedConversation))
+            {
+                return ChooseConversation(conversationBuddy.GetComponent<NPC>());
+            }
+            else
+            {
+                return (Tuple<List<string>, List<string>>)isFirst_talker_forcedConversation[2];
             }
         }
 
@@ -264,31 +285,6 @@ namespace Npc_AI
             }
         }
 
-        IEnumerator FirstStartOfConversation(object[] isFirst_talker_forcedConversation, Tuple<List<string>, List<string>> conversationToSpeak)
-        {
-            var componentOfBuddy = conversationBuddy.GetComponent<NPC>();
-
-            // If text is not given, get text from the Text Loader script 
-            if (!ForcedConversationExists(isFirst_talker_forcedConversation))
-            {
-                conversationToSpeak = ChooseConversation(componentOfBuddy);
-            }
-
-            if (conversationToSpeak == null)
-            {
-                yield break;
-            }
-
-            Change_This_Buddy_toTalkingState(componentOfBuddy);
-
-            StartSpeaking(conversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
-            componentOfBuddy.Text.text = null;
-            yield return new WaitForSeconds(4);
-
-            if (currentState != NpcStates.Scared)
-                componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
-        }
-
         Tuple<List<string>, List<string>> ChooseConversation(NPC componentOfBuddy)
         {
             Job[] jobs = { job, componentOfBuddy.job };
@@ -297,13 +293,24 @@ namespace Npc_AI
             return TextLoader.GetDialgoue(genders, jobs);
         }
 
-        void Change_This_Buddy_toTalkingState(NPC componentOfBuddy)
+        void Change_Buddy_toTalkingState(NPC componentOfBuddy)
         {
             ChangeState(NpcStates.Talking);
             agent.SetDestination(componentOfBuddy.transform.position);
 
             componentOfBuddy.conversationBuddy = gameObject;
             componentOfBuddy.ChangeState(NpcStates.Talking);
+        }
+
+        IEnumerator Speak_First_Lines(object[] componentOfBuddy_conversationToSpeak)
+        {
+            Tuple<List<string>, List<string>> conversationToSpeak = (Tuple<List<string>, List<string>>)componentOfBuddy_conversationToSpeak[1];
+            StartSpeaking(conversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
+            yield return new WaitForSeconds(4);
+
+            NPC componentOfBuddy = (NPC)componentOfBuddy_conversationToSpeak[0];
+            if (currentState != NpcStates.Scared)
+                componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
         }
 
         public void StartSpeaking(List<string> text, int waitSeconds = 0)
