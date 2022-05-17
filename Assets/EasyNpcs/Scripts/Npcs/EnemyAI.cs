@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Enemy_AI
                 "This is an optional field")]
         public Collider PatrolArea;
         [HideInInspector]
-        public Transform attackPoint; //Npc attacks enemies while going to area 
+        public Transform attackPoint; 
 
         public bool VisualiseAgentActions;
 
@@ -89,9 +90,7 @@ namespace Enemy_AI
 
             ManageState();
             WatchEnvironment();
-
-            if (CurrentState == EnemyState.Attacking)
-                RotateTo(currentTarget.gameObject);
+            RotateToTarget_WhenAttacking();
 
             #region Editor Only
 #if UNITY_EDITOR
@@ -103,43 +102,16 @@ namespace Enemy_AI
             #endregion
         }
 
-        void ManageState() //Checks which is the current state and makes the Ai do the chosen behaviours every Update
+        void ManageState()
         {
             switch (CurrentState)
             {
-                case EnemyState.Patroling:
-                    if (currentTarget == null)
-                    {
-                        Transform target = CheckForTargets(); //Find new target and start chasing it, else patrol
-                        if (target != null)
-                        {
-                            currentTarget = target;
-                            ChangeState(EnemyState.Chasing);
-
-                            return;
-                        }
-
-                        if (agent.remainingDistance <= agent.stoppingDistance)
-                        {
-                            ChangeState(EnemyState.Idle);
-                        }
-                    }
-                    else
-                    {
-                        ChangeState(EnemyState.Chasing);
-                    }
+                case EnemyState.Patrol:
+                    OnPatrol();
                     break;
 
                 case EnemyState.Idle:
-                    agent.speed = 2;
-                    if (attackPoint == null) //AttackPoint is the point will go to while attacking any enemies along the way.
-                    {
-                        PatrolToAnotherSpot();
-                    }
-                    else
-                    {
-                        ChangeState(EnemyState.Patroling);
-                    }
+                    OnIdle();
                     break;
 
                 case EnemyState.Chasing:
@@ -154,12 +126,19 @@ namespace Enemy_AI
                         currentTarget = null;
                         ChangeState(EnemyState.Idle);
                     }
-
+                    
                     RaycastHit hit;
                     Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
-                    if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit.transform == currentTarget)
+                    if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
                     {
-                        ChangeState(EnemyState.Attacking);
+                        if (hit.transform == currentTarget)
+                        {
+                            ChangeState(EnemyState.Attacking);
+                        }
+                        else
+                        {
+                            StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
+                        }
                     }
                     else
                     {
@@ -181,8 +160,6 @@ namespace Enemy_AI
                     }
                     else
                     {
-                        RotateTo(currentTarget.gameObject);
-
                         RaycastHit hit1;
                         Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit1, Mathf.Infinity, VisionMask);
                         if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit1.transform == currentTarget)
@@ -201,39 +178,43 @@ namespace Enemy_AI
             }
         }
 
-        Transform CheckForTargets()
+        void OnPatrol()
         {
-            List<Collider> possibleTargets = new List<Collider>();
-
-            //Return all attackable target colliders in sphere
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, AttackableLayers);
-
-            foreach (Collider col in cols)
+            if (currentTarget == null)
             {
-                //Make sure the collider is not owned by this Ai
-                if (col.transform == this.transform)
-                    continue;
+                TryToFindTarget();
+            }
+            else
+            {
+                ChangeState(EnemyState.Chasing);
+            }
+        }
 
-                //Check if AI can see the target 
-                if (Physics.Linecast(transform.position + Vector3.up * 2, col.transform.position + Vector3.up * 2, out RaycastHit hit, VisionMask))
-                {
-                    if (hit.collider != col)
-                         return null;
-                }
-                else
-                    continue;
+        void TryToFindTarget()
+        {
+            Transform target = CheckForTargets(); 
+            if (target != null)
+            {
+                currentTarget = target;
+                ChangeState(EnemyState.Chasing);
 
-                //Check if collider has attackable tag
-                for (int i = 0; i < Tags.Capacity; i++)
-                {
-                    if (col.gameObject.CompareTag(Tags[i]))
-                    {
-                        possibleTargets.Add(col);
-                        break;
-                    }
-                }
+                return;
             }
 
+            OnCatchingTarget();
+        }
+
+        void OnCatchingTarget()
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                ChangeState(EnemyState.Idle);
+            }
+        }
+
+        Transform CheckForTargets()
+        {
+            List<Collider> possibleTargets = PossibleTargets();
             if (possibleTargets.Count > 0)
             {
                 //Find the nearest target
@@ -244,7 +225,7 @@ namespace Enemy_AI
                         < Vector3.Distance(nearestTarget.transform.position, transform.position))
                         nearestTarget = possibleTargets[i];
                 }
-
+                
                 //Checks if maximum amout of targets are filled per target
                 EnemyAI[] combatBases = GameObject.FindObjectsOfType<EnemyAI>();
                 for (int i = 0; i < combatBases.Length; i++)
@@ -259,7 +240,7 @@ namespace Enemy_AI
                         System.Array.Resize(ref combatBases, combatBases.Length - 1);
                     }
                 }
-
+                
                 int howmanyTarget = 0;
                 for (int i = 0; i < combatBases.Length; i++)
                 {
@@ -280,6 +261,45 @@ namespace Enemy_AI
             }
             else
                 return null;
+        }
+
+        List<Collider> PossibleTargets()
+        {
+            List<Collider> toReturn = new List<Collider>();
+
+            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, VisionMask);
+            foreach (Collider col in cols)
+            {
+                if (col.transform != this.transform)
+                {
+                    if (Physics.Linecast(transform.position + Vector3.up * 1.7f, col.transform.position + Vector3.up * 1.7f, out RaycastHit hit, VisionMask))
+                    {
+                        for (int i = 0; i < Tags.Capacity; i++)
+                        {
+                            if (col.gameObject.CompareTag(Tags[i]))
+                            {
+                                toReturn.Add(col);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return toReturn;
+        }
+
+        void OnIdle()
+        {
+            agent.speed = 2;
+            if (attackPoint == null)
+            {
+                PatrolToAnotherSpot();
+            }
+            else
+            {
+                ChangeState(EnemyState.Patrol);
+            }
         }
 
         void Chase(Transform target)
@@ -333,7 +353,7 @@ namespace Enemy_AI
                     break;
                 case EnemyState.Idle:
                     break;
-                case EnemyState.Patroling:
+                case EnemyState.Patrol:
                     if (attackPoint)
                     {
                         agent.SetDestination(attackPoint.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
@@ -370,7 +390,7 @@ namespace Enemy_AI
                 }
                 if (NavMesh.SamplePosition(dest, out NavMeshHit hit, VisionRange, agent.areaMask))
                 {
-                    ChangeState(EnemyState.Patroling);
+                    ChangeState(EnemyState.Patrol);
                     agent.SetDestination(hit.position);
                     return;
                 }
@@ -386,10 +406,10 @@ namespace Enemy_AI
 
             foreach (Collider col in cols)
             {
-                NPC npc = col.transform.root.GetComponent<NPC>();
-                if (npc != null)
+                if (col.transform.root.GetComponent<NPC>() != null)
                 {
-                    if (npc.isAttacked)
+                    NPC npc = col.transform.root.GetComponent<NPC>();
+                    if (npc.broadcastAttacked)
                     {
                         foreach (string protect in Protects)
                         {
@@ -404,11 +424,24 @@ namespace Enemy_AI
             }
         }
 
-        void RotateTo(GameObject target)
+        void RotateToTarget_WhenAttacking()
         {
-            Vector3 direction = new Vector3(target.transform.position.x - transform.position.x, 0f, target.transform.position.z - transform.position.z);
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 2 / (Quaternion.Angle(transform.rotation, lookRotation) / agent.angularSpeed));
+            if (CurrentState == EnemyState.Attacking)
+            {
+                StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
+            }
+        }
+
+        public IEnumerator RotateTo(GameObject target)
+        {
+            Quaternion lookRotation;
+            do
+            {
+                Vector3 direction = (target.transform.position - transform.position).normalized;
+                lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
+                yield return new WaitForEndOfFrame();
+            } while (true);
         }
 
         public void OnAttack(GameObject attacker, Attack attack)

@@ -18,7 +18,7 @@ namespace Npc_AI
         [HideInInspector]
         public GameObject Attacker;
         [HideInInspector]
-        public bool isAttacked;
+        public bool broadcastAttacked;
         public float scaredRunningSpeed;
         public float runningDistance;
         public float runningTime;
@@ -72,7 +72,7 @@ namespace Npc_AI
                 if (col.gameObject.GetComponent<NPC>()) 
                 {
                     NPC npc = col.gameObject.GetComponent<NPC>();
-                    if (npc.isAttacked)
+                    if (npc.broadcastAttacked)
                     {
                         Attacker = npc.Attacker;
                         ChangeState(NpcStates.Scared);
@@ -239,8 +239,8 @@ namespace Npc_AI
         {
             bool IsFirstInConversation = (bool)isFirst_talker_forcedConversation[0];
             conversationBuddy = (GameObject)isFirst_talker_forcedConversation[1];
-            Tuple<List<string>, List<string>> conversationToSpeak = null;
 
+            Tuple<List<string>, List<string>> conversationToSpeak = null;
             if (IsFirstInConversation)
             {
                 Initialize_Or_Find_Conversation(isFirst_talker_forcedConversation, conversationToSpeak);
@@ -262,7 +262,6 @@ namespace Npc_AI
 
         Tuple<List<string>, List<string>> Check_ForcedConversation_And_Choose(object[] isFirst_talker_forcedConversation)
         {
-            // If text is not given, get text from the Text Loader script 
             if (!ForcedConversationExists(isFirst_talker_forcedConversation))
             {
                 return ChooseConversation(conversationBuddy.GetComponent<NPC>());
@@ -305,30 +304,23 @@ namespace Npc_AI
         IEnumerator Speak_First_Lines(object[] componentOfBuddy_conversationToSpeak)
         {
             Tuple<List<string>, List<string>> conversationToSpeak = (Tuple<List<string>, List<string>>)componentOfBuddy_conversationToSpeak[1];
-            StartSpeaking(conversationToSpeak.Item1); //1st speaks then 2nd npc speaks after 4secs
+            ExecuteLine(conversationToSpeak.Item1); 
             yield return new WaitForSeconds(4);
 
             NPC componentOfBuddy = (NPC)componentOfBuddy_conversationToSpeak[0];
-            if (currentState != NpcStates.Scared)
-                componentOfBuddy.StartSpeaking(conversationToSpeak.Item2);
+            componentOfBuddy.ExecuteLine(conversationToSpeak.Item2);
         }
 
-        public void StartSpeaking(List<string> text, int waitSeconds = 0)
+        public void ExecuteLine(List<string> text, int waitSeconds = 0)
         {
-            StartCoroutine(nameof(Talk), new object[] { text, waitSeconds });
+            StartCoroutine(nameof(Talk), text);
         }
 
-        IEnumerator Talk(object[] parameters)
+        IEnumerator Talk(List<string> text)
         {
-            List<string> text = (List<string>)parameters[0];
-            int waitSeconds = 0;
-
-            if (parameters.Length > 1)
-                waitSeconds = (int)parameters[1];
-
             for (int i = 0; i < text.Count; i++)
             {
-                if (!text[i].StartsWith(" ")) //Displays sentece for 4 secs
+                if (!text[i].StartsWith(" ")) 
                 {
                     Text.text = text[i];
                     yield return new WaitForSeconds(4);
@@ -340,15 +332,14 @@ namespace Npc_AI
                 }
             }
 
-            yield return new WaitForSeconds(waitSeconds);
             ChangeState(NpcStates.Idle);
         }
 
-        //Stops conversation and removes all behaviours from it
         public void EndConversation()
         {
             agent.isStopped = false;
             StopCoroutine(nameof(RotateTo));
+            StopCoroutine(nameof(Speak_First_Lines));
             StopCoroutine(nameof(Talk));
 
             conversationBuddy = null;
@@ -356,53 +347,48 @@ namespace Npc_AI
             GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
         }
 
-        //Start NPC-NPC interaction with nearby NPCs with 
+        [Range(0, 10000)]
+        public int converChoose = 0;
+
         void TriggerConversation(NPC npc)
         {
-            if (!enabled)
-                return;
-
-            if (conv == false)
-                return;
-
-            // States that are more prioritized
-            if (currentState == NpcStates.Scared || currentState == NpcStates.Talking)
-                return;
-
-            NPC NPCscript = npc;
-
-            if (NPCscript.enabled == false)
-                return;
-
-            //Checks if the talker's state does not have a higher priority
-            if (NPCscript.currentState == NpcStates.Scared || NPCscript.currentState == NpcStates.Talking)
-                return;
-
-            if (UnityEngine.Random.Range(0, 1000) < converChoose) //At a chance starts a conversation
+            if (Check_Conversation_Requirments(this) && Check_Conversation_Requirments(npc))
             {
-                //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
-                //Can stop bug for when both scripts decide to have a conversation at the same time
-
-                if (GetInstanceID() > NPCscript.GetInstanceID())
+                if (UnityEngine.Random.Range(0, 10000) < converChoose) 
                 {
-                    StartConversation(true, NPCscript.gameObject);
-                    NPCscript.StartConversation(false, gameObject);
+                    //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
+                    if (GetInstanceID() > npc.GetInstanceID())
+                    {
+                        StartConversation(true, npc.gameObject);
+                        npc.StartConversation(false, gameObject);
+                    }
                 }
             }
         }
 
-        [Range(0, 1000)]
-        public int converChoose = 0;
-        bool conv = true;
-
-        IEnumerator WaitTillNextConv()
+        bool Check_Conversation_Requirments(NPC npcScript)
         {
-            conv = false;
-            yield return new WaitForSeconds(60);
-            conv = true;
+            bool state = Check_State_For_Conversation(npcScript);
+            if (!npcScript.enabled || !state)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        //Called when NPC is attacked
+        bool Check_State_For_Conversation(NPC npcScript)
+        {
+            if (npcScript.currentState == NpcStates.Scared || npcScript.currentState == NpcStates.Talking)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public void OnAttack(GameObject attacker, Attack attack)
         {
             if (this.enabled == false)
@@ -410,18 +396,16 @@ namespace Npc_AI
 
             Attacker = attacker;
             ChangeState(NpcStates.Scared);
-            StartCoroutine(nameof(Attacked));
+            StartCoroutine(nameof(BroadcastAttacked_Courountine));
         }
 
-        //Method WatchEnvironment() uses "IsAttacked" boolean to check if NPC is attacked
-        IEnumerator Attacked()
+        IEnumerator BroadcastAttacked_Courountine()
         {
-            isAttacked = true;
+            broadcastAttacked = true;
             yield return new WaitForSeconds(1f);
-            isAttacked = false;
+            broadcastAttacked = false;
         }
 
-        //Run from "attacker" in opposite direction
         public IEnumerator Run(GameObject attacker)
         {
             agent.speed = scaredRunningSpeed;

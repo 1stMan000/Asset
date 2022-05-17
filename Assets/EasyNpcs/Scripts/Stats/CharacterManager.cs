@@ -40,7 +40,6 @@ namespace Npc_Manager
 
         void TakeDamage(GameObject attacker, float damage)
         {
-            Debug.Log("attacked" + damage + this.gameObject);
             if (damage <= 0f) return;
             currentHealth.SetValue(currentHealth.GetValue() - damage);
 
@@ -59,7 +58,6 @@ namespace Npc_Manager
 
         public Stat GetCurrentHealth()
         {
-            Debug.Log(currentHealth.GetValue());
             return currentHealth;
         }
 

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerText: Fuck you
   npcText: Fuck off
-  nextSentence: {fileID: 0}
+  nextSentence: {fileID: 11400000, guid: 4b38eb26b9af8ee42858b1d3631129c4, type: 2}
   choices: []

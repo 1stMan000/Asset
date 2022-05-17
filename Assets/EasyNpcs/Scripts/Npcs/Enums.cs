@@ -14,7 +14,7 @@ public enum NpcStates
 public enum EnemyState
 {
     Idle,
-    Patroling,
+    Patrol,
     Chasing,
     Attacking
 }

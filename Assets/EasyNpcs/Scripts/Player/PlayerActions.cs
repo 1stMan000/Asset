@@ -43,7 +43,7 @@ namespace Player_Actions
                     Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
                     textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
-                else if (Npc_Dialogue.currentSentence.choices != null)
+                else if (Npc_Dialogue.currentSentence.choices.Count > 0)
                 {
                     textAndButtons.text.SetActive(false);
 
@@ -54,6 +54,21 @@ namespace Player_Actions
                         button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
                         choiceNum++;
                     }
+                }
+                else
+                {
+                    isInteracting = false;
+                    dialogueWindow.SetActive(false);
+
+                    FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
+                    firstPersonAIO.playerCanMove = true;
+                    firstPersonAIO.lockAndHideCursor = true;
+                    firstPersonAIO.enableCameraMovement = true;
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+
+                    Npc_Dialogue.enabled = false;
+                    Npc_Dialogue.gameObject.GetComponent<NPC>().enabled = true;
                 }
             }
         }

@@ -618,10 +618,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633032, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: AttackDistance
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
@@ -630,13 +640,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
+      propertyPath: Tags.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
       propertyPath: ShowDebugMessages
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
+      propertyPath: VisionMask.m_Bits
+      value: 769
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
       propertyPath: Tags.Array.data[0]
       value: Enemy1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: Tags.Array.data[1]
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
@@ -646,7 +671,7 @@ PrefabInstance:
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
       propertyPath: AttackableLayers.m_Bits
-      value: 256
+      value: 768
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633043, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
@@ -1711,6 +1736,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1032470408447057326, guid: f327ab5017bd77c4ea886b56353da51d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4261681557133583364, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: m_Layer
@@ -1721,6 +1751,11 @@ PrefabInstance:
       propertyPath: slider
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8240761571646830966, guid: f327ab5017bd77c4ea886b56353da51d,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8255998229836673196, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: m_RootOrder
@@ -1729,17 +1764,17 @@ PrefabInstance:
     - target: {fileID: 8255998229836673196, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.73575
+      value: -13.395
       objectReference: {fileID: 0}
     - target: {fileID: 8255998229836673196, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.92
+      value: 1.63
       objectReference: {fileID: 0}
     - target: {fileID: 8255998229836673196, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.0182333
+      value: -8.382
       objectReference: {fileID: 0}
     - target: {fileID: 8255998229836673196, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
@@ -1801,6 +1836,16 @@ PrefabInstance:
       propertyPath: volumeLayerMask.m_Bits
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8320676258442742940, guid: f327ab5017bd77c4ea886b56353da51d,
+        type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320676258442742940, guid: f327ab5017bd77c4ea886b56353da51d,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8512270994217372885, guid: f327ab5017bd77c4ea886b56353da51d,
         type: 3}
       propertyPath: InventoryPanel
@@ -1841,6 +1886,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemey (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4159233491569455950, guid: 17f15e081e6773b40a110102352cabbe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4159233491569455950, guid: 17f15e081e6773b40a110102352cabbe,
         type: 3}
