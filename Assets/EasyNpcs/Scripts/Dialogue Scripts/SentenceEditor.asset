@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: SentenceEditor
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[{"key":"Start","label":"Start","summary":null,"hideLabel":false}],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":-83.0,"y":-209.0},"zoom":1.0,"elements":[{"nest":{"source":"Macro","macro":0,"embed":null},"defaultValues":{"String":{"$content":"Hello!","$type":"System.String"},"Sentence":{"$content":1,"$type":"UnityEngine.Object"},"NextSentence":{"$content":2,"$type":"UnityEngine.Object"}},"position":{"x":-299.0,"y":-205.0},"guid":"f5b0d79a-826b-4e5a-b2e9-e5f080cb735e","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"10"},{"nest":{"source":"Macro","macro":3,"embed":null},"defaultValues":{"String":{"$content":"How
+      are you my friend?","$type":"System.String"},"Sentence":{"$content":4,"$type":"UnityEngine.Object"},"NextSentence":null},"position":{"x":77.0,"y":-204.0},"guid":"6ffa1119-7a3a-4dc6-8917-878c8d27ea7a","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"13"},{"coroutine":false,"defaultValues":{},"position":{"x":-538.0,"y":-202.0},"guid":"f06e1c79-d8b3-42e6-8ed0-51ae225e57e6","$version":"A","$type":"Unity.VisualScripting.Start","$id":"16"},{"defaultValues":{},"position":{"x":-498.0,"y":-1.0},"guid":"2d6d60fa-110a-4832-b45b-ac68433e0e21","$version":"A","$type":"Unity.VisualScripting.Null","$id":"18"},{"sourceUnit":{"$ref":"16"},"sourceKey":"trigger","destinationUnit":{"$ref":"10"},"destinationKey":"Start","guid":"3655e7b9-828e-4e95-b6b2-52396b83d089","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"10"},"sourceKey":"Out","destinationUnit":{"$ref":"13"},"destinationKey":"Start","guid":"f153d4d0-9482-4e16-b48e-ffa4c375c0f0","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"18"},"sourceKey":"null","destinationUnit":{"$ref":"10"},"destinationKey":"Choices","guid":"158a00a2-20ee-492c-b3dd-7220d272b18e","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"18"},"sourceKey":"null","destinationUnit":{"$ref":"13"},"destinationKey":"Choices","guid":"f0189288-0a74-4f8c-ad26-a97e958539be","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: 4c627042c2de3a443807ea456225caf0, type: 2}
+    - {fileID: 11400000, guid: 6f83adb61283b1948b5af0272b854def, type: 2}
+    - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
+    - {fileID: 11400000, guid: 4c627042c2de3a443807ea456225caf0, type: 2}
+    - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}

@@ -43,7 +43,7 @@ namespace Player_Actions
                     Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
                     textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
-                else if (Npc_Dialogue.currentSentence.choices.Count > 0)
+                else if (Npc_Dialogue.currentSentence.choices != null)
                 {
                     textAndButtons.text.SetActive(false);
 
@@ -61,9 +61,7 @@ namespace Player_Actions
                     dialogueWindow.SetActive(false);
 
                     FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-                    firstPersonAIO.playerCanMove = true;
-                    firstPersonAIO.lockAndHideCursor = true;
-                    firstPersonAIO.enableCameraMovement = true;
+                    firstPersonAIO.enabled = false;
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
 

@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: Sentence
   m_EditorClassIdentifier: 
   playerText: 
-  npcText: Hi
-  nextSentence: {fileID: 0}
-  choices:
-  - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
-  - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
-  - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
-  - {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
+  npcText: Hello!
+  nextSentence: {fileID: 11400000, guid: 42da81537d2864741839ff9434953f3c, type: 2}
+  choices: []

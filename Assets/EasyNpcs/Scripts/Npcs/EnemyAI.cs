@@ -28,7 +28,7 @@ namespace Enemy_AI
 
         public LayerMask VisionMask;
         public float VisionRange;
-        public LayerMask AttackableLayers;
+
         [TagSelector] public List<string> Tags;
         public List<string> Protects;
 
@@ -217,38 +217,10 @@ namespace Enemy_AI
             List<Collider> possibleTargets = PossibleTargets();
             if (possibleTargets.Count > 0)
             {
-                //Find the nearest target
-                Collider nearestTarget = possibleTargets[0];
-                for (int i = 1; i < possibleTargets.Count; i++)
-                {
-                    if (Vector3.Distance(possibleTargets[i].transform.position, transform.position)
-                        < Vector3.Distance(nearestTarget.transform.position, transform.position))
-                        nearestTarget = possibleTargets[i];
-                }
+                Collider nearestTarget = NearestTarget(possibleTargets);
                 
-                //Checks if maximum amout of targets are filled per target
-                EnemyAI[] combatBases = GameObject.FindObjectsOfType<EnemyAI>();
-                for (int i = 0; i < combatBases.Length; i++)
-                {
-                    if (GetComponent<EnemyAI>() == combatBases[i] || combatBases[i].enabled == false)
-                    {
-                        for (int a = i; a < combatBases.Length - 1; a++)
-                        {
-                            combatBases[a] = combatBases[a + 1]; //Moving elements downwards, to fill the gap at [index]
-                        }
-
-                        System.Array.Resize(ref combatBases, combatBases.Length - 1);
-                    }
-                }
-                
-                int howmanyTarget = 0;
-                for (int i = 0; i < combatBases.Length; i++)
-                {
-                    if (combatBases[i].currentTarget == nearestTarget.transform)
-                    {
-                        howmanyTarget++;
-                    }
-                }
+                EnemyAI[] enemyAiScripts = Return_All_Valid_EnemyAi_Scripts();
+                int howmanyTarget = How_Many_Enemies_Are_Facing_Target(enemyAiScripts, nearestTarget);
 
                 if (howmanyTarget < maximumAttackers)
                 {
@@ -287,6 +259,52 @@ namespace Enemy_AI
             }
 
             return toReturn;
+        }
+
+        Collider NearestTarget(List<Collider> possibleTargets)
+        {
+            Collider nearestTarget = possibleTargets[0];
+            for (int i = 1; i < possibleTargets.Count; i++)
+            {
+                if (Vector3.Distance(possibleTargets[i].transform.position, transform.position)
+                    < Vector3.Distance(nearestTarget.transform.position, transform.position))
+                    nearestTarget = possibleTargets[i];
+            }
+
+            return nearestTarget;
+        }
+
+        EnemyAI[] Return_All_Valid_EnemyAi_Scripts()
+        {
+            EnemyAI[] enemyAiScripts = GameObject.FindObjectsOfType<EnemyAI>();
+            for (int i = 0; i < enemyAiScripts.Length; i++)
+            {
+                if (enemyAiScripts[i].enabled == false)
+                {
+                    for (int a = i; a < enemyAiScripts.Length - 1; a++)
+                    {
+                        enemyAiScripts[a] = enemyAiScripts[a + 1];
+                    }
+
+                    System.Array.Resize(ref enemyAiScripts, enemyAiScripts.Length - 1);
+                }
+            }
+
+            return enemyAiScripts;
+        }
+
+        int How_Many_Enemies_Are_Facing_Target(EnemyAI[] enemyAiScripts, Collider nearestTarget)
+        {
+            int howmanyTarget = 0;
+            for (int i = 0; i < enemyAiScripts.Length; i++)
+            {
+                if (enemyAiScripts[i].currentTarget == nearestTarget.transform)
+                {
+                    howmanyTarget++;
+                }
+            }
+
+            return howmanyTarget;
         }
 
         void OnIdle()

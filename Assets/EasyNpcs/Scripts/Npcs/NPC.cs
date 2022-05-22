@@ -230,6 +230,7 @@ namespace Npc_AI
             StopCoroutine(GoHomeCoroutine());
         }
 
+        //Conversation Functions
         public void StartConversation(bool isFirst, GameObject talker, Tuple<List<string>, List<string>> forcedConverstion = null)
         {
             Ready_For_Conversation(new object[] { isFirst, talker, forcedConverstion });

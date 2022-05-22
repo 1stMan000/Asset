@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be182cbcd0fea0b4dbe5422bd3078efa, type: 3}
   m_Name: Sentence 1
   m_EditorClassIdentifier: 
-  playerText: Fuck you
-  npcText: Fuck off
-  nextSentence: {fileID: 11400000, guid: 4b38eb26b9af8ee42858b1d3631129c4, type: 2}
+  playerText: 
+  npcText: How are you my friend?
+  nextSentence: {fileID: 0}
   choices: []
