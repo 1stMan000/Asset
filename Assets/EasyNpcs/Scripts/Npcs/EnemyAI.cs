@@ -89,7 +89,7 @@ namespace Enemy_AI
             anim.SetFloat("Speed", agent.velocity.magnitude);
 
             ManageState();
-            WatchEnvironment();
+            Check_To_Protect();
             RotateToTarget_WhenAttacking();
 
             #region Editor Only
@@ -178,6 +178,35 @@ namespace Enemy_AI
             }
         }
 
+        private void Check_To_Protect()
+        {
+            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
+
+            foreach (Collider col in cols)
+            {
+                if (col.transform.root.GetComponent<NPC>() != null)
+                {
+                    NPC npc = col.transform.root.GetComponent<NPC>();
+                    if (npc.broadcastAttacked)
+                    {
+                        CheckTag(npc);
+                    }
+                }
+            }
+        }
+
+        void CheckTag(NPC npc)
+        {
+            foreach (string protect in Protects)
+            {
+                if (npc.tag == protect && currentTarget == null)
+                {
+                    currentTarget = npc.Attacker.transform;
+                    return;
+                }
+            }
+        }
+
         void OnPatrol()
         {
             if (currentTarget == null)
@@ -222,17 +251,12 @@ namespace Enemy_AI
                 EnemyAI[] enemyAiScripts = Return_All_Valid_EnemyAi_Scripts();
                 int howmanyTarget = How_Many_Enemies_Are_Facing_Target(enemyAiScripts, nearestTarget);
 
-                if (howmanyTarget < maximumAttackers)
-                {
-                    return nearestTarget.transform;
-                }
-                else
-                {
-                    return null;
-                }
+                return Check_If_Maximum_Enemies_Are_Facing_Target(nearestTarget, howmanyTarget);
             }
             else
+            {
                 return null;
+            }
         }
 
         List<Collider> PossibleTargets()
@@ -305,6 +329,18 @@ namespace Enemy_AI
             }
 
             return howmanyTarget;
+        }
+
+        Transform Check_If_Maximum_Enemies_Are_Facing_Target(Collider target, int how_Many_Enemeies)
+        {
+            if (how_Many_Enemeies < maximumAttackers)
+            {
+                return target.transform;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         void OnIdle()
@@ -415,31 +451,6 @@ namespace Enemy_AI
             }
 
             ChangeState(EnemyState.Idle);
-        }
-
-        //Check environment to protect if another is being attacked
-        private void WatchEnvironment()
-        {
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
-
-            foreach (Collider col in cols)
-            {
-                if (col.transform.root.GetComponent<NPC>() != null)
-                {
-                    NPC npc = col.transform.root.GetComponent<NPC>();
-                    if (npc.broadcastAttacked)
-                    {
-                        foreach (string protect in Protects)
-                        {
-                            if (npc.tag == protect && currentTarget == null)
-                            {
-                                currentTarget = npc.Attacker.transform;
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         void RotateToTarget_WhenAttacking()
