@@ -9,13 +9,9 @@ namespace Enemy_AI
 {
     public class EnemyAI : WhenAttacking, IDestructible
     {
-        [HideInInspector]
-        public NavMeshAgent agent = null;
-
+        private CharacterManager manager;
+        private NavMeshAgent agent = null;
         protected Animator anim;
-
-        [HideInInspector]
-        public CharacterManager manager;
 
         [Tooltip("The collider representing the area in which the enemy preffer to stay. " +
                 "It can still be lured out of the area by npcs and the player. " +
@@ -23,8 +19,6 @@ namespace Enemy_AI
         public Collider PatrolArea;
         [HideInInspector]
         public Transform attackPoint; 
-
-        public bool VisualiseAgentActions;
 
         public LayerMask VisionMask;
         public float VisionRange;
@@ -42,8 +36,8 @@ namespace Enemy_AI
         [HideInInspector]
         public bool changingState = true;
 
-        public enum weapon { melee, ranged};
-        public weapon assignedWeapon; 
+        public enum Weapon { melee, ranged};
+        public Weapon assignedWeapon; 
         public Projectile projectile;
         public float launchHight;
 
@@ -60,22 +54,6 @@ namespace Enemy_AI
             agent = GetComponent<NavMeshAgent>();
             manager = GetComponent<CharacterManager>();
 
-            #region Editor Only
-#if UNITY_EDITOR
-            if (VisualiseAgentActions)
-            {
-                GameObject debugsphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                Destroy(debugsphere.GetComponent<Collider>());
-                debugsphere.name = "Target Debugger for " + transform.name;
-                GameObject debugparent = GameObject.Find("Debugger");
-                if (debugparent == null)
-                    debugparent = new GameObject("Debugger");
-                debugsphere.transform.SetParent(debugparent.transform);
-                DebugSphere = debugsphere.transform;
-            }
-#endif
-            #endregion
-
             ChangeState(EnemyState.Idle);
 
             if (VisionRange == 0)
@@ -91,15 +69,6 @@ namespace Enemy_AI
             ManageState();
             Check_To_Protect();
             RotateToTarget_WhenAttacking();
-
-            #region Editor Only
-#if UNITY_EDITOR
-            if (VisualiseAgentActions)
-            {
-                DebugSphere.position = agent.destination;
-            }
-#endif
-            #endregion
         }
 
         void ManageState()
@@ -207,6 +176,9 @@ namespace Enemy_AI
             }
         }
 
+        /// <summary>
+        /// Check targets on patrol functions
+        /// </summary>
         void OnPatrol()
         {
             if (currentTarget == null)
@@ -270,19 +242,24 @@ namespace Enemy_AI
                 {
                     if (Physics.Linecast(transform.position + Vector3.up * 1.7f, col.transform.position + Vector3.up * 1.7f, out RaycastHit hit, VisionMask))
                     {
-                        for (int i = 0; i < Tags.Capacity; i++)
-                        {
-                            if (col.gameObject.CompareTag(Tags[i]))
-                            {
-                                toReturn.Add(col);
-                                break;
-                            }
-                        }
+                        Check_Tags(col, ref toReturn);
                     }
                 }
             }
 
             return toReturn;
+        }
+
+        void Check_Tags(Collider col, ref List<Collider> toReturn)
+        {
+            for (int i = 0; i < Tags.Capacity; i++)
+            {
+                if (col.gameObject.CompareTag(Tags[i]))
+                {
+                    toReturn.Add(col);
+                    break;
+                }
+            }
         }
 
         Collider NearestTarget(List<Collider> possibleTargets)
@@ -481,15 +458,6 @@ namespace Enemy_AI
         public void OnDestruction(GameObject destroyer)
         {
             enabled = false;
-        }
-
-        void OnDrawGizmosSelected()
-        {
-            if (VisualiseAgentActions)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(transform.position, VisionRange);
-            }
         }
     }
 }

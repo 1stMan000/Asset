@@ -24,7 +24,7 @@ public class OnAttackAnim : StateMachineBehaviour
     {
         if (enemyAI.currentTarget != null)
         {
-            if (enemyAI.assignedWeapon == EnemyAI.weapon.melee)
+            if (enemyAI.assignedWeapon == EnemyAI.Weapon.melee)
                 enemyAI.WhenAttacking(enemyAI.currentTarget.gameObject);
             else
             {
