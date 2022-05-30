@@ -56,7 +56,7 @@ namespace Enemy_AI
 
             ChangeState(EnemyState.Idle);
 
-            if (VisionRange == 0)
+            if (VisionRange <= 0)
             {
                 Debug.Log("Please put the vision range of enemy AI to something bigger than 0");
             }
@@ -83,36 +83,8 @@ namespace Enemy_AI
                     OnIdle();
                     break;
 
-                case EnemyState.Chasing:
-                    agent.speed = 4;
-                    if (currentTarget == null) //If target is null, switch to idle state
-                    {
-                        ChangeState(EnemyState.Idle);
-                        return;
-                    }
-                    else if (currentTarget.GetComponent<CharacterManager>().isDead == true)
-                    {
-                        currentTarget = null;
-                        ChangeState(EnemyState.Idle);
-                    }
-                    
-                    RaycastHit hit;
-                    Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
-                    if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
-                    {
-                        if (hit.transform == currentTarget)
-                        {
-                            ChangeState(EnemyState.Attacking);
-                        }
-                        else
-                        {
-                            StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
-                        }
-                    }
-                    else
-                    {
-                        Chase(currentTarget);
-                    }
+                case EnemyState.Chase:
+                    OnChase();
                     break;
 
                 case EnemyState.Attacking:
@@ -137,7 +109,7 @@ namespace Enemy_AI
                         }
                         else
                         {
-                            ChangeState(EnemyState.Chasing);
+                            ChangeState(EnemyState.Chase);
                         }
                     }
                     break;
@@ -147,6 +119,9 @@ namespace Enemy_AI
             }
         }
 
+        /// <summary>
+        /// Protect functions
+        /// </summary>
         private void Check_To_Protect()
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
@@ -177,7 +152,7 @@ namespace Enemy_AI
         }
 
         /// <summary>
-        /// Check targets on patrol functions
+        /// Sense target functions
         /// </summary>
         void OnPatrol()
         {
@@ -187,7 +162,7 @@ namespace Enemy_AI
             }
             else
             {
-                ChangeState(EnemyState.Chasing);
+                ChangeState(EnemyState.Chase);
             }
         }
 
@@ -197,15 +172,15 @@ namespace Enemy_AI
             if (target != null)
             {
                 currentTarget = target;
-                ChangeState(EnemyState.Chasing);
+                ChangeState(EnemyState.Chase);
 
                 return;
             }
 
-            OnCatchingTarget();
+            No_Target_Available();
         }
 
-        void OnCatchingTarget()
+        void No_Target_Available()
         {
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
@@ -278,6 +253,13 @@ namespace Enemy_AI
         EnemyAI[] Return_All_Valid_EnemyAi_Scripts()
         {
             EnemyAI[] enemyAiScripts = GameObject.FindObjectsOfType<EnemyAI>();
+            Remove_Unabled_Enemy_Scripts(ref enemyAiScripts);
+
+            return enemyAiScripts;
+        }
+
+        void Remove_Unabled_Enemy_Scripts(ref EnemyAI[] enemyAiScripts)
+        {
             for (int i = 0; i < enemyAiScripts.Length; i++)
             {
                 if (enemyAiScripts[i].enabled == false)
@@ -290,8 +272,6 @@ namespace Enemy_AI
                     System.Array.Resize(ref enemyAiScripts, enemyAiScripts.Length - 1);
                 }
             }
-
-            return enemyAiScripts;
         }
 
         int How_Many_Enemies_Are_Facing_Target(EnemyAI[] enemyAiScripts, Collider nearestTarget)
@@ -320,9 +300,11 @@ namespace Enemy_AI
             }
         }
 
+        public float walkSpeed = 2;
+
         void OnIdle()
         {
-            agent.speed = 2;
+            agent.speed = walkSpeed;
             if (attackPoint == null)
             {
                 PatrolToAnotherSpot();
@@ -330,6 +312,78 @@ namespace Enemy_AI
             else
             {
                 ChangeState(EnemyState.Patrol);
+            }
+        }
+
+        /// <summary>
+        /// Chasing target functions
+        /// </summary>
+        public float runSpeed = 4;
+
+        void OnChase()
+        {
+            agent.speed = runSpeed;
+            
+            if (Check_Conditions_For_Chase())
+            {
+                if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
+                {
+                    Face_Target();
+                }
+                else
+                {
+                    Chase(currentTarget);
+                }
+            }
+        }
+
+        bool Check_Conditions_For_Chase()
+        {
+            if (!When_Target_Is_Null() || !Check_If_Dead())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        bool When_Target_Is_Null()
+        {
+            if (currentTarget == null)
+            {
+                ChangeState(EnemyState.Idle);
+                return false;
+            }
+
+            return true;
+        }
+
+        bool Check_If_Dead()
+        {
+            if (currentTarget.GetComponent<CharacterManager>().isDead == true)
+            {
+                currentTarget = null;
+                ChangeState(EnemyState.Idle);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        void Face_Target()
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
+            if (hit.transform == currentTarget)
+            {
+                ChangeState(EnemyState.Attacking);
+            }
+            else
+            {
+                StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
             }
         }
 
@@ -380,7 +434,7 @@ namespace Enemy_AI
             {
                 case EnemyState.Attacking:
                     break;
-                case EnemyState.Chasing:
+                case EnemyState.Chase:
                     break;
                 case EnemyState.Idle:
                     break;

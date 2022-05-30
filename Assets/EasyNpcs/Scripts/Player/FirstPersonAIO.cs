@@ -11,7 +11,7 @@ using Npc_Manager;
 
 namespace PlayerController
 {
-    public class FirstPersonAIO : WhenAttacking
+    public class FirstPersonAIO : MonoBehaviour
     {
 
         #region Variables
@@ -176,11 +176,6 @@ namespace PlayerController
 
         #endregion
 
-        private Animator anim;
-        private CharacterManager stats;
-
-        public float attackCooldown = 0f;
-
         private void Awake()
         {
             #region Look Settings - Awake
@@ -279,9 +274,6 @@ namespace PlayerController
             #region BETA_SETTINGS - Start
             fOVKick.fovStart = playerCamera.fieldOfView;
             #endregion
-
-            anim = GetComponentInChildren<Animator>();
-            stats = GetComponent<CharacterManager>();
         }
 
         private void Update()
@@ -306,20 +298,6 @@ namespace PlayerController
                 transform.localRotation = Quaternion.Euler(0, followAngles.y + originalRotation.y, 0);
             }
             #endregion
-
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                int layerMask = LayerMask.GetMask("Player");
-                layerMask = ~layerMask;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-                {
-                    GameObject attackable = hit.collider.gameObject;
-                    AttackTarget(attackable);
-                }
-            }
         }
 
         private void FixedUpdate()
@@ -691,9 +669,6 @@ namespace PlayerController
 
 
             #endregion
-
-            if (attackCooldown > 0)
-                attackCooldown -= Time.deltaTime;
         }
 
         /*     public IEnumerator FOVKickOut()

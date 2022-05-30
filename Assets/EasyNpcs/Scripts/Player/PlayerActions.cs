@@ -7,11 +7,14 @@ using PlayerController;
 
 namespace Player_Actions
 {
-    public class PlayerActions : MonoBehaviour
+    public class PlayerActions : WhenAttacking
     {
         public Camera playerCamera;
         public GameObject dialogueWindow;
+        public GameObject inventory;
+
         public KeyCode InteractButton = KeyCode.E;
+        public KeyCode InventoryButton = KeyCode.Tab;
 
         TextAndButtons textAndButtons;
 
@@ -31,12 +34,14 @@ namespace Player_Actions
         // Update is called once per frame
         void Update()
         {
+            Attack();
+
             if (Input.GetKeyDown(InteractButton))
             {
                 OpenOrCloseDialogue();
             }
 
-            if (isInteracting && Input.GetMouseButtonDown(0))
+            if (isInteracting && Input.GetMouseButtonUp(0))
             {
                 if (Npc_Dialogue.currentSentence.nextSentence != null)
                 {
@@ -61,12 +66,37 @@ namespace Player_Actions
                     dialogueWindow.SetActive(false);
 
                     FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-                    firstPersonAIO.enabled = false;
+                    firstPersonAIO.enabled = true;
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
 
                     Npc_Dialogue.enabled = false;
                     Npc_Dialogue.gameObject.GetComponent<NPC>().enabled = true;
+                }
+            }
+
+            if (!isInteracting && Input.GetKeyDown(InventoryButton))
+            {
+                inventory.SetActive(true);
+            }
+        }
+
+        void Attack()
+        {
+            if (!isInteracting)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    int layerMask = LayerMask.GetMask("Player");
+                    layerMask = ~layerMask;
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                    {
+                        GameObject attackable = hit.collider.gameObject;
+                        AttackTarget(attackable);
+                    }
                 }
             }
         }
@@ -125,9 +155,7 @@ namespace Player_Actions
             dialogueWindow.SetActive(true);
 
             FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-            firstPersonAIO.playerCanMove = false;
-            firstPersonAIO.lockAndHideCursor = false;
-            firstPersonAIO.enableCameraMovement = false;
+            firstPersonAIO.enabled = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
