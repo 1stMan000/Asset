@@ -20,8 +20,7 @@ namespace Player_Actions
 
         public LayerMask mask;
 
-        [HideInInspector]
-        public bool isInteracting;
+        bool isInteracting;
 
         DialogueManager Npc_Dialogue;
 
@@ -35,11 +34,7 @@ namespace Player_Actions
         void Update()
         {
             Attack();
-
-            if (Input.GetKeyDown(InteractButton))
-            {
-                OpenOrCloseDialogue();
-            }
+            OpenOrCloseDialogue();
 
             if (isInteracting && Input.GetMouseButtonUp(0))
             {
@@ -103,7 +98,7 @@ namespace Player_Actions
 
         void OpenOrCloseDialogue()
         {
-            if (!isInteracting)
+            if (Input.GetKeyDown(InteractButton) && !isInteracting)
             {
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                 {
@@ -112,56 +107,68 @@ namespace Player_Actions
                     {
                         if (!npc.GetComponentInParent<CharacterManager>().isDead)
                         {
-                            StartConversation(npc);
+                            StartDialogue(npc);
                         }
                     }
                 }
             }
         }
 
-        void StartConversation(GameObject npc)
+        void StartDialogue(GameObject npc)
         {
-            if (npc.GetComponentInParent<DialogueManager>() == null)
+            if (npc.GetComponentInParent<DialogueManager>() != null)
             {
-                return;
-            }
-            Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
+                if (Is_Npc_Type(npc))
+                {
+                    Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
 
+                    isInteracting = true;
+                    dialogueWindow.SetActive(true);
+
+                    FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
+                    firstPersonAIO.enabled = false;
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+
+                    Npc_Dialogue.enabled = true;
+                    dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+                }
+            }
+        }
+
+        bool Is_Npc_Type(GameObject npc)
+        {
             if (npc.GetComponentInParent<NPC>() != null)
             {
                 NPC npcAI = npc.GetComponentInParent<NPC>();
                 if (npcAI.enabled)
                 {
-                    if (npcAI.currentState == NpcStates.Scared)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        npcAI.enabled = false;
-                    }
+                    return State_NotScared(npcAI);
                 }
-            }
-
-            if (npc.GetComponentInParent<EnemyAI>() != null)
-            {
-                if (npc.GetComponentInParent<EnemyAI>().enabled)
+                else
                 {
-                    return;
+                    return false;
                 }
             }
-
-            isInteracting = true;
-            dialogueWindow.SetActive(true);
-
-            FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-            firstPersonAIO.enabled = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            Npc_Dialogue.enabled = true;
-            dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+            else
+            {
+                return false;
+            }
         }
+
+        bool State_NotScared(NPC npcAI)
+        {
+            if (npcAI.currentState == NpcStates.Scared)
+            {
+                return false;
+            }
+            else
+            {
+                npcAI.enabled = false;
+                return true;
+            }
+        }
+
 
         public void PressButton0()
         {

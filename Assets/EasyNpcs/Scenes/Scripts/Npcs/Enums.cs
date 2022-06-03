@@ -16,7 +16,7 @@ public enum EnemyState
     Idle,
     Patrol,
     Chase,
-    Attacking
+    Attack
 }
 
 [Flags]

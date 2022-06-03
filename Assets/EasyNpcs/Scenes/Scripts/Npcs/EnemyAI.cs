@@ -17,7 +17,6 @@ namespace Enemy_AI
                 "It can still be lured out of the area by npcs and the player. " +
                 "This is an optional field")]
         public Collider PatrolArea;
-        [HideInInspector]
         public Transform attackPoint; 
 
         public LayerMask VisionMask;
@@ -32,9 +31,6 @@ namespace Enemy_AI
         public float AttackDistance;
 
         public int maximumAttackers = 1;
-
-        [HideInInspector]
-        public bool changingState = true;
 
         public enum Weapon { melee, ranged};
         public Weapon assignedWeapon; 
@@ -68,7 +64,7 @@ namespace Enemy_AI
 
             ManageState();
             Check_To_Protect();
-            RotateToTarget_WhenAttacking();
+            RotateToTarget();
         }
 
         void ManageState()
@@ -87,31 +83,8 @@ namespace Enemy_AI
                     OnChase();
                     break;
 
-                case EnemyState.Attacking:
-                    agent.SetDestination(transform.position);
-
-                    if (currentTarget == null)
-                    {
-                        ChangeState(EnemyState.Idle);
-                    }
-                    else if (currentTarget.GetComponent<CharacterManager>().isDead == true)
-                    {
-                        currentTarget = null;
-                        ChangeState(EnemyState.Idle);
-                    }
-                    else
-                    {
-                        RaycastHit hit1;
-                        Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit1, Mathf.Infinity, VisionMask);
-                        if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit1.transform == currentTarget)
-                        {
-                            Attack(currentTarget.gameObject);
-                        }
-                        else
-                        {
-                            ChangeState(EnemyState.Chase);
-                        }
-                    }
+                case EnemyState.Attack:
+                    OnAttack();
                     break;
 
                 default:
@@ -253,12 +226,12 @@ namespace Enemy_AI
         EnemyAI[] Return_All_Valid_EnemyAi_Scripts()
         {
             EnemyAI[] enemyAiScripts = GameObject.FindObjectsOfType<EnemyAI>();
-            Remove_Unabled_Enemy_Scripts(ref enemyAiScripts);
+            Remove_Disabled_Enemy_Scripts(ref enemyAiScripts);
 
             return enemyAiScripts;
         }
 
-        void Remove_Unabled_Enemy_Scripts(ref EnemyAI[] enemyAiScripts)
+        void Remove_Disabled_Enemy_Scripts(ref EnemyAI[] enemyAiScripts)
         {
             for (int i = 0; i < enemyAiScripts.Length; i++)
             {
@@ -328,7 +301,7 @@ namespace Enemy_AI
             {
                 if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
                 {
-                    Face_Target();
+                    Check_If_Facing_Target();
                 }
                 else
                 {
@@ -373,13 +346,13 @@ namespace Enemy_AI
             return true;
         }
 
-        void Face_Target()
+        void Check_If_Facing_Target()
         {
             RaycastHit hit;
             Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
             if (hit.transform == currentTarget)
             {
-                ChangeState(EnemyState.Attacking);
+                ChangeState(EnemyState.Attack);
             }
             else
             {
@@ -389,16 +362,42 @@ namespace Enemy_AI
 
         void Chase(Transform target)
         {
-            if (currentTarget == null)
-            {
-                ChangeState(EnemyState.Idle);
-                return;
-            }
-
             if (agent.destination != currentTarget.position)
             {
                 currentTarget = target;
                 agent.SetDestination(target.position);
+            }
+        }
+
+        /// <summary>
+        /// Attack functions
+        /// </summary>
+        void OnAttack()
+        {
+            agent.SetDestination(transform.position);
+
+            if (currentTarget.GetComponent<CharacterManager>().isDead == true)
+            {
+                currentTarget = null;
+                ChangeState(EnemyState.Idle);
+            }
+            else
+            {
+                Check_Target_Distance_And_Raycast();
+            }
+        }
+
+        void Check_Target_Distance_And_Raycast()
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
+            if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit.transform == currentTarget)
+            {
+                Attack(currentTarget.gameObject);
+            }
+            else
+            {
+                ChangeState(EnemyState.Chase);
             }
         }
 
@@ -407,11 +406,15 @@ namespace Enemy_AI
             anim.SetTrigger("Attack");
         }
 
-        public void WhenAttacking(GameObject attacker)
+        public void Attack_Anim_Finished(GameObject attacker)
         {
             AttackTarget(attacker);
         }
 
+        /// <summary>
+        /// State maintanance functions
+        /// </summary>
+        /// <param name="state"></param>
         void ChangeState(EnemyState state)
         {
             if (CurrentState == state)
@@ -423,27 +426,25 @@ namespace Enemy_AI
 
         void ManageStateChange(EnemyState oldState, EnemyState newState)
         {
-            switch (oldState)
-            {
-                case EnemyState.Attacking:
-                    changingState = false;
-                    break;
-            }
-
             switch (newState)
             {
-                case EnemyState.Attacking:
+                case EnemyState.Attack:
                     break;
                 case EnemyState.Chase:
                     break;
                 case EnemyState.Idle:
                     break;
                 case EnemyState.Patrol:
-                    if (attackPoint)
-                    {
-                        agent.SetDestination(attackPoint.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
-                    }
+                    To_Attack_Point();
                     break;
+            }
+        }
+
+        void To_Attack_Point()
+        {
+            if (attackPoint)
+            {
+                agent.SetDestination(attackPoint.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
             }
         }
 
@@ -484,9 +485,9 @@ namespace Enemy_AI
             ChangeState(EnemyState.Idle);
         }
 
-        void RotateToTarget_WhenAttacking()
+        void RotateToTarget()
         {
-            if (CurrentState == EnemyState.Attacking)
+            if (CurrentState == EnemyState.Attack)
             {
                 StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
             }

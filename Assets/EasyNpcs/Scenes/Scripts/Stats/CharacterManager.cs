@@ -24,7 +24,19 @@ namespace Npc_Manager
         public void OnAttack(GameObject attacker, Attack attack)
         {
             TakeDamage(attacker, attack.Damage);
+            OnDeath(attacker);
+        }
 
+        void TakeDamage(GameObject attacker, float damage)
+        {
+            if (damage <= 0f) return;
+            currentHealth.SetValue(currentHealth.GetValue() - damage);
+
+            OnHealthValueChanged?.Invoke();
+        }
+
+        void OnDeath(GameObject attacker)
+        {
             if (GetCurrentHealth().GetValue() <= 0)
             {
                 if (gameObject.layer == 8)
@@ -36,14 +48,6 @@ namespace Npc_Manager
                     }
                 }
             }
-        }
-
-        void TakeDamage(GameObject attacker, float damage)
-        {
-            if (damage <= 0f) return;
-            currentHealth.SetValue(currentHealth.GetValue() - damage);
-
-            OnHealthValueChanged?.Invoke();
         }
 
         public Stat GetArmor()

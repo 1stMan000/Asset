@@ -25,7 +25,7 @@ public class OnAttackAnim : StateMachineBehaviour
         if (enemyAI.currentTarget != null)
         {
             if (enemyAI.assignedWeapon == EnemyAI.Weapon.melee)
-                enemyAI.WhenAttacking(enemyAI.currentTarget.gameObject);
+                enemyAI.Attack_Anim_Finished(enemyAI.currentTarget.gameObject);
             else
             {
                 Projectile projectile = Instantiate(enemyAI.projectile, thisNpc.transform.position + thisNpc.transform.forward * 1 + new Vector3(0, enemyAI.launchHight, 0), enemyAI.transform.rotation);
