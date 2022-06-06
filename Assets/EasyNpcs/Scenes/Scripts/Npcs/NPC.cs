@@ -250,7 +250,7 @@ namespace Npc_AI
 
         void Initialize_Or_Find_Conversation(object[] isFirst_talker_forcedConversation, Tuple<List<string>, List<string>> conversationToSpeak)
         {
-            conversationToSpeak = Check_ForcedConversation_And_Choose(isFirst_talker_forcedConversation);
+            conversationToSpeak = Check_ForcedConversation_And_If_Not_Choose(isFirst_talker_forcedConversation);
             if (conversationToSpeak != null)
             {
                 var componentOfBuddy = conversationBuddy.GetComponent<NPC>();
@@ -261,7 +261,7 @@ namespace Npc_AI
             }
         }
 
-        Tuple<List<string>, List<string>> Check_ForcedConversation_And_Choose(object[] isFirst_talker_forcedConversation)
+        Tuple<List<string>, List<string>> Check_ForcedConversation_And_If_Not_Choose(object[] isFirst_talker_forcedConversation)
         {
             if (!ForcedConversationExists(isFirst_talker_forcedConversation))
             {
@@ -456,7 +456,7 @@ namespace Npc_AI
                     //Stop loop if it is impossible to find way after "limit" iterations
                     if (++index > limit)
                     {
-                        ChangeState(NpcStates.Idle);
+                        agent.destination = this.transform.position;
                         break;
                     }
                 } while (!isPathValid);

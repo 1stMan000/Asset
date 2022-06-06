@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Npc_Manager;
 using Npc_AI;
-using Enemy_AI;
 using PlayerController;
 
 namespace Player_Actions
@@ -35,40 +34,7 @@ namespace Player_Actions
         {
             Attack();
             OpenOrCloseDialogue();
-
-            if (isInteracting && Input.GetMouseButtonUp(0))
-            {
-                if (Npc_Dialogue.currentSentence.nextSentence != null)
-                {
-                    Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
-                    textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
-                }
-                else if (Npc_Dialogue.currentSentence.choices != null)
-                {
-                    textAndButtons.text.SetActive(false);
-
-                    int choiceNum = 0;
-                    foreach (GameObject button in textAndButtons.buttons)
-                    {
-                        button.SetActive(true);
-                        button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
-                        choiceNum++;
-                    }
-                }
-                else
-                {
-                    isInteracting = false;
-                    dialogueWindow.SetActive(false);
-
-                    FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-                    firstPersonAIO.enabled = true;
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-
-                    Npc_Dialogue.enabled = false;
-                    Npc_Dialogue.gameObject.GetComponent<NPC>().enabled = true;
-                }
-            }
+            On_Dialgue_Sequence();
 
             if (!isInteracting && Input.GetKeyDown(InventoryButton))
             {
@@ -78,20 +44,17 @@ namespace Player_Actions
 
         void Attack()
         {
-            if (!isInteracting)
+            if (!isInteracting && Input.GetMouseButtonUp(0))
             {
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                int layerMask = LayerMask.GetMask("Player");
+                layerMask = ~layerMask;
 
-                if (Input.GetMouseButtonUp(0))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
                 {
-                    int layerMask = LayerMask.GetMask("Player");
-                    layerMask = ~layerMask;
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-                    {
-                        GameObject attackable = hit.collider.gameObject;
-                        AttackTarget(attackable);
-                    }
+                    GameObject attackable = hit.collider.gameObject;
+                    AttackTarget(attackable);
                 }
             }
         }
@@ -103,14 +66,28 @@ namespace Player_Actions
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                 {
                     GameObject npc = hit.transform.gameObject;
-                    if (npc.GetComponentInParent<CharacterManager>() != null)
+                    if (Check_CharacterManager(npc))
                     {
-                        if (!npc.GetComponentInParent<CharacterManager>().isDead)
-                        {
-                            StartDialogue(npc);
-                        }
+                        StartDialogue(npc);
                     }
                 }
+            }
+        }
+
+        bool Check_CharacterManager(GameObject npc)
+        {
+            if (npc.GetComponent<CharacterManager>() != null)
+            {
+                if (!npc.GetComponentInParent<CharacterManager>().isDead)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -118,25 +95,16 @@ namespace Player_Actions
         {
             if (npc.GetComponentInParent<DialogueManager>() != null)
             {
-                if (Is_Npc_Type(npc))
+                Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
+                if (Check_State(npc))
                 {
-                    Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
-
-                    isInteracting = true;
-                    dialogueWindow.SetActive(true);
-
-                    FirstPersonAIO firstPersonAIO = GetComponent<FirstPersonAIO>();
-                    firstPersonAIO.enabled = false;
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-
-                    Npc_Dialogue.enabled = true;
+                    Switch_PlayState_To_DialogueState(true);
                     dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
             }
         }
 
-        bool Is_Npc_Type(GameObject npc)
+        bool Check_State(GameObject npc)
         {
             if (npc.GetComponentInParent<NPC>() != null)
             {
@@ -145,10 +113,8 @@ namespace Player_Actions
                 {
                     return State_NotScared(npcAI);
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
             else
             {
@@ -169,6 +135,74 @@ namespace Player_Actions
             }
         }
 
+        void On_Dialgue_Sequence()
+        {
+            if (isInteracting && Input.GetMouseButtonUp(0))
+            {
+                Change_State_Of_Dialogue();
+            }
+        }
+
+        void Change_State_Of_Dialogue()
+        {
+            if (Npc_Dialogue.currentSentence.nextSentence != null)
+            {
+                Change_To_NextSentence();
+            }
+            else if (Npc_Dialogue.currentSentence.choices != null)
+            {
+                Activate_Choices_UI();
+            }
+            else
+            {
+                Switch_PlayState_To_DialogueState(false);
+            }
+        }
+
+        void Change_To_NextSentence()
+        {
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.nextSentence;
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        void Activate_Choices_UI()
+        {
+            textAndButtons.text.SetActive(false);
+
+            int choiceNum = 0;
+            foreach (GameObject button in textAndButtons.buttons)
+            {
+                button.SetActive(true);
+                button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
+                choiceNum++;
+            }
+        }
+
+        void Switch_PlayState_To_DialogueState(bool on_Off_Switch)
+        {
+            isInteracting = on_Off_Switch;
+            dialogueWindow.SetActive(on_Off_Switch);
+
+            GetComponent<FirstPersonAIO>().enabled = !on_Off_Switch;
+
+            Cursor_Lock_State(on_Off_Switch);
+            Cursor.visible = on_Off_Switch;
+
+            Npc_Dialogue.enabled = on_Off_Switch;
+            Npc_Dialogue.gameObject.GetComponent<NPC>().enabled = !on_Off_Switch;
+        }
+
+        void Cursor_Lock_State(bool on_Off_Switch)
+        {
+            if (on_Off_Switch)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
 
         public void PressButton0()
         {
