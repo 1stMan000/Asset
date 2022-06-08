@@ -172,9 +172,16 @@ namespace Player_Actions
             int choiceNum = 0;
             foreach (GameObject button in textAndButtons.buttons)
             {
-                button.SetActive(true);
-                button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
-                choiceNum++;
+                if (Npc_Dialogue.currentSentence.choices.Count > choiceNum)
+                {
+                    button.SetActive(true);
+                    button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
+                    choiceNum++;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
@@ -206,14 +213,43 @@ namespace Player_Actions
 
         public void PressButton0()
         {
+            Disable_Buttons();
+
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[0];
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        public void PressButton1()
+        {
+            Disable_Buttons();
+
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[1];
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        public void PressButton2()
+        {
+            Disable_Buttons();
+
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[2];
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        public void PressButton3()
+        {
+            Disable_Buttons();
+
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[3];
+            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
+        }
+
+        void Disable_Buttons()
+        {
             foreach (GameObject button in textAndButtons.buttons)
             {
                 button.SetActive(false);
             }
             textAndButtons.text.SetActive(true);
-
-            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[0];
-            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
         }
     }
 }
