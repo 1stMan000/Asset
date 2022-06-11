@@ -22,7 +22,6 @@ namespace Npc_AI
         public float scaredRunningSpeed;
         public float runningDistance;
         public float runningTime;
-        private float runTimeLeft;
 
         //NPC-NPC interaction
         GameObject conversationBuddy;
@@ -52,15 +51,8 @@ namespace Npc_AI
 
         void Update()
         {
-            Idle_Walk_Run_BlendAnim();
-            WatchEnvironment();
-        }
-
-        void Idle_Walk_Run_BlendAnim()
-        {
-            if (runTimeLeft > 0)
-                runTimeLeft -= Time.deltaTime;
             anim.SetFloat("Speed", agent.velocity.magnitude);
+            WatchEnvironment();
         }
 
         void WatchEnvironment()
@@ -85,7 +77,7 @@ namespace Npc_AI
             }
         }
 
-        private void ChangeState(NpcStates newState)
+        public void ChangeState(NpcStates newState)
         {
             if (currentState == newState)
                 return;
@@ -102,7 +94,8 @@ namespace Npc_AI
             switch (newState)
             {
                 case NpcStates.Scared:
-                    StartCoroutine(Run(Attacker));
+                    gameObject.AddComponent(typeof(RunAway_Script));
+                    StartCoroutine(GetComponent<RunAway_Script>().Run(Attacker));
                     break;
 
                 case NpcStates.GoingHome:
@@ -407,69 +400,10 @@ namespace Npc_AI
             broadcastAttacked = false;
         }
 
-        public IEnumerator Run(GameObject attacker)
-        {
-            agent.speed = scaredRunningSpeed;
-            runTimeLeft = runningTime;
-            agent.ResetPath();
-
-            while (runTimeLeft > 0)
-            {
-                Vector3 goal;
-                bool isPathValid;
-                NavMeshPath path = new NavMeshPath();
-
-                //Get the angle between "attacker" and NPC
-                Vector3 distanceIn3D = attacker.transform.position - transform.position;
-                float magnitude = new Vector2(distanceIn3D.x, distanceIn3D.z).magnitude;
-                Vector2 distance = new Vector2(distanceIn3D.x / magnitude, distanceIn3D.z / magnitude);
-                double angleX = Math.Acos(distance.x);
-                double angleY = Math.Asin(distance.y);
-
-                //Loop has iteration limit to avoid errors
-                int index = 0;
-                const int limit = 13;
-
-                //Loop tries to find further point from "attacker" in boundaries of a circle of "runningDistance" radius
-                do
-                {
-                    //Rotate point in the circle by (PI / 6 * index)
-                    angleX += index * Math.Pow(-1.0f, index) * Math.PI / 6.0f;
-                    angleY -= index * Math.Pow(-1.0f, index) * Math.PI / 6.0f;
-                    distance = new Vector2((float)Math.Cos(angleX), (float)Math.Sin(angleY));
-                    goal = new Vector3(transform.position.x - distance.x * runningDistance, transform.position.y, transform.position.z - distance.y * runningDistance);
-
-                    //Check if NPC can reach this point
-                    bool samplePosition = NavMesh.SamplePosition(goal, out NavMeshHit hit, runningDistance / 5, agent.areaMask);
-                    //Calculate path if the point is reachable
-                    if (samplePosition)
-                    {
-                        agent.CalculatePath(hit.position, path);
-                        yield return new WaitUntil(() => path.status != NavMeshPathStatus.PathInvalid);
-                        agent.path = path;
-                    }
-
-                    isPathValid = (samplePosition &&
-                                   path.status != NavMeshPathStatus.PathPartial &&
-                                   agent.remainingDistance <= runningDistance);
-
-                    //Stop loop if it is impossible to find way after "limit" iterations
-                    if (++index > limit)
-                    {
-                        agent.destination = this.transform.position;
-                        break;
-                    }
-                } while (!isPathValid);
-
-                yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= runningDistance / 1.2);
-            }
-
-            ChangeState(NpcStates.Idle);
-        }
-
         void StopRunning()
         {
-            StopCoroutine(nameof(Run));
+            if (GetComponent<RunAway_Script>() != null)
+                Destroy(GetComponent<RunAway_Script>());
         }
 
         //Rotate to the target
