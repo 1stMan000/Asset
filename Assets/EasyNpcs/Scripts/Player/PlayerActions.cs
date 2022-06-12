@@ -6,7 +6,7 @@ using PlayerController;
 
 namespace Player_Actions
 {
-    public class PlayerActions : WhenAttacking
+    public class PlayerActions : MonoBehaviour
     {
         public Camera playerCamera;
         public GameObject dialogueWindow;
@@ -54,7 +54,7 @@ namespace Player_Actions
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
                 {
                     GameObject attackable = hit.collider.gameObject;
-                    AttackTarget(attackable);
+                    AttackManager.AttackTarget(gameObject, attackable);
                 }
             }
         }

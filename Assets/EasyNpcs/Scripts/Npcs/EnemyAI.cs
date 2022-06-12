@@ -7,7 +7,7 @@ using Npc_AI;
 
 namespace Enemy_AI
 {
-    public class EnemyAI : WhenAttacking, IDestructible
+    public class EnemyAI : MonoBehaviour, IDestructible
     {
         private CharacterManager manager;
         private NavMeshAgent agent = null;
@@ -101,9 +101,9 @@ namespace Enemy_AI
 
             foreach (Collider col in cols)
             {
-                if (col.transform.root.GetComponent<NPC>() != null)
+                if (col.gameObject.GetComponent<NPC>())
                 {
-                    NPC npc = col.transform.root.GetComponent<NPC>();
+                    NPC npc = col.gameObject.GetComponent<NPC>();
                     if (npc.broadcastAttacked)
                     {
                         CheckTag(npc);
@@ -408,7 +408,7 @@ namespace Enemy_AI
 
         public void Attack_Anim_Finished(GameObject attacker)
         {
-            AttackTarget(attacker);
+            AttackManager.AttackTarget(gameObject, attacker);
         }
 
         /// <summary>

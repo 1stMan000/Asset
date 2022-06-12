@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Projectile : WhenAttacking
+public class Projectile : MonoBehaviour
 {
     private GameObject Caster;
     private GameObject target;
@@ -73,7 +73,7 @@ public class Projectile : WhenAttacking
             return;
         }
 
-        AttackTarget(target);
+        AttackManager.AttackTarget(gameObject, target);
         Destroy(gameObject);
     }
 }

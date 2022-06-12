@@ -21,7 +21,7 @@ public class ScrollingText : MonoBehaviour
     {
         if(Time.time - startTime < duration)
         {
-            transform.LookAt(Camera.main.transform);
+            transform.LookAt(Camera.main.transform); 
             transform.Translate(Vector3.up * speed * Time.deltaTime);
         }
         else 
