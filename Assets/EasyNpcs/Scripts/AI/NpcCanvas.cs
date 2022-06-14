@@ -47,6 +47,6 @@ public class NpcCanvas : MonoBehaviour
     {
         NpcData data = GetComponentInParent<NpcData>();
         if (data != null)
-            text.text = data.NpcName + "\nThe " + data.Job.ToString().ToLower();
+            text.text = data.NpcName + "\nThe " + data.job.ToString().ToLower();
     }
 }

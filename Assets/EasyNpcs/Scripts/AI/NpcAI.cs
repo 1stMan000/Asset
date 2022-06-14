@@ -25,7 +25,7 @@ namespace Npc_AI
 
         //NPC-NPC interaction
         GameObject conversationBuddy;
-        private TextMesh Text;
+        public TextMesh Text;
 
         DayAndNightControl dayAndNightControl;
         public Behaviour workScript;
@@ -114,7 +114,7 @@ namespace Npc_AI
 
                 case NpcStates.Working:
                     if (workScript == null)
-                        SetMoveTarget(work);
+                        agent.SetDestination(work.position);
                     else
                         workScript.enabled = true;
                     break;
@@ -148,12 +148,6 @@ namespace Npc_AI
             }
         }
 
-        private void SetMoveTarget(Transform target)
-        {
-            agent.ResetPath();
-            agent.SetDestination(target.position);
-        }
-
         void GoToWork()
         {
             if (!enabled)
@@ -163,11 +157,10 @@ namespace Npc_AI
             StartCoroutine(GoToWorkCoroutine());
         }
 
-        //Set agent destination to work position, and change state to "Working" as it is reached
         IEnumerator GoToWorkCoroutine()
         {
             agent.speed = movementSpeed;
-            SetMoveTarget(work);
+            agent.SetDestination(work.position);
             yield return new WaitUntil(() => Vector3.Distance(transform.position, work.position) <= agent.stoppingDistance);
 
             if (enabled)
@@ -200,7 +193,7 @@ namespace Npc_AI
             agent.speed = movementSpeed;
             ChangeState(NpcStates.GoingHome);
 
-            SetMoveTarget(home);
+            agent.SetDestination(home.position);
 
             yield return new WaitUntil(() => agent.remainingDistance <= 0.1f && !agent.pathPending);
             if (currentState == NpcStates.GoingHome)
@@ -214,76 +207,10 @@ namespace Npc_AI
             StopCoroutine(GoHomeCoroutine());
         }
 
-        //Conversation Functions
-        public void StartConversation(bool isFirst, GameObject talker, Tuple<List<string>, List<string>> forcedConverstion = null)
+        public void ChangeTo_Talking(GameObject gameObject)
         {
-            Ready_For_Conversation(new object[] { isFirst, talker, forcedConverstion });
-        }
-
-        void Ready_For_Conversation(object[] isFirst_talker_forcedConversation)
-        {
-            bool IsFirstInConversation = (bool)isFirst_talker_forcedConversation[0];
-            conversationBuddy = (GameObject)isFirst_talker_forcedConversation[1];
-
-            Tuple<List<string>, List<string>> conversationToSpeak = null;
-            if (IsFirstInConversation)
-            {
-                Initialize_Or_Find_Conversation(isFirst_talker_forcedConversation, conversationToSpeak);
-            }
-        }
-
-        void Initialize_Or_Find_Conversation(object[] isFirst_talker_forcedConversation, Tuple<List<string>, List<string>> conversationToSpeak)
-        {
-            conversationToSpeak = Check_ForcedConversation_And_If_Not_Choose(isFirst_talker_forcedConversation);
-            if (conversationToSpeak != null)
-            {
-                var componentOfBuddy = conversationBuddy.GetComponent<NpcAI>();
-                Change_Buddy_toTalkingState(componentOfBuddy);
-
-                object[] componentOfBuddy_conversationToSpeak = { componentOfBuddy, conversationToSpeak };
-                StartCoroutine(nameof(Speak_First_Lines), componentOfBuddy_conversationToSpeak);
-            }
-        }
-
-        Tuple<List<string>, List<string>> Check_ForcedConversation_And_If_Not_Choose(object[] isFirst_talker_forcedConversation)
-        {
-            if (!ForcedConversationExists(isFirst_talker_forcedConversation))
-            {
-                return ChooseConversation(conversationBuddy.GetComponent<NpcAI>());
-            }
-            else
-            {
-                return (Tuple<List<string>, List<string>>)isFirst_talker_forcedConversation[2];
-            }
-        }
-
-        bool ForcedConversationExists(object[] isFirst_talker_forcedConversation)
-        {
-            if (isFirst_talker_forcedConversation[2] != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        Tuple<List<string>, List<string>> ChooseConversation(NpcAI componentOfBuddy)
-        {
-            Job[] jobs = { job, componentOfBuddy.job };
-            Gender[] genders = { Gender, componentOfBuddy.Gender };
-
-            return TextLoader.GetDialgoue(genders, jobs);
-        }
-
-        void Change_Buddy_toTalkingState(NpcAI componentOfBuddy)
-        {
+            conversationBuddy = gameObject;
             ChangeState(NpcStates.Talking);
-            agent.SetDestination(componentOfBuddy.transform.position);
-
-            componentOfBuddy.conversationBuddy = gameObject;
-            componentOfBuddy.ChangeState(NpcStates.Talking);
         }
 
         IEnumerator Speak_First_Lines(object[] componentOfBuddy_conversationToSpeak)
@@ -329,7 +256,7 @@ namespace Npc_AI
 
             conversationBuddy = null;
 
-            GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().Job.ToString().ToLower();
+            GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().job.ToString().ToLower();
         }
 
         [Range(0, 10000)]
@@ -344,8 +271,15 @@ namespace Npc_AI
                     //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
                     if (GetInstanceID() > npc.GetInstanceID())
                     {
-                        StartConversation(true, npc.gameObject);
-                        npc.StartConversation(false, gameObject);
+                        if (GetComponent<RunConversation>() == null)
+                        {
+                            RunConversation runConversation = gameObject.AddComponent<RunConversation>();
+                            runConversation.first = true;
+                            runConversation.me = this;
+                            runConversation.partner = npc;
+                            runConversation.conversation = null;
+                            runConversation.StartConversation();
+                        }
                     }
                 }
             }

@@ -569,13 +569,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
+      propertyPath: gender
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
       propertyPath: runningTime
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: converChoose
-      value: 1000
+      value: 1216
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
@@ -2285,13 +2290,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
+      propertyPath: gender
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
       propertyPath: runningTime
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: converChoose
-      value: 817
+      value: 1307
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}

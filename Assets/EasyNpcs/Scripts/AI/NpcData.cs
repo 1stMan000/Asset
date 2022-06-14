@@ -14,12 +14,8 @@ public class NpcData : MonoBehaviour
     protected int age;
     public int Age { get { return age; } }
 
-    [SerializeField]
-    protected Job job;
-    public Job Job { get { return job; } }
-
-    public Gender Gender;
-
+    public Job job;
+    public Gender gender;
 
     [SerializeField]
     protected Transform home;
