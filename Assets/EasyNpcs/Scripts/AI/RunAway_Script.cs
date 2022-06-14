@@ -7,7 +7,7 @@ using Npc_AI;
 public class RunAway_Script : MonoBehaviour
 {
     NavMeshAgent agent;
-    NPC npc;
+    NpcAI npc;
 
     private float runTimeLeft = 10;
 
@@ -19,7 +19,7 @@ public class RunAway_Script : MonoBehaviour
     public IEnumerator Run(GameObject attacker)
     {
         agent = GetComponent<NavMeshAgent>();
-        npc = GetComponent<NPC>();
+        npc = GetComponent<NpcAI>();
 
         agent.speed = npc.scaredRunningSpeed;
         runTimeLeft = npc.runningTime;

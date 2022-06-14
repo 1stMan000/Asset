@@ -63,7 +63,7 @@ namespace Enemy_AI
             anim.SetFloat("Speed", agent.velocity.magnitude);
 
             ManageState();
-            Check_To_Protect();
+            Protect();
             RotateToTarget();
         }
 
@@ -95,24 +95,30 @@ namespace Enemy_AI
         /// <summary>
         /// Protect functions
         /// </summary>
-        private void Check_To_Protect()
+        private void Protect()
         {
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
+            /*Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
 
             foreach (Collider col in cols)
             {
-                if (col.gameObject.GetComponent<NPC>())
+                if (col.gameObject.GetComponent<NpcAI>())
                 {
-                    NPC npc = col.gameObject.GetComponent<NPC>();
+                    NpcAI npc = col.gameObject.GetComponent<NpcAI>();
                     if (npc.broadcastAttacked)
                     {
                         CheckTag(npc);
                     }
                 }
+            }*/
+
+            NpcAI attackedNpc = SenseSurroundings.Sense_Nearby_Attacked_Npc(transform.position, VisionRange, VisionMask);
+            if (attackedNpc != null)
+            {
+                CheckTag(attackedNpc);    
             }
         }
 
-        void CheckTag(NPC npc)
+        void CheckTag(NpcAI npc)
         {
             foreach (string protect in Protects)
             {

@@ -106,9 +106,9 @@ namespace Player_Actions
 
         bool Check_State(GameObject npc)
         {
-            if (npc.GetComponentInParent<NPC>() != null)
+            if (npc.GetComponentInParent<NpcAI>() != null)
             {
-                NPC npcAI = npc.GetComponentInParent<NPC>();
+                NpcAI npcAI = npc.GetComponentInParent<NpcAI>();
                 if (npcAI.enabled)
                 {
                     return State_NotScared(npcAI);
@@ -122,7 +122,7 @@ namespace Player_Actions
             }
         }
 
-        bool State_NotScared(NPC npcAI)
+        bool State_NotScared(NpcAI npcAI)
         {
             if (npcAI.currentState == NpcStates.Scared)
             {
@@ -196,7 +196,7 @@ namespace Player_Actions
             Cursor.visible = on_Off_Switch;
 
             Npc_Dialogue.enabled = on_Off_Switch;
-            Npc_Dialogue.gameObject.GetComponent<NPC>().enabled = !on_Off_Switch;
+            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on_Off_Switch;
         }
 
         void Cursor_Lock_State(bool on_Off_Switch)

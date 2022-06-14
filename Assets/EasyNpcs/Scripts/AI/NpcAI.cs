@@ -8,7 +8,7 @@ using Text_Loader;
 
 namespace Npc_AI
 {
-    public class NPC : NpcData, IDestructible
+    public class NpcAI : NpcData, IDestructible
     {
         Animator anim;
 
@@ -57,23 +57,14 @@ namespace Npc_AI
 
         void WatchEnvironment()
         {
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, VisionLayers);
-
-            foreach (Collider col in cols)
+            Attacker = SenseSurroundings.Sense_Nearby_Attacker(transform.position, VisionRange, VisionLayers);
+            if (Attacker != null)
             {
-                if (col.gameObject.GetComponent<NPC>()) 
-                {
-                    NPC npc = col.gameObject.GetComponent<NPC>();
-                    if (npc.broadcastAttacked)
-                    {
-                        Attacker = npc.Attacker;
-                        ChangeState(NpcStates.Scared);
-                    }
-                    else
-                    {
-                        TriggerConversation(npc);
-                    }
-                }
+                ChangeState(NpcStates.Scared);
+            }
+            else
+            {
+                TriggerConversation(SenseSurroundings.Sense_Nearby_Npc(transform.position, VisionRange, VisionLayers));
             }
         }
 
@@ -246,7 +237,7 @@ namespace Npc_AI
             conversationToSpeak = Check_ForcedConversation_And_If_Not_Choose(isFirst_talker_forcedConversation);
             if (conversationToSpeak != null)
             {
-                var componentOfBuddy = conversationBuddy.GetComponent<NPC>();
+                var componentOfBuddy = conversationBuddy.GetComponent<NpcAI>();
                 Change_Buddy_toTalkingState(componentOfBuddy);
 
                 object[] componentOfBuddy_conversationToSpeak = { componentOfBuddy, conversationToSpeak };
@@ -258,7 +249,7 @@ namespace Npc_AI
         {
             if (!ForcedConversationExists(isFirst_talker_forcedConversation))
             {
-                return ChooseConversation(conversationBuddy.GetComponent<NPC>());
+                return ChooseConversation(conversationBuddy.GetComponent<NpcAI>());
             }
             else
             {
@@ -278,7 +269,7 @@ namespace Npc_AI
             }
         }
 
-        Tuple<List<string>, List<string>> ChooseConversation(NPC componentOfBuddy)
+        Tuple<List<string>, List<string>> ChooseConversation(NpcAI componentOfBuddy)
         {
             Job[] jobs = { job, componentOfBuddy.job };
             Gender[] genders = { Gender, componentOfBuddy.Gender };
@@ -286,7 +277,7 @@ namespace Npc_AI
             return TextLoader.GetDialgoue(genders, jobs);
         }
 
-        void Change_Buddy_toTalkingState(NPC componentOfBuddy)
+        void Change_Buddy_toTalkingState(NpcAI componentOfBuddy)
         {
             ChangeState(NpcStates.Talking);
             agent.SetDestination(componentOfBuddy.transform.position);
@@ -301,7 +292,7 @@ namespace Npc_AI
             ExecuteLine(conversationToSpeak.Item1); 
             yield return new WaitForSeconds(4);
 
-            NPC componentOfBuddy = (NPC)componentOfBuddy_conversationToSpeak[0];
+            NpcAI componentOfBuddy = (NpcAI)componentOfBuddy_conversationToSpeak[0];
             componentOfBuddy.ExecuteLine(conversationToSpeak.Item2);
         }
 
@@ -344,7 +335,7 @@ namespace Npc_AI
         [Range(0, 10000)]
         public int converChoose = 0;
 
-        void TriggerConversation(NPC npc)
+        void TriggerConversation(NpcAI npc)
         {
             if (Check_Conversation_Requirments(this) && Check_Conversation_Requirments(npc))
             {
@@ -360,7 +351,7 @@ namespace Npc_AI
             }
         }
 
-        bool Check_Conversation_Requirments(NPC npcScript)
+        bool Check_Conversation_Requirments(NpcAI npcScript)
         {
             bool state = Check_State_For_Conversation(npcScript);
             if (!npcScript.enabled || !state)
@@ -371,7 +362,7 @@ namespace Npc_AI
             return true;
         }
 
-        bool Check_State_For_Conversation(NPC npcScript)
+        bool Check_State_For_Conversation(NpcAI npcScript)
         {
             if (npcScript.currentState == NpcStates.Scared || npcScript.currentState == NpcStates.Talking)
             {
