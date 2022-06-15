@@ -7,23 +7,41 @@ using Text_Loader;
 
 public class RunConversation : MonoBehaviour
 {
-    public bool first;
-    public NpcAI me;
-    public NpcAI partner;
-    public Tuple<List<string>,List<string>> conversation = null;
+    bool first;
+    NpcAI me;
+    NpcAI partner;
+    Tuple<List<string>,List<string>> conversation = null;
+
+    Rotate rotate;
+
+    public void Set(bool order, NpcAI npcMe, NpcAI npcPartner, Tuple<List<string>, List<string>> conver = null)
+    {
+        first = order;
+        me = npcMe;
+        partner = npcPartner;
+        conversation = conver;
+    }
 
     public void StartConversation()
     {
+        rotate = gameObject.AddComponent<Rotate>();
+        StartCoroutine(rotate.RotateTo(partner.gameObject));
+
         if (first)
         {
-            Tuple<List<string>, List<string>> chosenConv = Choose_Conversation();
-            if (chosenConv != null)
-            {
-                me.ChangeTo_Talking(partner.gameObject);
-                partner.ChangeTo_Talking(me.gameObject);
+            If_First();
+        }
+    }
 
-                StartCoroutine(Speak_First_Lines(chosenConv));
-            }
+    void If_First()
+    {
+        Tuple<List<string>, List<string>> chosenConv = Choose_Conversation();
+        if (chosenConv != null)
+        {
+            me.ChangeTo_Talking(partner.gameObject);
+            partner.ChangeTo_Talking(me.gameObject);
+
+            StartCoroutine(Speak_First_Lines(chosenConv));
         }
     }
 
@@ -53,6 +71,8 @@ public class RunConversation : MonoBehaviour
         yield return new WaitForSeconds(4);
 
         RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
+        partnerConv.Set(false, partner, me);
+        partnerConv.StartConversation();
         partnerConv.StartCoroutine(Talk(chosenConv.Item2, partner));
     }
 
@@ -72,6 +92,13 @@ public class RunConversation : MonoBehaviour
             }
         }
 
+        Destroy(rotate);
+        Destroy(this);
         npc.ChangeState(NpcStates.Idle);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(rotate);
     }
 }

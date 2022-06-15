@@ -109,7 +109,6 @@ namespace Npc_AI
                     break;
 
                 case NpcStates.Talking:
-                    StartCoroutine(nameof(RotateTo), conversationBuddy);
                     break;
 
                 case NpcStates.Working:
@@ -213,49 +212,11 @@ namespace Npc_AI
             ChangeState(NpcStates.Talking);
         }
 
-        IEnumerator Speak_First_Lines(object[] componentOfBuddy_conversationToSpeak)
-        {
-            Tuple<List<string>, List<string>> conversationToSpeak = (Tuple<List<string>, List<string>>)componentOfBuddy_conversationToSpeak[1];
-            ExecuteLine(conversationToSpeak.Item1); 
-            yield return new WaitForSeconds(4);
-
-            NpcAI componentOfBuddy = (NpcAI)componentOfBuddy_conversationToSpeak[0];
-            componentOfBuddy.ExecuteLine(conversationToSpeak.Item2);
-        }
-
-        public void ExecuteLine(List<string> text, int waitSeconds = 0)
-        {
-            StartCoroutine(nameof(Talk), text);
-        }
-
-        IEnumerator Talk(List<string> text)
-        {
-            for (int i = 0; i < text.Count; i++)
-            {
-                if (!text[i].StartsWith(" ")) 
-                {
-                    Text.text = text[i];
-                    yield return new WaitForSeconds(4);
-                    if (i != text.Count - 1)
-                    {
-                        Text.text = null;
-                        yield return new WaitForSeconds(4);
-                    }
-                }
-            }
-
-            ChangeState(NpcStates.Idle);
-        }
-
         public void EndConversation()
         {
-            agent.isStopped = false;
-            StopCoroutine(nameof(RotateTo));
-            StopCoroutine(nameof(Speak_First_Lines));
-            StopCoroutine(nameof(Talk));
+            Destroy(GetComponent<RunConversation>());
 
             conversationBuddy = null;
-
             GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().job.ToString().ToLower();
         }
 
@@ -274,10 +235,7 @@ namespace Npc_AI
                         if (GetComponent<RunConversation>() == null)
                         {
                             RunConversation runConversation = gameObject.AddComponent<RunConversation>();
-                            runConversation.first = true;
-                            runConversation.me = this;
-                            runConversation.partner = npc;
-                            runConversation.conversation = null;
+                            runConversation.Set(true, this, npc, null);
                             runConversation.StartConversation();
                         }
                     }
@@ -329,19 +287,6 @@ namespace Npc_AI
         {
             if (GetComponent<RunAway_Script>() != null)
                 Destroy(GetComponent<RunAway_Script>());
-        }
-
-        //Rotate to the target
-        public IEnumerator RotateTo(GameObject target)
-        {
-            Quaternion lookRotation;
-            do
-            {
-                Vector3 direction = (target.transform.position - transform.position).normalized;
-                lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
-                yield return new WaitForEndOfFrame();
-            } while (true);
         }
 
         void OnDestroy()
