@@ -14,17 +14,10 @@ namespace Npc_AI
 
         public NavMeshAgent agent { get; private set; }
         public float movementSpeed;
-
-        [HideInInspector]
-        public GameObject Attacker;
-        [HideInInspector]
-        public bool broadcastAttacked;
         public float scaredRunningSpeed;
         public float runningDistance;
         public float runningTime;
 
-        //NPC-NPC interaction
-        GameObject conversationBuddy;
         public TextMesh Text;
 
         DayAndNightControl dayAndNightControl;
@@ -35,7 +28,11 @@ namespace Npc_AI
             anim = GetComponentInChildren<Animator>();
             agent = GetComponent<NavMeshAgent>();
             Text = GetComponentInChildren<TextMesh>();
+            DayAndNightCycle_Initialize();
+        }
 
+        void DayAndNightCycle_Initialize()
+        {
             dayAndNightControl = FindObjectOfType<DayAndNightControl>();
 
             if (dayAndNightControl != null)
@@ -54,6 +51,8 @@ namespace Npc_AI
             anim.SetFloat("Speed", agent.velocity.magnitude);
             WatchEnvironment();
         }
+
+        GameObject Attacker;
 
         void WatchEnvironment()
         {
@@ -85,8 +84,7 @@ namespace Npc_AI
             switch (newState)
             {
                 case NpcStates.Scared:
-                    gameObject.AddComponent(typeof(RunAway_Script));
-                    StartCoroutine(GetComponent<RunAway_Script>().Run(Attacker));
+                    OnScared();
                     break;
 
                 case NpcStates.GoingHome:
@@ -97,15 +95,7 @@ namespace Npc_AI
                     break;
 
                 case NpcStates.Idle:
-                    float time = dayAndNightControl.currentTime;
-                    if (time > .3f && time < .7f)
-                    {
-                        GoToWork();
-                    }
-                    else
-                    {
-                        GoHome();
-                    }
+                    OnIdle();
                     break;
 
                 case NpcStates.Talking:
@@ -144,6 +134,40 @@ namespace Npc_AI
                     break;
                 default:
                     break;
+            }
+        }
+
+        public void OnAttack(GameObject attacker, Attack attack)
+        {
+            if (this.enabled == false)
+                return;
+
+            Attacker = attacker;
+            ChangeState(NpcStates.Scared);
+        }
+
+        void OnScared()
+        {
+            gameObject.AddComponent(typeof(RunAway));
+            StartCoroutine(GetComponent<RunAway>().Run(Attacker));
+        }
+
+        void StopRunning()
+        {
+            if (GetComponent<RunAway>() != null)
+                Destroy(GetComponent<RunAway>());
+        }
+
+        void OnIdle()
+        {
+            float time = dayAndNightControl.currentTime;
+            if (time > .3f && time < .7f)
+            {
+                GoToWork();
+            }
+            else
+            {
+                GoHome();
             }
         }
 
@@ -206,26 +230,12 @@ namespace Npc_AI
             StopCoroutine(GoHomeCoroutine());
         }
 
-        public void ChangeTo_Talking(GameObject gameObject)
-        {
-            conversationBuddy = gameObject;
-            ChangeState(NpcStates.Talking);
-        }
-
-        public void EndConversation()
-        {
-            Destroy(GetComponent<RunConversation>());
-
-            conversationBuddy = null;
-            GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().job.ToString().ToLower();
-        }
-
         [Range(0, 10000)]
         public int converChoose = 0;
 
         void TriggerConversation(NpcAI npc)
         {
-            if (Check_Conversation_Requirments(this) && Check_Conversation_Requirments(npc))
+            if (currentState != NpcStates.Scared && npc.currentState != NpcStates.Scared)
             {
                 if (UnityEngine.Random.Range(0, 10000) < converChoose) 
                 {
@@ -243,63 +253,15 @@ namespace Npc_AI
             }
         }
 
-        bool Check_Conversation_Requirments(NpcAI npcScript)
+        public void ChangeTo_Talking(GameObject gameObject)
         {
-            bool state = Check_State_For_Conversation(npcScript);
-            if (!npcScript.enabled || !state)
-            {
-                return false;
-            }
-
-            return true;
+            ChangeState(NpcStates.Talking);
         }
 
-        bool Check_State_For_Conversation(NpcAI npcScript)
+        public void EndConversation()
         {
-            if (npcScript.currentState == NpcStates.Scared || npcScript.currentState == NpcStates.Talking)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public void OnAttack(GameObject attacker, Attack attack)
-        {
-            if (this.enabled == false)
-                return;
-
-            Attacker = attacker;
-            ChangeState(NpcStates.Scared);
-            StartCoroutine(nameof(BroadcastAttacked_Courountine));
-        }
-
-        IEnumerator BroadcastAttacked_Courountine()
-        {
-            broadcastAttacked = true;
-            yield return new WaitForSeconds(1f);
-            broadcastAttacked = false;
-        }
-
-        void StopRunning()
-        {
-            if (GetComponent<RunAway_Script>() != null)
-                Destroy(GetComponent<RunAway_Script>());
-        }
-
-        void OnDestroy()
-        {
-            DayAndNightControl control = FindObjectOfType<DayAndNightControl>();
-            control.OnMorningHandler -= GoToWork;
-            control.OnEveningHandler -= GoHome;
-        }
-
-        void OnDisable()
-        {
-            TurnOffBehaviour(currentState);
-            anim.SetFloat("Speed", 0);
+            Destroy(GetComponent<RunConversation>());
+            GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().job.ToString().ToLower();
         }
 
         private void OnEnable()
@@ -310,6 +272,12 @@ namespace Npc_AI
         public void OnDestruction(GameObject destroyer)
         {
             enabled = false;
+        }
+
+        void OnDisable()
+        {
+            TurnOffBehaviour(currentState);
+            anim.SetFloat("Speed", 0);
         }
 
         public void EnableCombat()

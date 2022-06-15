@@ -97,20 +97,6 @@ namespace Enemy_AI
         /// </summary>
         private void Protect()
         {
-            /*Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange);
-
-            foreach (Collider col in cols)
-            {
-                if (col.gameObject.GetComponent<NpcAI>())
-                {
-                    NpcAI npc = col.gameObject.GetComponent<NpcAI>();
-                    if (npc.broadcastAttacked)
-                    {
-                        CheckTag(npc);
-                    }
-                }
-            }*/
-
             NpcAI attackedNpc = SenseSurroundings.Sense_Nearby_Attacked_Npc(transform.position, VisionRange, VisionMask);
             if (attackedNpc != null)
             {
@@ -124,7 +110,7 @@ namespace Enemy_AI
             {
                 if (npc.tag == protect && currentTarget == null)
                 {
-                    currentTarget = npc.Attacker.transform;
+                    currentTarget = npc.GetComponent<RunAway>().Attacker.transform;
                     return;
                 }
             }

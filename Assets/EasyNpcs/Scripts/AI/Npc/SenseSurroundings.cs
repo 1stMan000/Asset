@@ -11,13 +11,9 @@ public static class SenseSurroundings
 
         foreach (Collider col in cols)
         {
-            if (col.gameObject.GetComponent<NpcAI>())
+            if (col.gameObject.GetComponent<RunAway>())
             {
-                NpcAI npc = col.gameObject.GetComponent<NpcAI>();
-                if (npc.broadcastAttacked)
-                {
-                    return npc.Attacker;
-                }
+                return col.gameObject.GetComponent<RunAway>().Attacker;
             }
         }
 
@@ -30,14 +26,10 @@ public static class SenseSurroundings
 
         foreach (Collider col in cols)
         {
-            if (col.gameObject.GetComponent<NpcAI>())
+            if (col.gameObject.GetComponent<RunAway>())
             {
-                NpcAI npc = col.gameObject.GetComponent<NpcAI>();
-                if (npc.broadcastAttacked)
-                {
-                    return npc;
-                }
-            }
+                return col.gameObject.GetComponent<NpcAI>();
+            } 
         }
 
         return null;

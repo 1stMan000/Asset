@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using Npc_AI;
 
-public class RunAway_Script : MonoBehaviour
+public class RunAway : MonoBehaviour
 {
     NavMeshAgent agent;
     NpcAI npc;
+
+    public GameObject Attacker;
 
     private float runTimeLeft = 10;
 
@@ -18,6 +20,8 @@ public class RunAway_Script : MonoBehaviour
 
     public IEnumerator Run(GameObject attacker)
     {
+        Attacker = attacker;
+
         agent = GetComponent<NavMeshAgent>();
         npc = GetComponent<NpcAI>();
 
@@ -76,6 +80,11 @@ public class RunAway_Script : MonoBehaviour
             yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= npc.runningDistance / 1.2);
         }
 
+        Finish();
+    }
+
+    void Finish()
+    {
         npc.ChangeState(NpcStates.Idle);
         Destroy(this);
     }
