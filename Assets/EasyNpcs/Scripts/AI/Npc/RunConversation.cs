@@ -14,6 +14,11 @@ public class RunConversation : MonoBehaviour
 
     Rotate rotate;
 
+    private void Start()
+    {
+        me.ChangeState(NpcStates.Talking);
+    }
+
     public void Set(bool order, NpcAI npcMe, NpcAI npcPartner, Tuple<List<string>, List<string>> conver = null)
     {
         first = order;
@@ -38,9 +43,6 @@ public class RunConversation : MonoBehaviour
         Tuple<List<string>, List<string>> chosenConv = Choose_Conversation();
         if (chosenConv != null)
         {
-            me.ChangeTo_Talking(partner.gameObject);
-            partner.ChangeTo_Talking(me.gameObject);
-
             StartCoroutine(Speak_First_Lines(chosenConv));
         }
     }
@@ -67,34 +69,32 @@ public class RunConversation : MonoBehaviour
 
     IEnumerator Speak_First_Lines(Tuple<List<string>, List<string>> chosenConv)
     {
-        StartCoroutine(Talk(chosenConv.Item1, me));
+        StartCoroutine(Talk(chosenConv.Item1));
         yield return new WaitForSeconds(4);
 
         RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
         partnerConv.Set(false, partner, me);
         partnerConv.StartConversation();
-        partnerConv.StartCoroutine(Talk(chosenConv.Item2, partner));
+        StartCoroutine(partnerConv.Talk(chosenConv.Item2));
     }
 
-    public IEnumerator Talk(List<string> text, NpcAI npc)
+    public IEnumerator Talk(List<string> text)
     {
         for (int i = 0; i < text.Count; i++)
         {
             if (!text[i].StartsWith(" "))
             {
-                npc.Text.text = text[i];
+                me.Text.text = text[i];
                 yield return new WaitForSeconds(4);
                 if (i != text.Count - 1)
                 {
-                    npc.Text.text = null;
+                    me.Text.text = null;
                     yield return new WaitForSeconds(4);
                 }
             }
         }
 
-        Destroy(rotate);
-        Destroy(this);
-        npc.ChangeState(NpcStates.Idle);
+        me.ChangeState(NpcStates.Idle);
     }
 
     private void OnDestroy()

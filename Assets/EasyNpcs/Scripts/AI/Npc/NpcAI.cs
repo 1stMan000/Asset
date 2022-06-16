@@ -18,6 +18,7 @@ namespace Npc_AI
         public float runningDistance;
         public float runningTime;
 
+        [HideInInspector]
         public TextMesh Text;
 
         DayAndNightControl dayAndNightControl;
@@ -99,6 +100,7 @@ namespace Npc_AI
                     break;
 
                 case NpcStates.Talking:
+                    agent.SetDestination(transform.position);
                     break;
 
                 case NpcStates.Working:
@@ -117,13 +119,12 @@ namespace Npc_AI
             switch (prevState)
             {
                 case NpcStates.Scared:
-                    StopRunning();
+                    break;
+                case NpcStates.GoingToWork:
+                    Destroy(GetComponent<LifeCycle>());
                     break;
                 case NpcStates.GoingHome:
                     StopGoingHome();
-                    break;
-                case NpcStates.GoingToWork:
-                    StopGoingToWork();
                     break;
                 case NpcStates.Working:
                     if (workScript != null)
@@ -152,12 +153,6 @@ namespace Npc_AI
             StartCoroutine(GetComponent<RunAway>().Run(Attacker));
         }
 
-        void StopRunning()
-        {
-            if (GetComponent<RunAway>() != null)
-                Destroy(GetComponent<RunAway>());
-        }
-
         void OnIdle()
         {
             float time = dayAndNightControl.currentTime;
@@ -176,8 +171,13 @@ namespace Npc_AI
             if (!enabled)
                 return;
 
+            if (currentState == NpcStates.GoingToWork || currentState == NpcStates.Talking || currentState == NpcStates.Scared)
+                return;
+
             ChangeState(NpcStates.GoingToWork);
-            StartCoroutine(GoToWorkCoroutine());
+            LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
+            lifeCycle.Set(this);
+            lifeCycle.Start_GOTOWork();
         }
 
         IEnumerator GoToWorkCoroutine()
@@ -205,9 +205,10 @@ namespace Npc_AI
             if (!enabled)
                 return;
 
-            //States that are more prioritized than 'GoingHome' state
             if (currentState == NpcStates.GoingHome || currentState == NpcStates.Talking || currentState == NpcStates.Scared)
                 return;
+
+            ChangeState(NpcStates.GoingHome);
             StartCoroutine(GoHomeCoroutine());
         }
 
@@ -247,15 +248,12 @@ namespace Npc_AI
                             RunConversation runConversation = gameObject.AddComponent<RunConversation>();
                             runConversation.Set(true, this, npc, null);
                             runConversation.StartConversation();
+
+                            ChangeState(NpcStates.Talking);
                         }
                     }
                 }
             }
-        }
-
-        public void ChangeTo_Talking(GameObject gameObject)
-        {
-            ChangeState(NpcStates.Talking);
         }
 
         public void EndConversation()

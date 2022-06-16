@@ -18,8 +18,7 @@ public class NpcData : MonoBehaviour
     public Gender gender;
 
     [SerializeField]
-    protected Transform home;
-
+    public Transform home;
     public Transform work;
 
     [SerializeField]
