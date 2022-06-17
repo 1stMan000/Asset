@@ -62,12 +62,12 @@ namespace Enemy_AI
         {
             anim.SetFloat("Speed", agent.velocity.magnitude);
 
-            ManageState();
+            State_On_Update();
             Protect();
             RotateToTarget();
         }
 
-        void ManageState()
+        void State_On_Update()
         {
             switch (CurrentState)
             {
@@ -92,15 +92,11 @@ namespace Enemy_AI
             }
         }
 
-        /// <summary>
-        /// Protect functions
-        /// </summary>
         private void Protect()
         {
-            NpcAI attackedNpc = SenseSurroundings.Sense_Nearby_Attacked_Npc(transform.position, VisionRange, VisionMask);
-            if (attackedNpc != null)
+            if (currentTarget == null)
             {
-                CheckTag(attackedNpc);    
+                currentTarget = SenseSurroundings.Sense_Nearby_Attacked_Npc(transform.position, VisionRange, VisionMask, Protects);
             }
         }
 

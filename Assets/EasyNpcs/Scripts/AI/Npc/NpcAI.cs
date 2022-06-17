@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using DayandNight;
-using Text_Loader;
 
 namespace Npc_AI
 {
@@ -124,7 +121,7 @@ namespace Npc_AI
                     Destroy(GetComponent<LifeCycle>());
                     break;
                 case NpcStates.GoingHome:
-                    StopGoingHome();
+                    Destroy(GetComponent<LifeCycle>());
                     break;
                 case NpcStates.Working:
                     if (workScript != null)
@@ -175,29 +172,10 @@ namespace Npc_AI
                 return;
 
             ChangeState(NpcStates.GoingToWork);
+
             LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
             lifeCycle.Set(this);
             lifeCycle.Start_GOTOWork();
-        }
-
-        IEnumerator GoToWorkCoroutine()
-        {
-            agent.speed = movementSpeed;
-            agent.SetDestination(work.position);
-            yield return new WaitUntil(() => Vector3.Distance(transform.position, work.position) <= agent.stoppingDistance);
-
-            if (enabled)
-            {
-                if (currentState != NpcStates.Working)
-                    ChangeState(NpcStates.Working);
-            }
-        }
-
-        void StopGoingToWork()
-        {
-            if (agent.isActiveAndEnabled)
-                agent.ResetPath();
-            StopCoroutine(GoToWorkCoroutine());
         }
 
         void GoHome()
@@ -209,26 +187,10 @@ namespace Npc_AI
                 return;
 
             ChangeState(NpcStates.GoingHome);
-            StartCoroutine(GoHomeCoroutine());
-        }
 
-        IEnumerator GoHomeCoroutine()
-        {
-            agent.speed = movementSpeed;
-            ChangeState(NpcStates.GoingHome);
-
-            agent.SetDestination(home.position);
-
-            yield return new WaitUntil(() => agent.remainingDistance <= 0.1f && !agent.pathPending);
-            if (currentState == NpcStates.GoingHome)
-                ChangeState(NpcStates.Idle);
-        }
-
-        void StopGoingHome()
-        {
-            if (agent.isActiveAndEnabled)
-                agent.ResetPath();
-            StopCoroutine(GoHomeCoroutine());
+            LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
+            lifeCycle.Set(this);
+            lifeCycle.Start_GOTOHome();
         }
 
         [Range(0, 10000)]

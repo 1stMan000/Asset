@@ -26,7 +26,12 @@ public class LifeCycle : MonoBehaviour
         npcAI.ChangeState(NpcStates.Working);
     }
 
-    public IEnumerator GoHomeCoroutine()
+    public void Start_GOTOHome()
+    {
+        StartCoroutine(GoHomeCoroutine());
+    }
+
+    IEnumerator GoHomeCoroutine()
     {
         npcAI.agent.speed = npcAI.movementSpeed;
         npcAI.agent.SetDestination(npcAI.home.position);
