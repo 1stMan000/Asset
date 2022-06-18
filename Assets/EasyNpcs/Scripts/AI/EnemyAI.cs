@@ -139,75 +139,8 @@ namespace Enemy_AI
             List<Collider> possibleTargets = SenseSurroundings.PossibleTargets(transform.position, VisionRange, VisionMask, Tags, gameObject);
             if (possibleTargets.Count > 0)
             {
-                Collider nearestTarget = NearestTarget(possibleTargets);
-                
-                EnemyAI[] enemyAiScripts = Return_All_Valid_EnemyAi_Scripts();
-                int howmanyTarget = How_Many_Enemies_Are_Facing_Target(enemyAiScripts, nearestTarget);
-
-                return Check_If_Maximum_Enemies_Are_Facing_Target(nearestTarget, howmanyTarget);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        Collider NearestTarget(List<Collider> possibleTargets)
-        {
-            Collider nearestTarget = possibleTargets[0];
-            for (int i = 1; i < possibleTargets.Count; i++)
-            {
-                if (Vector3.Distance(possibleTargets[i].transform.position, transform.position)
-                    < Vector3.Distance(nearestTarget.transform.position, transform.position))
-                    nearestTarget = possibleTargets[i];
-            }
-
-            return nearestTarget;
-        }
-
-        EnemyAI[] Return_All_Valid_EnemyAi_Scripts()
-        {
-            EnemyAI[] enemyAiScripts = GameObject.FindObjectsOfType<EnemyAI>();
-            Remove_Disabled_Enemy_Scripts(ref enemyAiScripts);
-
-            return enemyAiScripts;
-        }
-
-        void Remove_Disabled_Enemy_Scripts(ref EnemyAI[] enemyAiScripts)
-        {
-            for (int i = 0; i < enemyAiScripts.Length; i++)
-            {
-                if (enemyAiScripts[i].enabled == false)
-                {
-                    for (int a = i; a < enemyAiScripts.Length - 1; a++)
-                    {
-                        enemyAiScripts[a] = enemyAiScripts[a + 1];
-                    }
-
-                    System.Array.Resize(ref enemyAiScripts, enemyAiScripts.Length - 1);
-                }
-            }
-        }
-
-        int How_Many_Enemies_Are_Facing_Target(EnemyAI[] enemyAiScripts, Collider nearestTarget)
-        {
-            int howmanyTarget = 0;
-            for (int i = 0; i < enemyAiScripts.Length; i++)
-            {
-                if (enemyAiScripts[i].currentTarget == nearestTarget.transform)
-                {
-                    howmanyTarget++;
-                }
-            }
-
-            return howmanyTarget;
-        }
-
-        Transform Check_If_Maximum_Enemies_Are_Facing_Target(Collider target, int how_Many_Enemeies)
-        {
-            if (how_Many_Enemeies < maximumAttackers)
-            {
-                return target.transform;
+                Collider nearestTarget = SenseSurroundings.NearestTarget(possibleTargets, transform.position);
+                return SenseSurroundings.Check_If_Maximum_Enemies_Are_Facing_Target(nearestTarget, maximumAttackers);
             }
             else
             {

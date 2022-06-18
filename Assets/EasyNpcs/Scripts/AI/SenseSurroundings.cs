@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Npc_AI;
+using Enemy_AI;
 
 public static class SenseSurroundings 
 {
@@ -101,5 +102,71 @@ public static class SenseSurroundings
         }
 
         return collider;
+    }
+
+    public static Collider NearestTarget(List<Collider> possibleTargets, Vector3 position)
+    {
+        Collider nearestTarget = possibleTargets[0];
+        for (int i = 1; i < possibleTargets.Count; i++)
+        {
+            if (Vector3.Distance(possibleTargets[i].transform.position, position)
+                < Vector3.Distance(nearestTarget.transform.position, position))
+                nearestTarget = possibleTargets[i];
+        }
+
+        return nearestTarget;
+    }
+
+    public static Transform Check_If_Maximum_Enemies_Are_Facing_Target(Collider target, int maximumAttackers)
+    {
+        int number_Of_Enemies_On_Target = Number_Of_Enemies_On_Target(target);
+        if (number_Of_Enemies_On_Target < maximumAttackers)
+        {
+            return target.transform;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    static int Number_Of_Enemies_On_Target(Collider target)
+    {
+        EnemyAI[] enemyAiScripts = Return_All_Valid_EnemyAi_Scripts();
+
+        int enemies = 0;
+        for (int i = 0; i < enemyAiScripts.Length; i++)
+        {
+            if (enemyAiScripts[i].currentTarget == target.transform)
+            {
+                enemies++;
+            }
+        }
+
+        return enemies;
+    }
+
+    static EnemyAI[] Return_All_Valid_EnemyAi_Scripts()
+    {
+        EnemyAI[] enemyAiScripts = GameObject.FindObjectsOfType<EnemyAI>();
+        Remove_Disabled_Enemy_Scripts(ref enemyAiScripts);
+
+        return enemyAiScripts;
+    }
+
+    static void Remove_Disabled_Enemy_Scripts(ref EnemyAI[] enemyAiScripts)
+    {
+        for (int i = 0; i < enemyAiScripts.Length; i++)
+        {
+            if (enemyAiScripts[i].enabled == false)
+            {
+                for (int a = i; a < enemyAiScripts.Length - 1; a++)
+                {
+                    enemyAiScripts[a] = enemyAiScripts[a + 1];
+                }
+
+                System.Array.Resize(ref enemyAiScripts, enemyAiScripts.Length - 1);
+            }
+        }
     }
 }
