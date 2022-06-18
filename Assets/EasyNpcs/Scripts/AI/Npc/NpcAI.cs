@@ -54,7 +54,7 @@ namespace Npc_AI
 
         void WatchEnvironment()
         {
-            Attacker = SenseSurroundings.Sense_Nearby_Attacker(transform.position, VisionRange, VisionLayers);
+            Attacker = SenseSurroundings.NPC_Sense_Attacker(transform.position, VisionRange, VisionLayers);
             if (Attacker != null)
             {
                 ChangeState(NpcStates.Scared);

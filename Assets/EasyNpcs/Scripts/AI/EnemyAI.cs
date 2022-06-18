@@ -96,25 +96,10 @@ namespace Enemy_AI
         {
             if (currentTarget == null)
             {
-                currentTarget = SenseSurroundings.Sense_Nearby_Attacked_Npc(transform.position, VisionRange, VisionMask, Protects);
+                currentTarget = SenseSurroundings.BattleAI_Sense_Friendly_Attacked(transform.position, VisionRange, VisionMask, Protects);
             }
         }
 
-        void CheckTag(NpcAI npc)
-        {
-            foreach (string protect in Protects)
-            {
-                if (npc.tag == protect && currentTarget == null)
-                {
-                    currentTarget = npc.GetComponent<RunAway>().Attacker.transform;
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sense target functions
-        /// </summary>
         void OnPatrol()
         {
             if (currentTarget == null)
@@ -151,7 +136,7 @@ namespace Enemy_AI
 
         Transform CheckForTargets()
         {
-            List<Collider> possibleTargets = PossibleTargets();
+            List<Collider> possibleTargets = SenseSurroundings.PossibleTargets(transform.position, VisionRange, VisionMask, Tags, gameObject);
             if (possibleTargets.Count > 0)
             {
                 Collider nearestTarget = NearestTarget(possibleTargets);
@@ -164,37 +149,6 @@ namespace Enemy_AI
             else
             {
                 return null;
-            }
-        }
-
-        List<Collider> PossibleTargets()
-        {
-            List<Collider> toReturn = new List<Collider>();
-
-            Collider[] cols = Physics.OverlapSphere(transform.position, VisionRange, VisionMask);
-            foreach (Collider col in cols)
-            {
-                if (col.transform != this.transform)
-                {
-                    if (Physics.Linecast(transform.position + Vector3.up * 1.7f, col.transform.position + Vector3.up * 1.7f, out RaycastHit hit, VisionMask))
-                    {
-                        Check_Tags(col, ref toReturn);
-                    }
-                }
-            }
-
-            return toReturn;
-        }
-
-        void Check_Tags(Collider col, ref List<Collider> toReturn)
-        {
-            for (int i = 0; i < Tags.Capacity; i++)
-            {
-                if (col.gameObject.CompareTag(Tags[i]))
-                {
-                    toReturn.Add(col);
-                    break;
-                }
             }
         }
 
