@@ -80,7 +80,7 @@ public class RunAway : MonoBehaviour
             yield return new WaitUntil(() => Vector3.Distance(agent.destination, transform.position) <= npc.runningDistance / 1.2);
         }
 
-        npc.ChangeState(NpcStates.Idle);
+        npc.ChangeState(NpcState.Idle);
         Destroy(this);
     }
 }

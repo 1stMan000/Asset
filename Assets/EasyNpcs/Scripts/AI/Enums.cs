@@ -1,6 +1,6 @@
 ﻿using System;
 
-public enum NpcStates
+public enum NpcState
 {
     Idle,
     GoingToWork,
@@ -11,7 +11,7 @@ public enum NpcStates
     Scared
 }
 
-public enum EnemyState
+public enum EnemeyState
 {
     Idle,
     Patrol,

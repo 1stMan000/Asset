@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    public IEnumerator RotateTo(GameObject target)
+    public void RotateTo(GameObject target)
+    {
+        StartCoroutine(RotateToObject(target));
+    }
+
+    IEnumerator RotateToObject(GameObject target)
     {
         Quaternion lookRotation;
         do

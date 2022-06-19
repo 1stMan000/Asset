@@ -124,7 +124,7 @@ namespace Player_Actions
 
         bool State_NotScared(NpcAI npcAI)
         {
-            if (npcAI.currentState == NpcStates.Scared)
+            if (npcAI.currentState == NpcState.Scared)
             {
                 return false;
             }

@@ -16,7 +16,7 @@ public class RunConversation : MonoBehaviour
 
     private void Start()
     {
-        me.ChangeState(NpcStates.Talking);
+        me.ChangeState(NpcState.Talking);
     }
 
     public void Set(bool order, NpcAI npcMe, NpcAI npcPartner, Tuple<List<string>, List<string>> conver = null)
@@ -30,7 +30,7 @@ public class RunConversation : MonoBehaviour
     public void StartConversation()
     {
         rotate = gameObject.AddComponent<Rotate>();
-        StartCoroutine(rotate.RotateTo(partner.gameObject));
+        rotate.RotateTo(partner.gameObject);
 
         if (first)
         {
@@ -94,7 +94,7 @@ public class RunConversation : MonoBehaviour
             }
         }
 
-        me.ChangeState(NpcStates.Idle);
+        me.ChangeState(NpcState.Idle);
     }
 
     private void OnDestroy()

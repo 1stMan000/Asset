@@ -57,7 +57,7 @@ namespace Npc_AI
             Attacker = SenseSurroundings.NPC_Sense_Attacker(transform.position, VisionRange, VisionLayers);
             if (Attacker != null)
             {
-                ChangeState(NpcStates.Scared);
+                ChangeState(NpcState.Scared);
             }
             else
             {
@@ -65,42 +65,42 @@ namespace Npc_AI
             }
         }
 
-        public void ChangeState(NpcStates newState)
+        public void ChangeState(NpcState newState)
         {
             if (currentState == newState)
                 return;
 
-            NpcStates prevState = currentState;
+            NpcState prevState = currentState;
             currentState = newState;
 
             OnStateChanged(prevState, newState);
         }
 
-        private void OnStateChanged(NpcStates prevState, NpcStates newState)
+        private void OnStateChanged(NpcState prevState, NpcState newState)
         {
             TurnOffBehaviour(prevState);
             switch (newState)
             {
-                case NpcStates.Scared:
+                case NpcState.Scared:
                     OnScared();
                     break;
 
-                case NpcStates.GoingHome:
+                case NpcState.GoingHome:
                     GoHome();
                     break;
 
-                case NpcStates.GoingToWork:
+                case NpcState.GoingToWork:
                     break;
 
-                case NpcStates.Idle:
+                case NpcState.Idle:
                     OnIdle();
                     break;
 
-                case NpcStates.Talking:
+                case NpcState.Talking:
                     agent.SetDestination(transform.position);
                     break;
 
-                case NpcStates.Working:
+                case NpcState.Working:
                     if (workScript == null)
                         agent.SetDestination(work.position);
                     else
@@ -111,23 +111,23 @@ namespace Npc_AI
             }
         }
 
-        void TurnOffBehaviour(NpcStates prevState)
+        void TurnOffBehaviour(NpcState prevState)
         {
             switch (prevState)
             {
-                case NpcStates.Scared:
+                case NpcState.Scared:
                     break;
-                case NpcStates.GoingToWork:
+                case NpcState.GoingToWork:
                     Destroy(GetComponent<LifeCycle>());
                     break;
-                case NpcStates.GoingHome:
+                case NpcState.GoingHome:
                     Destroy(GetComponent<LifeCycle>());
                     break;
-                case NpcStates.Working:
+                case NpcState.Working:
                     if (workScript != null)
                         workScript.enabled = false;
                     break;
-                case NpcStates.Talking:
+                case NpcState.Talking:
                     EndConversation();
                     break;
                 default:
@@ -141,7 +141,7 @@ namespace Npc_AI
                 return;
 
             Attacker = attacker;
-            ChangeState(NpcStates.Scared);
+            ChangeState(NpcState.Scared);
         }
 
         void OnScared()
@@ -168,10 +168,10 @@ namespace Npc_AI
             if (!enabled)
                 return;
 
-            if (currentState == NpcStates.GoingToWork || currentState == NpcStates.Talking || currentState == NpcStates.Scared)
+            if (currentState == NpcState.GoingToWork || currentState == NpcState.Talking || currentState == NpcState.Scared)
                 return;
 
-            ChangeState(NpcStates.GoingToWork);
+            ChangeState(NpcState.GoingToWork);
 
             LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
             lifeCycle.Set(this);
@@ -183,10 +183,10 @@ namespace Npc_AI
             if (!enabled)
                 return;
 
-            if (currentState == NpcStates.GoingHome || currentState == NpcStates.Talking || currentState == NpcStates.Scared)
+            if (currentState == NpcState.GoingHome || currentState == NpcState.Talking || currentState == NpcState.Scared)
                 return;
 
-            ChangeState(NpcStates.GoingHome);
+            ChangeState(NpcState.GoingHome);
 
             LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
             lifeCycle.Set(this);
@@ -198,7 +198,7 @@ namespace Npc_AI
 
         void TriggerConversation(NpcAI npc)
         {
-            if (currentState != NpcStates.Scared && npc.currentState != NpcStates.Scared)
+            if (currentState != NpcState.Scared && npc.currentState != NpcState.Scared)
             {
                 if (UnityEngine.Random.Range(0, 10000) < converChoose) 
                 {
@@ -211,7 +211,7 @@ namespace Npc_AI
                             runConversation.Set(true, this, npc, null);
                             runConversation.StartConversation();
 
-                            ChangeState(NpcStates.Talking);
+                            ChangeState(NpcState.Talking);
                         }
                     }
                 }
@@ -226,7 +226,7 @@ namespace Npc_AI
 
         private void OnEnable()
         {
-            ChangeState(NpcStates.Idle);
+            ChangeState(NpcState.Idle);
         }
 
         public void OnDestruction(GameObject destroyer)

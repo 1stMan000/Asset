@@ -25,7 +25,7 @@ namespace Enemy_AI
         [TagSelector] public List<string> Tags;
         public List<string> Protects;
 
-        public EnemyState CurrentState;
+        public EnemeyState CurrentState;
         public Transform currentTarget;
 
         public float AttackDistance;
@@ -50,7 +50,7 @@ namespace Enemy_AI
             agent = GetComponent<NavMeshAgent>();
             manager = GetComponent<CharacterManager>();
 
-            ChangeState(EnemyState.Idle);
+            ChangeState(EnemeyState.Idle);
 
             if (VisionRange <= 0)
             {
@@ -71,19 +71,19 @@ namespace Enemy_AI
         {
             switch (CurrentState)
             {
-                case EnemyState.Patrol:
+                case EnemeyState.Patrol:
                     OnPatrol();
                     break;
 
-                case EnemyState.Idle:
+                case EnemeyState.Idle:
                     OnIdle();
                     break;
 
-                case EnemyState.Chase:
+                case EnemeyState.Chase:
                     OnChase();
                     break;
 
-                case EnemyState.Attack:
+                case EnemeyState.Attack:
                     OnAttack();
                     break;
 
@@ -108,7 +108,7 @@ namespace Enemy_AI
             }
             else
             {
-                ChangeState(EnemyState.Chase);
+                ChangeState(EnemeyState.Chase);
             }
         }
 
@@ -118,7 +118,7 @@ namespace Enemy_AI
             if (target != null)
             {
                 currentTarget = target;
-                ChangeState(EnemyState.Chase);
+                ChangeState(EnemeyState.Chase);
 
                 return;
             }
@@ -130,7 +130,7 @@ namespace Enemy_AI
         {
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
-                ChangeState(EnemyState.Idle);
+                ChangeState(EnemeyState.Idle);
             }
         }
 
@@ -159,13 +159,10 @@ namespace Enemy_AI
             }
             else
             {
-                ChangeState(EnemyState.Patrol);
+                ChangeState(EnemeyState.Patrol);
             }
         }
 
-        /// <summary>
-        /// Chasing target functions
-        /// </summary>
         public float runSpeed = 4;
 
         void OnChase()
@@ -201,7 +198,7 @@ namespace Enemy_AI
         {
             if (currentTarget == null)
             {
-                ChangeState(EnemyState.Idle);
+                ChangeState(EnemeyState.Idle);
                 return false;
             }
 
@@ -213,7 +210,7 @@ namespace Enemy_AI
             if (currentTarget.GetComponent<CharacterManager>().isDead == true)
             {
                 currentTarget = null;
-                ChangeState(EnemyState.Idle);
+                ChangeState(EnemeyState.Idle);
 
                 return false;
             }
@@ -227,7 +224,7 @@ namespace Enemy_AI
             Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
             if (hit.transform == currentTarget)
             {
-                ChangeState(EnemyState.Attack);
+                ChangeState(EnemeyState.Attack);
             }
             else
             {
@@ -244,9 +241,6 @@ namespace Enemy_AI
             }
         }
 
-        /// <summary>
-        /// Attack functions
-        /// </summary>
         void OnAttack()
         {
             agent.SetDestination(transform.position);
@@ -254,7 +248,7 @@ namespace Enemy_AI
             if (currentTarget.GetComponent<CharacterManager>().isDead == true)
             {
                 currentTarget = null;
-                ChangeState(EnemyState.Idle);
+                ChangeState(EnemeyState.Idle);
             }
             else
             {
@@ -272,7 +266,7 @@ namespace Enemy_AI
             }
             else
             {
-                ChangeState(EnemyState.Chase);
+                ChangeState(EnemeyState.Chase);
             }
         }
 
@@ -286,31 +280,40 @@ namespace Enemy_AI
             AttackManager.AttackTarget(gameObject, attacker);
         }
 
-        /// <summary>
-        /// State maintanance functions
-        /// </summary>
-        /// <param name="state"></param>
-        void ChangeState(EnemyState state)
+        void ChangeState(EnemeyState newState)
         {
-            if (CurrentState == state)
+            if (CurrentState == newState)
                 return;
 
-            ManageStateChange(CurrentState, state);
-            CurrentState = state;
+            TurnOffBehaviour(CurrentState);
+            OnStateChange(CurrentState, newState);
+            CurrentState = newState;
         }
 
-        void ManageStateChange(EnemyState oldState, EnemyState newState)
+        void OnStateChange(EnemeyState oldState, EnemeyState newState)
         {
             switch (newState)
             {
-                case EnemyState.Attack:
+                case EnemeyState.Attack:
+                    Rotate rotate = gameObject.AddComponent<Rotate>();
+                    rotate.RotateTo(currentTarget.gameObject);
                     break;
-                case EnemyState.Chase:
+                case EnemeyState.Chase:
                     break;
-                case EnemyState.Idle:
+                case EnemeyState.Idle:
                     break;
-                case EnemyState.Patrol:
+                case EnemeyState.Patrol:
                     To_Attack_Point();
+                    break;
+            }
+        }
+
+        void TurnOffBehaviour(EnemeyState prevState)
+        {
+            switch (prevState)
+            {
+                case EnemeyState.Attack:
+                    Destroy(GetComponent<Rotate>());
                     break;
             }
         }
@@ -351,18 +354,18 @@ namespace Enemy_AI
                 }
                 if (NavMesh.SamplePosition(dest, out NavMeshHit hit, VisionRange, agent.areaMask))
                 {
-                    ChangeState(EnemyState.Patrol);
+                    ChangeState(EnemeyState.Patrol);
                     agent.SetDestination(hit.position);
                     return;
                 }
             }
 
-            ChangeState(EnemyState.Idle);
+            ChangeState(EnemeyState.Idle);
         }
 
         void RotateToTarget()
         {
-            if (CurrentState == EnemyState.Attack)
+            if (CurrentState == EnemeyState.Attack)
             {
                 StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
             }

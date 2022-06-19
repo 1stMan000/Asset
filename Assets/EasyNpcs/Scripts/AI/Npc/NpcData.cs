@@ -22,9 +22,9 @@ public class NpcData : MonoBehaviour
     public Transform work;
 
     [SerializeField]
-    private NpcStates _currentState;
+    private NpcState _currentState;
 
-    public NpcStates currentState
+    public NpcState currentState
     {
         get
         {

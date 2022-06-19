@@ -23,7 +23,7 @@ public class LifeCycle : MonoBehaviour
         npcAI.agent.SetDestination(npcAI.work.position);
         yield return new WaitUntil(() => Vector3.Distance(transform.position, npcAI.work.position) <= npcAI.agent.stoppingDistance);
 
-        npcAI.ChangeState(NpcStates.Working);
+        npcAI.ChangeState(NpcState.Working);
     }
 
     public void Start_GOTOHome()
@@ -38,7 +38,7 @@ public class LifeCycle : MonoBehaviour
 
         yield return new WaitUntil(() => npcAI.agent.remainingDistance <= 0.1f && !npcAI.agent.pathPending);
 
-        npcAI.ChangeState(NpcStates.Idle);
+        npcAI.ChangeState(NpcState.Idle);
     }
 
     private void OnDestroy()
