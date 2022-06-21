@@ -1,9 +1,9 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using Npc_Manager;
-using Npc_AI;
+using Sense;
+using Rotation;
 
 namespace Enemy_AI
 {
@@ -64,7 +64,6 @@ namespace Enemy_AI
 
             State_On_Update();
             Protect();
-            RotateToTarget();
         }
 
         void State_On_Update()
@@ -114,7 +113,7 @@ namespace Enemy_AI
 
         void TryToFindTarget()
         {
-            Transform target = CheckForTargets(); 
+            Transform target = SenseSurroundings.CheckForTargets(gameObject); 
             if (target != null)
             {
                 currentTarget = target;
@@ -131,20 +130,6 @@ namespace Enemy_AI
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 ChangeState(EnemeyState.Idle);
-            }
-        }
-
-        Transform CheckForTargets()
-        {
-            List<Collider> possibleTargets = SenseSurroundings.PossibleTargets(transform.position, VisionRange, VisionMask, Tags, gameObject);
-            if (possibleTargets.Count > 0)
-            {
-                Collider nearestTarget = SenseSurroundings.NearestTarget(possibleTargets, transform.position);
-                return SenseSurroundings.Check_If_Maximum_Enemies_Are_Facing_Target(nearestTarget, maximumAttackers);
-            }
-            else
-            {
-                return null;
             }
         }
 
@@ -169,7 +154,7 @@ namespace Enemy_AI
         {
             agent.speed = runSpeed;
             
-            if (Check_Conditions_For_Chase())
+            if (currentTarget.GetComponent<CharacterManager>().isDead == false)
             {
                 if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
                 {
@@ -182,53 +167,17 @@ namespace Enemy_AI
             }
         }
 
-        bool Check_Conditions_For_Chase()
-        {
-            if (!When_Target_Is_Null() || !Check_If_Dead())
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        bool When_Target_Is_Null()
-        {
-            if (currentTarget == null)
-            {
-                ChangeState(EnemeyState.Idle);
-                return false;
-            }
-
-            return true;
-        }
-
-        bool Check_If_Dead()
-        {
-            if (currentTarget.GetComponent<CharacterManager>().isDead == true)
-            {
-                currentTarget = null;
-                ChangeState(EnemeyState.Idle);
-
-                return false;
-            }
-
-            return true;
-        }
-
         void Check_If_Facing_Target()
         {
             RaycastHit hit;
-            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
+            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity);
             if (hit.transform == currentTarget)
             {
                 ChangeState(EnemeyState.Attack);
             }
             else
             {
-                StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
+                Chase(currentTarget);
             }
         }
 
@@ -361,26 +310,6 @@ namespace Enemy_AI
             }
 
             ChangeState(EnemeyState.Idle);
-        }
-
-        void RotateToTarget()
-        {
-            if (CurrentState == EnemeyState.Attack)
-            {
-                StartCoroutine(nameof(RotateTo), currentTarget.gameObject);
-            }
-        }
-
-        public IEnumerator RotateTo(GameObject target)
-        {
-            Quaternion lookRotation;
-            do
-            {
-                Vector3 direction = (target.transform.position - transform.position).normalized;
-                lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
-                yield return new WaitForEndOfFrame();
-            } while (true);
         }
 
         public void OnAttack(GameObject attacker, Attack attack)

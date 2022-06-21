@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Npc_AI;
 using Text_Loader;
+using Rotation;
 
 public class RunConversation : MonoBehaviour
 {

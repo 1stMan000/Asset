@@ -2,22 +2,25 @@ using System.Collections;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class Rotate : MonoBehaviour
+namespace Rotation
 {
-    public void RotateTo(GameObject target)
+    public class Rotate : MonoBehaviour
     {
-        StartCoroutine(RotateToObject(target));
-    }
-
-    IEnumerator RotateToObject(GameObject target)
-    {
-        Quaternion lookRotation;
-        do
+        public void RotateTo(GameObject target)
         {
-            Vector3 direction = (target.transform.position - transform.position).normalized;
-            lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
-            yield return new WaitForEndOfFrame();
-        } while (true);
+            StartCoroutine(RotateToObject(target));
+        }
+
+        IEnumerator RotateToObject(GameObject target)
+        {
+            Quaternion lookRotation;
+            do
+            {
+                Vector3 direction = (target.transform.position - transform.position).normalized;
+                lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
+                yield return new WaitForFixedUpdate();
+            } while (true);
+        }
     }
 }

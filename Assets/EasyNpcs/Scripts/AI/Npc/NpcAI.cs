@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using DayandNight;
+using Sense;
 
 namespace Npc_AI
 {
