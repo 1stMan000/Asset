@@ -97,7 +97,10 @@ namespace Sense
                 {
                     if (Physics.Linecast(position + Vector3.up * 1.7f, col.transform.position + Vector3.up * 1.7f, out RaycastHit hit, VisionLayers))
                     {
-                        posssibleTargets.Add(CheckTag(col, tags));
+                        if (CheckTag(col, tags))
+                        {
+                            posssibleTargets.Add(col);
+                        }
                     }
                 }
             }
@@ -105,32 +108,32 @@ namespace Sense
             return posssibleTargets;
         }
 
-        static Collider CheckTag(Collider col, List<string> tags)
+        static bool CheckTag(Collider col, List<string> tags)
         {
-            Collider collider = new Collider();
-
             for (int i = 0; i < tags.Capacity; i++)
             {
                 if (col.gameObject.CompareTag(tags[i]))
                 {
-                    collider = col;
-                    break;
+                    return true;
                 }
             }
 
-            return collider;
+            return false;
         }
 
         static Collider NearestTarget(List<Collider> possibleTargets, Vector3 position)
         {
             Collider nearestTarget = possibleTargets[0];
-            for (int i = 1; i < possibleTargets.Count; i++)
+            if (possibleTargets.Count > 1)
             {
-                if (Vector3.Distance(possibleTargets[i].transform.position, position)
-                    < Vector3.Distance(nearestTarget.transform.position, position))
-                    nearestTarget = possibleTargets[i];
+                for (int i = 1; i < possibleTargets.Count; i++)
+                {
+                    if (Vector3.Distance(possibleTargets[i].transform.position, position)
+                        < Vector3.Distance(nearestTarget.transform.position, position))
+                        nearestTarget = possibleTargets[i];
+                }
             }
-
+            
             return nearestTarget;
         }
 
@@ -184,6 +187,20 @@ namespace Sense
 
                     System.Array.Resize(ref enemyAiScripts, enemyAiScripts.Length - 1);
                 }
+            }
+        }
+
+        public static bool Check_Target_Distance_And_Raycast(Transform me, Transform target, float attackDistance)
+        {
+            RaycastHit hit;
+            Physics.Raycast(me.position + new Vector3(0, 1), target.transform.position - me.position, out hit, Mathf.Infinity);
+            if ((me.position - target.position).magnitude <= attackDistance && hit.transform == target)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

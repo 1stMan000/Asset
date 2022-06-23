@@ -9,14 +9,13 @@ namespace Enemy_AI
 {
     public class EnemyAI : MonoBehaviour, IDestructible
     {
-        private CharacterManager manager;
         private NavMeshAgent agent = null;
         protected Animator anim;
 
         [Tooltip("The collider representing the area in which the enemy preffer to stay. " +
                 "It can still be lured out of the area by npcs and the player. " +
                 "This is an optional field")]
-        public Collider PatrolArea;
+        public Collider patrolArea;
         public Transform attackPoint; 
 
         public LayerMask VisionMask;
@@ -48,7 +47,6 @@ namespace Enemy_AI
         {
             anim = GetComponentInChildren<Animator>();
             agent = GetComponent<NavMeshAgent>();
-            manager = GetComponent<CharacterManager>();
 
             ChangeState(EnemeyState.Idle);
 
@@ -156,28 +154,14 @@ namespace Enemy_AI
             
             if (currentTarget.GetComponent<CharacterManager>().isDead == false)
             {
-                if ((currentTarget.position - transform.position).magnitude <= AttackDistance)
+                if (SenseSurroundings.Check_Target_Distance_And_Raycast(transform, currentTarget, AttackDistance))
                 {
-                    Check_If_Facing_Target();
+                    ChangeState(EnemeyState.Attack);
                 }
                 else
                 {
                     Chase(currentTarget);
                 }
-            }
-        }
-
-        void Check_If_Facing_Target()
-        {
-            RaycastHit hit;
-            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity);
-            if (hit.transform == currentTarget)
-            {
-                ChangeState(EnemeyState.Attack);
-            }
-            else
-            {
-                Chase(currentTarget);
             }
         }
 
@@ -198,18 +182,11 @@ namespace Enemy_AI
             {
                 currentTarget = null;
                 ChangeState(EnemeyState.Idle);
-            }
-            else
-            {
-                Check_Target_Distance_And_Raycast();
-            }
-        }
 
-        void Check_Target_Distance_And_Raycast()
-        {
-            RaycastHit hit;
-            Physics.Raycast(transform.position + new Vector3(0, 1), currentTarget.transform.position - transform.position, out hit, Mathf.Infinity, VisionMask);
-            if ((currentTarget.position - transform.position).magnitude <= AttackDistance && hit.transform == currentTarget)
+                return;
+            }
+
+            if (SenseSurroundings.Check_Target_Distance_And_Raycast(transform, currentTarget, AttackDistance))
             {
                 Attack(currentTarget.gameObject);
             }
@@ -278,38 +255,16 @@ namespace Enemy_AI
         //Pick random spot and start moving there
         void PatrolToAnotherSpot()
         {
-            const int IterationLimit = 25;
             Vector3 dest;
-            //iteration limit to avoid stack overflow
-            for (int i = 0; i < IterationLimit; i++)
+            if (CalculatePatrol.CalculateSpots(this, 25, out dest))
             {
-                if (PatrolArea == null)
-                {
-                    //Pick spot within X4 VisionRange 
-                    dest = new Vector3(
-                        Random.Range(transform.position.x - VisionRange * 2, transform.position.x + VisionRange * 2),
-                        (transform.position.y),
-                        Random.Range(transform.position.z - VisionRange * 2, transform.position.z + VisionRange * 2)
-                        );
-                }
-                else
-                {
-                    //Pick spot within Patrol Area collider
-                    dest = new Vector3(
-                        Random.Range(PatrolArea.bounds.min.x, PatrolArea.bounds.max.x),
-                        0,
-                        Random.Range(PatrolArea.bounds.min.z, PatrolArea.bounds.max.z)
-                        );
-                }
-                if (NavMesh.SamplePosition(dest, out NavMeshHit hit, VisionRange, agent.areaMask))
-                {
-                    ChangeState(EnemeyState.Patrol);
-                    agent.SetDestination(hit.position);
-                    return;
-                }
+                ChangeState(EnemeyState.Patrol);
+                agent.SetDestination(dest);
             }
-
-            ChangeState(EnemeyState.Idle);
+            else
+            {
+                ChangeState(EnemeyState.Idle);
+            }
         }
 
         public void OnAttack(GameObject attacker, Attack attack)
