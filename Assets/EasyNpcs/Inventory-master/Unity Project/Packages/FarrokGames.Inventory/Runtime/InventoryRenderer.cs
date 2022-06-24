@@ -175,9 +175,6 @@ namespace FarrokhGames.Inventory
             rectTransform.sizeDelta = containerSize;
         }
 
-        /*
-        Clears and renders all items
-        */
         private void ReRenderAllItems()
         {
             // Clear all items
@@ -195,9 +192,6 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /*
-        Handler for when inventory.OnItemAdded is invoked
-        */
         private void HandleItemAdded(IInventoryItem item)
         {
             var img = CreateImage(item.sprite, false);
@@ -237,24 +231,18 @@ namespace FarrokhGames.Inventory
             ReRenderAllItems();
         }
 
-        /*
-         * Create an image with given sprite and settings
-         */
         private Image CreateImage(Sprite sprite, bool raycastTarget)
         {
             var img = _imagePool.Take();
             img.gameObject.SetActive(true);
             img.sprite = sprite;
-            img.rectTransform.sizeDelta = new Vector2(img.sprite.rect.width, img.sprite.rect.height);
+            img.rectTransform.sizeDelta = new Vector2(img.sprite.rect.width / (40 / _cellSize.x), img.sprite.rect.height / (40 / _cellSize.y));
             img.transform.SetAsLastSibling();
             img.type = Image.Type.Simple;
             img.raycastTarget = raycastTarget;
             return img;
         }
 
-        /*
-         * Recycles given image 
-         */
         private void RecycleImage(Image image)
         {
             image.gameObject.name = "Image";

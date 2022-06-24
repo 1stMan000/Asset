@@ -17,13 +17,10 @@ namespace FarrokhGames.Inventory
             Resize(width, height);
         }
 
-        /// <inheritdoc />
         public int width => _size.x;
 
-        /// <inheritdoc />
         public int height => _size.y;
 
-        /// <inheritdoc />
         public void Resize(int newWidth, int newHeight)
         {
             _size.x = newWidth;
@@ -34,20 +31,19 @@ namespace FarrokhGames.Inventory
         private void RebuildRect()
         {
             _fullRect = new Rect(0, 0, _size.x, _size.y);
-            HandleSizeChanged();
+            Check_If_Items_Fit();
             onResized?.Invoke();
         }
 
-        private void HandleSizeChanged()
+        private void Check_If_Items_Fit()
         {
-            // Drop all items that no longer fit the inventory
             for (int i = 0; i < allItems.Length;)
             {
                 var item = allItems[i];
                 var shouldBeDropped = false;
                 var padding = Vector2.one * 0.01f;
 
-                if (!_fullRect.Contains(item.GetMinPoint() + padding) || !_fullRect.Contains(item.GetMaxPoint() - padding))
+                if (!_fullRect.Contains(item.GetLowerLeftPoint() + padding) || !_fullRect.Contains(item.GetTopRightPoint() - padding))
                 {
                     shouldBeDropped = true;
                 }
@@ -63,20 +59,19 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /// <inheritdoc />
         public void Rebuild()
         {
             Rebuild(false);
         }
 
-        private void Rebuild(bool silent)
+        private void Rebuild(bool notFromScratch)
         {
             allItems = new IInventoryItem[_provider.inventoryItemCount];
             for (var i = 0; i < _provider.inventoryItemCount; i++)
             {
                 allItems[i] = _provider.GetInventoryItem(i);
             }
-            if (!silent)onRebuilt?.Invoke();
+            if (!notFromScratch)onRebuilt?.Invoke();
         }
 
         public void Dispose()
@@ -169,7 +164,6 @@ namespace FarrokhGames.Inventory
             return true;
         }
 
-        /// <inheritdoc />
         public bool TryDrop(IInventoryItem item)
         {
             if (!CanDrop(item) || !_provider.DropInventoryItem(item)) 
@@ -211,7 +205,7 @@ namespace FarrokhGames.Inventory
             var padding = Vector2.one * 0.01f;
 
             // Check if item is outside of inventory
-            if (!_fullRect.Contains(item.GetMinPoint() + padding) || !_fullRect.Contains(item.GetMaxPoint() - padding))
+            if (!_fullRect.Contains(item.GetLowerLeftPoint() + padding) || !_fullRect.Contains(item.GetTopRightPoint() - padding))
             {
                 item.position = previousPoint;
                 return false;

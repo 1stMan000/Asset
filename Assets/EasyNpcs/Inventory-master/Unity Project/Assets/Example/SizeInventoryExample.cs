@@ -14,8 +14,8 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private int _width = 8;
         [SerializeField] private int _height = 4;
         [SerializeField] private ItemDefinition[] _definitions = null;
-        [SerializeField] private bool _fillRandomly = true; // Should the inventory get filled with random items?
-        [SerializeField] private bool _fillEmpty = false; // Should the inventory get completely filled?
+        [SerializeField] private bool _fillRandomly = true; 
+        [SerializeField] private bool _fillEmpty = false; 
 
         void Start()
         {
@@ -23,6 +23,7 @@ namespace FarrokhGames.Inventory.Examples
 
             // Create inventory
             var inventory = new InventoryManager(provider, _width, _height);
+            inventory.TryAdd(_definitions[_definitions.Length - 1]);
 
             // Fill inventory with random items
             if (_fillRandomly)
