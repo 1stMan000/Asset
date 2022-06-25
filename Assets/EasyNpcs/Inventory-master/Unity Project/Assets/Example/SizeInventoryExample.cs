@@ -16,13 +16,14 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private ItemDefinition[] _definitions = null;
         [SerializeField] private bool _fillRandomly = true; 
         [SerializeField] private bool _fillEmpty = false; 
+        public InventoryManager inventory;
 
         void Start()
         {
             var provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
 
             // Create inventory
-            var inventory = new InventoryManager(provider, _width, _height);
+            inventory = new InventoryManager(provider, _width, _height);
             inventory.TryAdd(_definitions[_definitions.Length - 1]);
 
             // Fill inventory with random items

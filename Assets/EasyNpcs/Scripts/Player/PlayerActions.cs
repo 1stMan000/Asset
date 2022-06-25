@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using Npc_Manager;
 using Npc_AI;
 using PlayerController;
+using FarrokhGames.Inventory.Examples;
 
 namespace Player_Actions
 {
@@ -36,9 +37,26 @@ namespace Player_Actions
             OpenOrCloseDialogue();
             On_Dialgue_Sequence();
 
-            if (!isInteracting && Input.GetKeyDown(InventoryButton))
+            if (Input.GetKeyDown(InventoryButton))
             {
-                inventory.SetActive(true);
+                if (!isInteracting)
+                {
+                    isInteracting = true;
+                    GetComponent<FirstPersonAIO>().enabled = false;
+                    Cursor_Lock_State(true);
+                    Cursor.visible = true;
+
+                    inventory.SetActive(true);
+                }
+                else
+                {
+                    isInteracting = false;
+                    GetComponent<FirstPersonAIO>().enabled = true;
+                    Cursor_Lock_State(false);
+                    Cursor.visible = false;
+
+                    inventory.SetActive(false);
+                }
             }
         }
 
@@ -69,6 +87,10 @@ namespace Player_Actions
                     if (Check_CharacterManager(npc))
                     {
                         StartDialogue(npc);
+                    }
+                    else
+                    {
+                        inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(npc.GetComponent<Item>().ItemDefinition);
                     }
                 }
             }
