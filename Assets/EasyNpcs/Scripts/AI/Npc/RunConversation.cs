@@ -76,7 +76,7 @@ public class RunConversation : MonoBehaviour
         RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
         partnerConv.Set(false, partner, me);
         partnerConv.StartConversation();
-        StartCoroutine(partnerConv.Talk(chosenConv.Item2));
+        partnerConv.RecieveRequest(chosenConv);
     }
 
     public IEnumerator Talk(List<string> text)
@@ -94,8 +94,13 @@ public class RunConversation : MonoBehaviour
                 }
             }
         }
-
+        
         me.ChangeState(NpcState.Idle);
+    }
+
+    void RecieveRequest(Tuple<List<string>, List<string>> chosenConv)
+    {
+        StartCoroutine(Talk(chosenConv.Item2));
     }
 
     private void OnDestroy()

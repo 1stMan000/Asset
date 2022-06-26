@@ -29,50 +29,42 @@ namespace Text_Loader
 
     public class TextLoader : MonoBehaviour
     {
-        // Assign in Inspector
-        // Path to the folder with npc-npc dialogues.
         [SerializeField]
         private string path;
 
         private string currentFile;
         private static List<List<DialogueText>> dialogueTexts;
 
-        // Start is called before the first frame update
         void Start()
         {
             dialogueTexts = new List<List<DialogueText>>();
+            var textFiles = FindAllTextFiles();
 
-            // Get pathes of all .txt files in directory
+            foreach (var textFile in textFiles)
+            {
+                currentFile = textFile;
+                dialogueTexts.Add(FillDialogueText());
+            }
+        }
+        
+        IEnumerable<string> FindAllTextFiles()
+        {
             var ext = new List<string> { "txt" };
-            var names = Directory
+            var texts = Directory
                 .EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
                 .Where(s => ext.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()));
 
-            // Iterate through all the files and read dialogues to the list
-            foreach (var name in names)
-            {
-                currentFile = name;
-                dialogueTexts.Add(FillDialogueText());
-            }
+            return texts;
         }
 
         List<DialogueText> FillDialogueText()
         {
-            var strings = ReadText(currentFile);
+            var strings = Split_Text_By_Lines(currentFile);
 
             return new List<DialogueText>() { Fill(strings), Fill(strings) };
         }
 
-        /// <summary>
-        /// Reads text from the given file and return a list of strings.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the file
-        /// </param>
-        /// <returns>
-        /// Returns a List of strings
-        /// </returns>
-        public static List<string> ReadText(string path)
+        public static List<string> Split_Text_By_Lines(string path)
         {
             StreamReader reader = new StreamReader(path);
             string text = reader.ReadToEnd();
@@ -84,9 +76,8 @@ namespace Text_Loader
         {
             DialogueText text = new DialogueText(new List<string>());
 
-            // Get tags
-            ParseText(FindTagString(ref strings), out text.Gender);
-            ParseText(FindTagString(ref strings), out text.Job);
+            Parse_Gender_Job(FindTagString(ref strings), out text.Gender);
+            Parse_Gender_Job(FindTagString(ref strings), out text.Job);
 
             // Get text till a tag string is found or end of the file is reached
             for (int i = 0; i < strings.Count; i++)
@@ -104,8 +95,14 @@ namespace Text_Loader
             return text;
         }
 
-        // Erases strings without tags (!enum),
-        // till a tag string is found, throws exception otherwise
+        void Parse_Gender_Job<TEnum>(string tag, out TEnum enumerator) where TEnum : struct
+        {
+            if (!Enum.TryParse(tag.Remove(0, 1), out enumerator))
+            {
+                Debug.LogError("Wrong " + typeof(TEnum).ToString() + " type name in file: " + currentFile);
+            }
+        }
+
         string FindTagString(ref List<string> strings)
         {
             for (int i = 0; i < strings.Count; i++)
@@ -122,17 +119,6 @@ namespace Text_Loader
             string error = "Wrong dialogue file format in file: " + path;
             Debug.LogError(error);
             throw new Exception(error);
-        }
-
-        // Parse Enum from a string
-        // String must have structure ( ! before enum)
-        // "!TEnum"
-        void ParseText<TEnum>(string tag, out TEnum enumerator) where TEnum : struct
-        {
-            if (!Enum.TryParse(tag.Remove(0, 1), out enumerator))
-            {
-                Debug.LogError("Wrong " + typeof(TEnum).ToString() + " type name in file: " + currentFile);
-            }
         }
 
         /// <summary>
@@ -196,7 +182,7 @@ namespace Text_Loader
         /// </returns>
         public static Tuple<List<string>, List<string>> DialogueWithoutTags(string path)
         {
-            var text = ReadText(path);
+            var text = Split_Text_By_Lines(path);
             var firstList = new List<string>();
             var secondList = new List<string>();
 

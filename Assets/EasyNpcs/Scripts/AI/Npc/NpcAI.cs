@@ -206,7 +206,7 @@ namespace Npc_AI
                     //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
                     if (GetInstanceID() > npc.GetInstanceID())
                     {
-                        if (GetComponent<RunConversation>() == null)
+                        if (GetComponent<RunConversation>() == null && npc.GetComponent<RunConversation>() == null)
                         {
                             RunConversation runConversation = gameObject.AddComponent<RunConversation>();
                             runConversation.Set(true, this, npc, null);
