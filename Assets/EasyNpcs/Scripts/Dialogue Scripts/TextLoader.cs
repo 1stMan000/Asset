@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Text_Loader
 {
-    struct DialogueText
+    public struct DialogueText
     {
         public Job Job;
         public Gender Gender;
@@ -18,13 +18,6 @@ namespace Text_Loader
             Job = Job.Default;
             Gender = Gender.Default;
         }
-
-        public DialogueText(Job job, Gender gender, List<string> firstText)
-        {
-            Job = job;
-            Gender = gender;
-            Text = firstText;
-        }
     }
 
     public class TextLoader : MonoBehaviour
@@ -33,7 +26,7 @@ namespace Text_Loader
         private string path;
 
         private string currentFile;
-        private static List<List<DialogueText>> dialogueTexts;
+        public static List<List<DialogueText>> dialogueTexts {get; private set;}
 
         void Start()
         {
@@ -64,7 +57,7 @@ namespace Text_Loader
             return new List<DialogueText>() { Fill(strings), Fill(strings) };
         }
 
-        public static List<string> Split_Text_By_Lines(string path)
+        static List<string> Split_Text_By_Lines(string path)
         {
             StreamReader reader = new StreamReader(path);
             string text = reader.ReadToEnd();
@@ -79,7 +72,13 @@ namespace Text_Loader
             Parse_Gender_Job(FindTagString(ref strings), out text.Gender);
             Parse_Gender_Job(FindTagString(ref strings), out text.Job);
 
-            // Get text till a tag string is found or end of the file is reached
+            Check_End_Of_Npc_Section(text, strings);
+
+            return text;
+        }
+
+        void Check_End_Of_Npc_Section(DialogueText text, List<string> strings)
+        {
             for (int i = 0; i < strings.Count; i++)
             {
                 if (strings[i][0] == '!')
@@ -91,8 +90,6 @@ namespace Text_Loader
                     i--;
                 }
             }
-
-            return text;
         }
 
         void Parse_Gender_Job<TEnum>(string tag, out TEnum enumerator) where TEnum : struct
@@ -121,34 +118,31 @@ namespace Text_Loader
             throw new Exception(error);
         }
 
-        /// <summary>
-        /// Get a random dialogue with the given tags.
-        /// </summary>
-        /// <param name="gender">
-        /// An array of Gender enums, where first element is used for first dialogue, second - for second.
-        /// </param>
-        /// <param name="job">
-        /// An array of Job enums, where first element is used for first dialogue, second - for second.
-        /// </param>
-        /// <returns>
-        /// Returns a Tuple with two dialogues.
-        /// </returns>
-        public static Tuple<List<string>, List<string>> GetDialgoue(Gender[] gender = null, Job[] job = null)
+        public static Tuple<List<string>, List<string>> GetDialgoue(Gender[] genders = null, Job[] jobs = null)
         {
-            // Fill arrays with Default values, if arrays are null
-            gender = gender ?? new Gender[] { Gender.Default, Gender.Default };
-            job = job ?? new Job[] { Job.Default, Job.Default };
+            genders = genders ?? new Gender[] { Gender.Default, Gender.Default };
+            jobs = jobs ?? new Job[] { Job.Default, Job.Default };
 
-            List<List<DialogueText>> list = new List<List<DialogueText>>();
+            List<List<DialogueText>> validTexts = Parse_DialogueTexts(genders, jobs);
+            
+            if (validTexts.Count < 1)
+                return null;
+
+            System.Random random = new System.Random();
+            var chosenText = validTexts[random.Next(0, validTexts.Count - 1)];
+
+            return new Tuple<List<string>, List<string>>(chosenText[0].Text, chosenText[1].Text);
+        }
+
+        static List<List<DialogueText>> Parse_DialogueTexts(Gender[] genders, Job[] jobs)
+        {
             List<List<DialogueText>> validTexts = new List<List<DialogueText>>();
-            // Fills the list with dialogues with suitable tags
             foreach (var text in dialogueTexts)
             {
                 bool isValid = true;
                 for (int i = 0; i < 2; i++)
                 {
-                    // If dialogue doesn't have needed tag, it is not valid and not included into the list
-                    if (!job[i].HasFlag(text[i].Job) || !gender[i].HasFlag(text[i].Gender))
+                    if (!jobs[i].HasFlag(text[i].Job) || !genders[i].HasFlag(text[i].Gender))
                     {
                         isValid = false;
                     }
@@ -159,54 +153,48 @@ namespace Text_Loader
                 }
             }
 
-            System.Random random = new System.Random();
-            list.Add(validTexts[random.Next(0, validTexts.Count)]);
+            return validTexts;
+        }
+    }
 
-            if (list.Count < 1)
+    public class FindDialogue
+    {
+        public static Tuple<List<string>, List<string>> GetDialgoue(Gender[] genders = null, Job[] jobs = null)
+        {
+            genders = genders ?? new Gender[] { Gender.Default, Gender.Default };
+            jobs = jobs ?? new Job[] { Job.Default, Job.Default };
+
+            List<List<DialogueText>> validTexts = Parse_DialogueTexts(genders, jobs);
+            
+            if (validTexts.Count < 1)
                 return null;
 
-            // Pick random dialogue from the list
-            var chosenText = list[random.Next(0, list.Count)];
+            System.Random random = new System.Random();
+            var chosenText = validTexts[random.Next(0, validTexts.Count - 1)];
 
             return new Tuple<List<string>, List<string>>(chosenText[0].Text, chosenText[1].Text);
         }
 
-        /// <summary>
-        /// Reads 2 dialogues from the given path. Dialogues must be divided by a line "{}"
-        /// </summary>
-        /// <param name="path">
-        /// The path to file to read text from.
-        /// </param>
-        /// <returns>
-        /// Returns a tuple, where first element is first dialogue, second element - second dialogue.
-        /// </returns>
-        public static Tuple<List<string>, List<string>> DialogueWithoutTags(string path)
+        static List<List<DialogueText>> Parse_DialogueTexts(Gender[] genders, Job[] jobs)
         {
-            var text = Split_Text_By_Lines(path);
-            var firstList = new List<string>();
-            var secondList = new List<string>();
-
-            bool reached = false;
-
-            // Fills first list with the text till "{}" line is found, then fills second list 
-            foreach (var str in text)
+            List<List<DialogueText>> validTexts = new List<List<DialogueText>>();
+            foreach (var text in TextLoader.dialogueTexts)
             {
-                if (str[0] == '{' && str[1] == '}')
+                bool isValid = true;
+                for (int i = 0; i < 2; i++)
                 {
-                    reached = true;
-                    continue;
+                    if (!jobs[i].HasFlag(text[i].Job) || !genders[i].HasFlag(text[i].Gender))
+                    {
+                        isValid = false;
+                    }
                 }
-
-                List<string> list;
-                if (reached)
-                    list = secondList;
-                else
-                    list = firstList;
-
-                list.Add(str);
+                if (isValid)
+                {
+                    validTexts.Add(text);
+                }
             }
 
-            return new Tuple<List<string>, List<string>>(firstList, secondList);
+            return validTexts;
         }
     }
 }
