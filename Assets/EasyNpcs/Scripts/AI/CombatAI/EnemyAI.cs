@@ -7,19 +7,13 @@ using Rotation;
 
 namespace Enemy_AI
 {
-    public class EnemyAI : MonoBehaviour, IDestructible
+    public class EnemyAI : NpcData, IDestructible
     {
         private NavMeshAgent agent = null;
         protected Animator anim;
 
-        [Tooltip("The collider representing the area in which the enemy preffer to stay. " +
-                "It can still be lured out of the area by npcs and the player. " +
-                "This is an optional field")]
         public Collider patrolArea;
         public Transform attackPoint; 
-
-        public LayerMask VisionMask;
-        public float VisionRange;
 
         [TagSelector] public List<string> Tags;
         public List<string> Protects;
@@ -93,7 +87,7 @@ namespace Enemy_AI
         {
             if (currentTarget == null)
             {
-                currentTarget = SenseSurroundings.BattleAI_Sense_Friendly_Attacked(transform.position, VisionRange, VisionMask, Protects);
+                currentTarget = SenseSurroundings.BattleAI_Sense_Friendly_Attacked(transform.position, VisionRange, VisionLayers, Protects);
             }
         }
 

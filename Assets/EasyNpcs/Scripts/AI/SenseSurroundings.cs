@@ -74,7 +74,7 @@ namespace Sense
         public static Transform CheckForTargets(GameObject me)
         {
             EnemyAI enemyAI = me.GetComponent<EnemyAI>();
-            List<Collider> possibleTargets = SenseSurroundings.PossibleTargets(me.transform.position, enemyAI.VisionRange, enemyAI.VisionMask, enemyAI.Tags, me);
+            List<Collider> possibleTargets = SenseSurroundings.PossibleTargets(me.transform.position, enemyAI.VisionRange, enemyAI.VisionLayers, enemyAI.Tags, me);
             if (possibleTargets.Count > 0)
             {
                 Collider nearestTarget = SenseSurroundings.NearestTarget(possibleTargets, me.transform.position);

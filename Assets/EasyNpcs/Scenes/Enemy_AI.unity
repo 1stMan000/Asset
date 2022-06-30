@@ -352,6 +352,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
       propertyPath: VisualiseAgentActions
       value: 1
       objectReference: {fileID: 0}
@@ -438,6 +443,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Tags.Array.data[0]
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
@@ -705,6 +715,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
       propertyPath: VisualiseAgentActions
       value: 1
       objectReference: {fileID: 0}
@@ -791,6 +806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Tags.Array.data[0]
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
@@ -1028,6 +1048,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
       propertyPath: AttackableLayers.m_Bits
       value: 256
       objectReference: {fileID: 0}
@@ -1207,6 +1232,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Tags.Array.data[0]
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
+        type: 3}
+      propertyPath: VisionLayers.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 5604837293089633035, guid: 8a98e9d580fe7924b9bf8c5b7b05c766,
         type: 3}

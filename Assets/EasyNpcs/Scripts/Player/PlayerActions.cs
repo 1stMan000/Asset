@@ -30,13 +30,18 @@ namespace Player_Actions
             textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
         }
 
-        // Update is called once per frame
         void Update()
         {
-            Attack();
-            OpenOrCloseDialogue();
-            On_Dialgue_Sequence();
-
+            if (!isInteracting)
+            {
+                Attack();
+                Interact();
+            }
+            else
+            {
+                On_Dialgue_Sequence();
+            }
+            
             if (Input.GetKeyDown(InventoryButton))
             {
                 if (!isInteracting)
@@ -62,35 +67,29 @@ namespace Player_Actions
 
         void Attack()
         {
-            if (!isInteracting && Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0))
             {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                int layerMask = LayerMask.GetMask("Player");
-                layerMask = ~layerMask;
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity, ~LayerMask.GetMask("Player")))
                 {
-                    GameObject attackable = hit.collider.gameObject;
-                    AttackManager.AttackTarget(gameObject, attackable);
+                    AttackManager.AttackTarget(gameObject, hit.collider.gameObject);
                 }
             }
         }
 
-        void OpenOrCloseDialogue()
+        void Interact()
         {
-            if (Input.GetKeyDown(InteractButton) && !isInteracting)
+            if (Input.GetKeyDown(InteractButton))
             {
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                 {
-                    GameObject npc = hit.transform.gameObject;
-                    if (Check_CharacterManager(npc))
+                    GameObject chosenObject = hit.transform.gameObject;
+                    if (Check_CharacterManager(chosenObject))
                     {
-                        StartDialogue(npc);
+                        StartDialogue(chosenObject);
                     }
                     else
                     {
-                        inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(npc.GetComponent<Item>().ItemDefinition);
+                        inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition);
                     }
                 }
             }
@@ -105,6 +104,7 @@ namespace Player_Actions
                     return true;
                 }
 
+                Debug.Log("Npc is dead");
                 return false;
             }
             else
@@ -136,10 +136,12 @@ namespace Player_Actions
                     return State_NotScared(npcAI);
                 }
 
+                Debug.Log("NpcAI of" + npc + "is not enabled");
                 return false;
             }
             else
             {
+                Debug.LogWarning(npc + "does not have NpcAi attached");
                 return false;
             }
         }
@@ -148,6 +150,7 @@ namespace Player_Actions
         {
             if (npcAI.currentState == NpcState.Scared)
             {
+                Debug.Log("The npc's current state blocks interaction");
                 return false;
             }
             else
@@ -159,7 +162,7 @@ namespace Player_Actions
 
         void On_Dialgue_Sequence()
         {
-            if (isInteracting && Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0))
             {
                 Change_State_Of_Dialogue();
             }
@@ -198,12 +201,13 @@ namespace Player_Actions
                 {
                     button.SetActive(true);
                     button.GetComponentInChildren<Text>().text = Npc_Dialogue.currentSentence.choices[choiceNum].playerText;
-                    choiceNum++;
                 }
                 else
                 {
                     break;
                 }
+
+                choiceNum++;
             }
         }
 
@@ -233,35 +237,11 @@ namespace Player_Actions
             }
         }
 
-        public void PressButton0()
+        public void PressButton(int i)
         {
             Disable_Buttons();
 
-            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[0];
-            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
-        }
-
-        public void PressButton1()
-        {
-            Disable_Buttons();
-
-            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[1];
-            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
-        }
-
-        public void PressButton2()
-        {
-            Disable_Buttons();
-
-            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[2];
-            textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
-        }
-
-        public void PressButton3()
-        {
-            Disable_Buttons();
-
-            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[3];
+            Npc_Dialogue.currentSentence = Npc_Dialogue.currentSentence.choices[i];
             textAndButtons.text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
         }
 
