@@ -1,52 +1,24 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.AI;
 
 public class NpcData : MonoBehaviour
 {
-    [SerializeField]
-    protected string npcName;
-    public string NpcName { get { return npcName; } }
+    [HideInInspector]
+    public NavMeshAgent agent;
+    protected Animator anim;
 
     public float VisionRange = 10;
     public LayerMask VisionLayers;
 
-    [SerializeField]
-    protected int age;
-    public int Age { get { return age; } }
-
-    public Job job;
-    public Gender gender;
-
-    [SerializeField]
-    public Transform home;
-    public Transform work;
-
-    [SerializeField]
-    private NpcState _currentState;
-
-    public NpcState currentState
+    protected virtual void Start()
     {
-        get
-        {
-            return _currentState;
-        }
-        protected set
-        {
-            _currentState = value;
-        }
-    }
-    
-
-    [HideInInspector]
-    public UnityEvent OnNpcDataInspectorChanged;
-    private void OnValidate()
-    {
-        if (OnNpcDataInspectorChanged == null)
-            OnNpcDataInspectorChanged = new UnityEvent();
-        OnNpcDataInspectorChanged.Invoke();
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
     }
 
-   
-
+    protected virtual void Update()
+    {
+        anim.SetFloat("Speed", agent.velocity.magnitude);
+    }
 }
 

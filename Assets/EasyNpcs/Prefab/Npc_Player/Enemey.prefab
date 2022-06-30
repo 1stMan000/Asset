@@ -124,17 +124,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  manager: {fileID: 0}
-  PatrolArea: {fileID: 0}
-  attackPoint: {fileID: 0}
-  VisualiseAgentActions: 0
-  VisionMask:
-    serializedVersion: 2
-    m_Bits: 257
   VisionRange: 10
-  AttackableLayers:
+  VisionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1792
+  patrolArea: {fileID: 0}
+  attackPoint: {fileID: 0}
   Tags:
   - Npc
   Protects: []
@@ -142,10 +137,11 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   AttackDistance: 1
   maximumAttackers: 1
-  changingState: 1
   assignedWeapon: 0
   projectile: {fileID: 0}
   launchHight: 0
+  walkSpeed: 2
+  runSpeed: 4
 --- !u!114 &5604837293089633045
 MonoBehaviour:
   m_ObjectHideFlags: 0

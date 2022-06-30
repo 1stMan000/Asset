@@ -24,7 +24,6 @@ namespace FarrokhGames.Inventory.Examples
 
             // Create inventory
             inventory = new InventoryManager(provider, _width, _height);
-            inventory.TryAdd(_definitions[_definitions.Length - 1]);
 
             // Fill inventory with random items
             if (_fillRandomly)

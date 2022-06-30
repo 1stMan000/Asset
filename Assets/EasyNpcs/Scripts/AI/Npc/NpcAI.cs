@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.AI;
 using DayandNight;
 using Sense;
 
@@ -8,9 +7,9 @@ namespace Npc_AI
 {
     public class NpcAI : NpcData, IDestructible
     {
-        Animator anim;
+        public Job job;
+        public Gender gender;
 
-        public NavMeshAgent agent { get; private set; }
         public float movementSpeed;
         public float scaredRunningSpeed;
         public float runningDistance;
@@ -21,11 +20,26 @@ namespace Npc_AI
 
         DayAndNightControl dayAndNightControl;
         public Behaviour workScript;
+        public Transform home;
+        public Transform work;
 
-        void Start()
+        private NpcState _currentState;
+
+        public NpcState currentState
         {
-            anim = GetComponentInChildren<Animator>();
-            agent = GetComponent<NavMeshAgent>();
+            get
+            {
+                return _currentState;
+            }
+            protected set
+            {
+                _currentState = value;
+            }
+        }
+
+        protected override void Start()
+        {
+            base.Start();
             Text = GetComponentInChildren<TextMesh>();
             DayAndNightCycle_Initialize();
         }
@@ -45,9 +59,9 @@ namespace Npc_AI
             }
         }
 
-        void Update()
+        protected override void Update()
         {
-            anim.SetFloat("Speed", agent.velocity.magnitude);
+            base.Update();
             WatchEnvironment();
         }
 
@@ -222,7 +236,7 @@ namespace Npc_AI
         public void EndConversation()
         {
             Destroy(GetComponent<RunConversation>());
-            GetComponentInChildren<TextMesh>().text = GetComponentInChildren<NpcData>().NpcName + "\nThe " + GetComponentInChildren<NpcData>().job.ToString().ToLower();
+            GetComponentInChildren<TextMesh>().text = null;
         }
 
         private void OnEnable()

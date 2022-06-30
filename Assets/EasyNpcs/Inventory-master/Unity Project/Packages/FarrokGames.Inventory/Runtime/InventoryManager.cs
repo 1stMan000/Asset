@@ -215,7 +215,6 @@ namespace FarrokhGames.Inventory
             if (!allItems.Any(otherItem => item.Overlaps(otherItem))) return true; // Item can be added
             item.position = previousPoint;
             return false;
-
         }
 
         /// <inheritdoc />
@@ -242,7 +241,6 @@ namespace FarrokhGames.Inventory
             return true;
         }
 
-        /// <inheritdoc />
         public bool CanAdd(IInventoryItem item)
         {
             Vector2Int point;
@@ -253,7 +251,6 @@ namespace FarrokhGames.Inventory
             return false;
         }
 
-        /// <inheritdoc />
         public bool TryAdd(IInventoryItem item)
         {
             if (!CanAdd(item))return false;

@@ -20,47 +20,34 @@ namespace Player_Actions
 
         public LayerMask mask;
 
-        bool isInteracting;
-
         DialogueManager Npc_Dialogue;
+
+        enum PlayerState { Normal, Dialogue, Inventory }
+        PlayerState playerState;
 
         private void Start()
         {
-            isInteracting = false;
+            playerState = PlayerState.Normal;
             textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
         }
 
         void Update()
         {
-            if (!isInteracting)
+            if (playerState == PlayerState.Normal)
             {
                 Attack();
                 Interact();
+                Switch_To_Inventory(true);
             }
             else
             {
-                On_Dialgue_Sequence();
-            }
-            
-            if (Input.GetKeyDown(InventoryButton))
-            {
-                if (!isInteracting)
+                if (playerState == PlayerState.Dialogue)
                 {
-                    isInteracting = true;
-                    GetComponent<FirstPersonAIO>().enabled = false;
-                    Cursor_Lock_State(true);
-                    Cursor.visible = true;
-
-                    inventory.SetActive(true);
+                    On_Dialgue_Sequence();
                 }
                 else
                 {
-                    isInteracting = false;
-                    GetComponent<FirstPersonAIO>().enabled = true;
-                    Cursor_Lock_State(false);
-                    Cursor.visible = false;
-
-                    inventory.SetActive(false);
+                    Switch_To_Inventory(false);
                 }
             }
         }
@@ -89,7 +76,7 @@ namespace Player_Actions
                     }
                     else
                     {
-                        inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition);
+                        inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition.CreateInstance());
                     }
                 }
             }
@@ -120,7 +107,7 @@ namespace Player_Actions
                 Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
                 if (Check_State(npc))
                 {
-                    Switch_PlayState_To_DialogueState(true);
+                    Switch_To_DialogueState(true);
                     dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
             }
@@ -180,7 +167,7 @@ namespace Player_Actions
             }
             else
             {
-                Switch_PlayState_To_DialogueState(false);
+                Switch_To_DialogueState(false);
             }
         }
 
@@ -211,18 +198,35 @@ namespace Player_Actions
             }
         }
 
-        void Switch_PlayState_To_DialogueState(bool on_Off_Switch)
+        void Switch_To_DialogueState(bool on)
         {
-            isInteracting = on_Off_Switch;
-            dialogueWindow.SetActive(on_Off_Switch);
+            if (on)
+                playerState = PlayerState.Dialogue;
+            else
+                playerState = PlayerState.Normal;
+            GetComponent<FirstPersonAIO>().enabled = !on;
+            Cursor_Lock_State(on);
+            Cursor.visible = on;
 
-            GetComponent<FirstPersonAIO>().enabled = !on_Off_Switch;
+            dialogueWindow.SetActive(on);
+            Npc_Dialogue.enabled = on;
+            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on;
+        }
 
-            Cursor_Lock_State(on_Off_Switch);
-            Cursor.visible = on_Off_Switch;
+        void Switch_To_Inventory(bool on)
+        {
+            if (Input.GetKeyDown(InventoryButton))
+            {
+                if (on)
+                    playerState = PlayerState.Inventory;
+                else
+                    playerState = PlayerState.Normal;
+                GetComponent<FirstPersonAIO>().enabled = !on;
+                Cursor_Lock_State(on);
+                Cursor.visible = on;
 
-            Npc_Dialogue.enabled = on_Off_Switch;
-            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on_Off_Switch;
+                inventory.SetActive(on);
+            }
         }
 
         void Cursor_Lock_State(bool on_Off_Switch)

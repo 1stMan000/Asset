@@ -17,7 +17,6 @@ public class NpcCanvas : MonoBehaviour
             canvas = GetComponent<Canvas>();
         if (PlayerCam == null)
             PlayerCam = Camera.main;
-        updateText();
      
     }
 
@@ -27,26 +26,11 @@ public class NpcCanvas : MonoBehaviour
         if (parent == null)
         {
             enabled = false;
-        }  
-        else
-        {
-            var data = parent.OnNpcDataInspectorChanged;
-            if (data == null)
-                data = new UnityEvent();
-
-            data.AddListener(updateText);
         }
     }
 
     private void Update()
     {
         canvas.transform.LookAt(PlayerCam.transform.position);
-    }
-
-    private void updateText()
-    {
-        NpcData data = GetComponentInParent<NpcData>();
-        if (data != null)
-            text.text = data.NpcName + "\nThe " + data.job.ToString().ToLower();
     }
 }

@@ -9,9 +9,6 @@ namespace Enemy_AI
 {
     public class EnemyAI : NpcData, IDestructible
     {
-        private NavMeshAgent agent = null;
-        protected Animator anim;
-
         public Collider patrolArea;
         public Transform attackPoint; 
 
@@ -37,25 +34,21 @@ namespace Enemy_AI
 #endif
         #endregion
 
-        void Start()
+        protected override void Start()
         {
-            anim = GetComponentInChildren<Animator>();
-            agent = GetComponent<NavMeshAgent>();
-
+            base.Start();
             ChangeState(EnemeyState.Idle);
 
             if (VisionRange <= 0)
             {
-                Debug.Log("Please put the vision range of enemy AI to something bigger than 0");
+                Debug.LogWarning("VisionRange is 0");
             }
         }
 
-        void Update()
+        protected override void Update()
         {
-            anim.SetFloat("Speed", agent.velocity.magnitude);
-
+            base.Update();
             State_On_Update();
-            Protect();
         }
 
         void State_On_Update()
@@ -83,14 +76,6 @@ namespace Enemy_AI
             }
         }
 
-        private void Protect()
-        {
-            if (currentTarget == null)
-            {
-                currentTarget = SenseSurroundings.BattleAI_Sense_Friendly_Attacked(transform.position, VisionRange, VisionLayers, Protects);
-            }
-        }
-
         void OnPatrol()
         {
             if (currentTarget == null)
@@ -113,8 +98,15 @@ namespace Enemy_AI
 
                 return;
             }
+            
+            if (Protect() == null)
+                No_Target_Available();
+        }
 
-            No_Target_Available();
+        private Transform Protect()
+        {
+            currentTarget = SenseSurroundings.BattleAI_Sense_Friendly_Attacked(transform.position, VisionRange, VisionLayers, Protects);
+            return currentTarget;
         }
 
         void No_Target_Available()
