@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 namespace FarrokhGames.Inventory
 {
-    /// <summary>
-    /// Class for keeping track of dragged items
-    /// </summary>
     public class InventoryDraggedItem
     {
         public enum DropMode
@@ -17,46 +14,27 @@ namespace FarrokhGames.Inventory
             Dropped,
         }
 
-        /// <summary>
-        /// Returns the InventoryController this item originated from
-        /// </summary>
         public InventoryController originalController { get; private set; }
 
-        /// <summary>
-        /// Returns the point inside the inventory from which this item originated from
-        /// </summary>
         public Vector2Int originPoint { get; private set; }
 
-        /// <summary>
-        /// Returns the item-instance that is being dragged
-        /// </summary>
         public IInventoryItem item { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the InventoryController currently in control of this item
-        /// </summary>
         public InventoryController currentController;
 
         private readonly Canvas _canvas;
         private readonly RectTransform _canvasRect;
-        private readonly Image _image;
+        private Image _image;
         private Vector2 _offset;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="canvas">The canvas</param>
-        /// <param name="originalController">The InventoryController this item originated from</param>
-        /// <param name="originPoint">The point inside the inventory from which this item originated from</param>
-        /// <param name="item">The item-instance that is being dragged</param>
-        /// <param name="offset">The starting offset of this item</param>
         [SuppressMessage("ReSharper", "Unity.InefficientPropertyAccess")]
         public InventoryDraggedItem(
             Canvas canvas,
             InventoryController originalController,
             Vector2Int originPoint,
             IInventoryItem item,
-            Vector2 offset)
+            Vector2 offset,
+            InventoryRenderer renderer)
         {
             this.originalController = originalController;
             currentController = this.originalController;
@@ -68,12 +46,16 @@ namespace FarrokhGames.Inventory
 
             _offset = offset; 
 
-            // Create an image representing the dragged item
+            CreateImageForDrag(renderer);
+        }
+
+        void CreateImageForDrag(InventoryRenderer renderer)
+        {
             _image = new GameObject("DraggedItem").AddComponent<Image>();
             _image.raycastTarget = false;
             _image.transform.SetParent(_canvas.transform);
             _image.transform.SetAsLastSibling();
-            _image.transform.localScale = Vector3.one;
+            _image.transform.localScale = new Vector3(renderer.cellSize.x / 20, renderer.cellSize.y / 20, 1);
             _image.sprite = item.sprite;
             _image.SetNativeSize();
         }

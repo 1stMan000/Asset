@@ -55,9 +55,6 @@ namespace FarrokhGames.Inventory
                 });
         }
 
-        /// <summary>
-        /// Set what inventory to use when rendering
-        /// </summary>
         public void SetInventory(IInventoryManager inventoryManager, InventoryRenderMode renderMode)
         {
             OnDisable();

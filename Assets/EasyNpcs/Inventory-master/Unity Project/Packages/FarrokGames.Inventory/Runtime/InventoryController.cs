@@ -78,9 +78,6 @@ namespace FarrokhGames.Inventory
                 _itemToDrag = inventory.GetAtPoint(grid);
             }
 
-            /*
-             * Dragging started (IBeginDragHandler)
-             */
             public void OnBeginDrag(PointerEventData eventData)
             {
                 inventoryRenderer.ClearSelection();
@@ -91,16 +88,15 @@ namespace FarrokhGames.Inventory
                 var itemOffest = inventoryRenderer.GetItemOffset(_itemToDrag);
                 var offset = itemOffest - localPosition;
 
-                // Create a dragged item 
                 _draggedItem = new InventoryDraggedItem(
                     _canvas,
                     this,
                     _itemToDrag.position,
                     _itemToDrag,
-                    offset
+                    offset,
+                    inventoryRenderer
                 );
 
-                // Remove the item from inventory
                 inventory.TryRemove(_itemToDrag);
 
                 onItemPickedUp?.Invoke(_itemToDrag);

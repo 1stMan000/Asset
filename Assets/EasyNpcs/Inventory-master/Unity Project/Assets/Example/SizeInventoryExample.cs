@@ -22,10 +22,8 @@ namespace FarrokhGames.Inventory.Examples
         {
             var provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
 
-            // Create inventory
             inventory = new InventoryManager(provider, _width, _height);
 
-            // Fill inventory with random items
             if (_fillRandomly)
             {
                 var tries = (_width * _height) / 3;
@@ -35,7 +33,6 @@ namespace FarrokhGames.Inventory.Examples
                 }
             }
 
-            // Fill empty slots with first (1x1) item
             if (_fillEmpty)
             {
                 for (var i = 0; i < _width * _height; i++)
@@ -44,7 +41,6 @@ namespace FarrokhGames.Inventory.Examples
                 }
             }
 
-            // Sets the renderers's inventory to trigger drawing
             GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
 
             // Log items being dropped on the ground
