@@ -2,9 +2,6 @@
 
 namespace FarrokhGames.Inventory.Examples
 {
-    /// <summary>
-    /// Example Lobby class
-    /// </summary>
     [RequireComponent(typeof(InventoryRenderer))]
     public class SizeInventoryExample : MonoBehaviour
     {
@@ -21,9 +18,18 @@ namespace FarrokhGames.Inventory.Examples
         void Start()
         {
             var provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
-
             inventory = new InventoryManager(provider, _width, _height);
 
+            FillRandomly();
+            FillEmpty();
+
+            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
+
+            Tests();
+        }
+
+        void FillRandomly()
+        {
             if (_fillRandomly)
             {
                 var tries = (_width * _height) / 3;
@@ -32,7 +38,10 @@ namespace FarrokhGames.Inventory.Examples
                     inventory.TryAdd(_definitions[Random.Range(0, _definitions.Length)].CreateInstance());
                 }
             }
+        }
 
+        void FillEmpty()
+        {
             if (_fillEmpty)
             {
                 for (var i = 0; i < _width * _height; i++)
@@ -40,22 +49,20 @@ namespace FarrokhGames.Inventory.Examples
                     inventory.TryAdd(_definitions[0].CreateInstance());
                 }
             }
+        }
 
-            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
-
-            // Log items being dropped on the ground
+        void Tests()
+        {
             inventory.onItemDropped += (item) =>
             {
                 Debug.Log((item as ItemDefinition).Name + " was dropped on the ground");
             };
 
-			// Log when an item was unable to be placed on the ground (due to its canDrop being set to false)
             inventory.onItemDroppedFailed += (item) =>
             {
                 Debug.Log($"You're not allowed to drop {(item as ItemDefinition).Name} on the ground");
             };
 
-			// Log when an item was unable to be placed on the ground (due to its canDrop being set to false)
             inventory.onItemAddedFailed += (item) =>
             {
                 Debug.Log($"You can't put {(item as ItemDefinition).Name} there!");

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace FarrokhGames.Inventory.Examples
@@ -9,9 +8,6 @@ namespace FarrokhGames.Inventory.Examples
         private int _maximumAlowedItemCount;
         ItemType _allowedItem;
 
-        /// <summary>
-        /// CTOR
-        /// </summary>
         public InventoryProvider(InventoryRenderMode renderMode, int maximumAlowedItemCount = -1, ItemType allowedItem = ItemType.Any)
         {
             inventoryRenderMode = renderMode;
