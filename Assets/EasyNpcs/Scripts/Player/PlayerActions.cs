@@ -77,6 +77,7 @@ namespace Player_Actions
                     else
                     {
                         inventory.transform.GetChild(1).GetComponent<SizeInventoryExample>().inventory.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition.CreateInstance());
+                        Destroy(chosenObject);
                     }
                 }
             }

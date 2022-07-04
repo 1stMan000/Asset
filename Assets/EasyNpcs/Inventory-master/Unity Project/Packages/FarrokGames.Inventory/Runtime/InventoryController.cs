@@ -52,6 +52,8 @@ namespace FarrokhGames.Inventory
             private IInventoryItem _itemToDrag;
             private PointerEventData _currentEventData;
             private IInventoryItem _lastHoveredItem;
+            
+            public GameObject player;
 
             /*
              * Setup
@@ -65,6 +67,15 @@ namespace FarrokhGames.Inventory
                 var canvases = GetComponentsInParent<Canvas>();
                 if (canvases.Length == 0) { throw new NullReferenceException("Could not find a canvas."); }
                 _canvas = canvases[canvases.Length - 1];
+
+                onItemDropped += DropItemToWorld;
+            }
+
+            void DropItemToWorld(IInventoryItem item)
+            {
+                _draggedItem = null;
+                Instantiate(item.dropObject);
+                item.dropObject.transform.position = player.transform.position + Vector3.forward;
             }
 
             /*

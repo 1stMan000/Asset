@@ -9,17 +9,16 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private InventoryShape _shape = null;
         [SerializeField] private ItemType _type = ItemType.Utility;
         [SerializeField] private bool _canDrop = true;
+        [SerializeField] private GameObject _gameObject;
         [SerializeField, HideInInspector] private Vector2Int _position = Vector2Int.zero;
 
         public string Name => this.name;
-
         public ItemType Type => _type;
-
         public Sprite sprite => _sprite;
-
         public int width => _shape.width;
-
         public int height => _shape.height;
+
+        public GameObject dropObject => _gameObject;
 
         public Vector2Int position
         {

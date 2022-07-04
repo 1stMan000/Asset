@@ -18,4 +18,7 @@ MonoBehaviour:
     _height: 1
     _shape: 0101
   _type: 1
+  _canDrop: 1
+  _gameObject: {fileID: 5385852830837069516, guid: 86fee0628a804eb47ac0f32e1451e723,
+    type: 3}
   _position: {x: 0, y: 0}

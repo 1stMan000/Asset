@@ -205,9 +205,6 @@ namespace FarrokhGames.Inventory
             _items.Add(item, img);
         }
 
-        /*
-        Handler for when inventory.OnItemRemoved is invoked
-        */
         private void HandleItemRemoved(IInventoryItem item)
         {
             if (_items.ContainsKey(item))

@@ -17,8 +17,26 @@ namespace FarrokhGames.Inventory
             Resize(width, height);
         }
 
-        public int width => _size.x;
+        public void Rebuild()
+        {
+            Rebuild(false);
+        }
 
+        public IInventoryItem[] allItems { get; private set; }
+        public Action onRebuilt { get; set; }
+
+        private void Rebuild(bool notFromScratch)
+        {
+            allItems = new IInventoryItem[_provider.inventoryItemCount];
+            for (var i = 0; i < _provider.inventoryItemCount; i++)
+            {
+                allItems[i] = _provider.GetInventoryItem(i);
+            }
+
+            if (!notFromScratch) onRebuilt?.Invoke();
+        }
+
+        public int width => _size.x;
         public int height => _size.y;
 
         public void Resize(int newWidth, int newHeight)
@@ -40,15 +58,9 @@ namespace FarrokhGames.Inventory
             for (int i = 0; i < allItems.Length;)
             {
                 var item = allItems[i];
-                var shouldBeDropped = false;
                 var padding = Vector2.one * 0.01f;
 
                 if (!_fullRect.Contains(item.GetLowerLeftPoint() + padding) || !_fullRect.Contains(item.GetTopRightPoint() - padding))
-                {
-                    shouldBeDropped = true;
-                }
-
-                if (shouldBeDropped)
                 {
                     TryDrop(item);
                 }
@@ -59,28 +71,12 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        public void Rebuild()
-        {
-            Rebuild(false);
-        }
-
-        private void Rebuild(bool notFromScratch)
-        {
-            allItems = new IInventoryItem[_provider.inventoryItemCount];
-            for (var i = 0; i < _provider.inventoryItemCount; i++)
-            {
-                allItems[i] = _provider.GetInventoryItem(i);
-            }
-            if (!notFromScratch)onRebuilt?.Invoke();
-        }
-
         public void Dispose()
         {
             _provider = null;
             allItems = null;
         }
 
-        /// <inheritdoc />
         public bool isFull
         {
             get
@@ -98,35 +94,21 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /// <inheritdoc />
-        public IInventoryItem[] allItems { get; private set; }
-
-        /// <inheritdoc />
-        public Action onRebuilt { get; set; }
-        
-        /// <inheritdoc />
         public Action<IInventoryItem> onItemDropped { get; set; }
 
-        /// <inheritdoc />
         public Action<IInventoryItem> onItemDroppedFailed { get; set; }
         
-        /// <inheritdoc />
         public Action<IInventoryItem> onItemAdded { get; set; }
         
-        /// <inheritdoc />
         public Action<IInventoryItem> onItemAddedFailed { get; set; }
 
-        /// <inheritdoc />
         public Action<IInventoryItem> onItemRemoved { get; set; }
-        
-        /// <inheritdoc />
+ 
         public Action onResized { get; set; }
 
-        /// <inheritdoc />
         public IInventoryItem GetAtPoint(Vector2Int point)
         {
-            // Single item override
-            if (_provider.inventoryRenderMode == InventoryRenderMode.Single && _provider.isInventoryFull && allItems.Length > 0)
+            if (GetAtPoint_SingleRender_Inventory())
             {
                 return allItems[0];
             }
@@ -135,10 +117,22 @@ namespace FarrokhGames.Inventory
             {
                 if (item.Contains(point)) { return item; }
             }
+
             return null;
         }
 
-        /// <inheritdoc />
+        bool GetAtPoint_SingleRender_Inventory()
+        {
+            if (_provider.inventoryRenderMode == InventoryRenderMode.Single && _provider.isInventoryFull && allItems.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public IInventoryItem[] GetAtPoint(Vector2Int point, Vector2Int size)
         {
             var posibleItems = new IInventoryItem[size.x * size.y];
@@ -151,14 +145,15 @@ namespace FarrokhGames.Inventory
                     c++;
                 }
             }
+
             return posibleItems.Distinct().Where(x => x != null).ToArray();
         }
 
-        /// <inheritdoc />
         public bool TryRemove(IInventoryItem item)
         {
             if (!CanRemove(item)) return false;
             if (!_provider.RemoveInventoryItem(item)) return false;
+
             Rebuild(true);
             onItemRemoved?.Invoke(item);
             return true;
@@ -171,6 +166,7 @@ namespace FarrokhGames.Inventory
 				onItemDroppedFailed?.Invoke(item);
 				return false;
 			}
+
             Rebuild(true);
             onItemDropped?.Invoke(item);
             return true;
@@ -183,6 +179,7 @@ namespace FarrokhGames.Inventory
 				onItemDroppedFailed?.Invoke(item);
 				return false;
 			}
+
 			onItemDropped?.Invoke(item);
 			return true;
 		}
@@ -288,7 +285,6 @@ namespace FarrokhGames.Inventory
         /// <inheritdoc />
         public bool Contains(IInventoryItem item) => allItems.Contains(item);
         
-
         /// <inheritdoc />
         public bool CanRemove(IInventoryItem item) => Contains(item) && _provider.CanRemoveInventoryItem(item);
 

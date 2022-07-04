@@ -35,6 +35,7 @@ namespace FarrokhGames.Inventory.Examples
                 _items.Add(item);
                 return true;
             }
+
             return false;
         }
 

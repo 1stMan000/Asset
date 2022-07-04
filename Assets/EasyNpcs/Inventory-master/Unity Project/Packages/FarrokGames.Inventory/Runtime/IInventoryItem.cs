@@ -15,6 +15,8 @@ namespace FarrokhGames.Inventory
         bool IsPartOfShape(Vector2Int localPosition);
         
         bool canDrop { get; }
+
+        GameObject dropObject { get; }
     }
 
     internal static class InventoryItemExtensions
