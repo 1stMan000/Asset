@@ -31,28 +31,35 @@ namespace FarrokhGames.Inventory
         private Image[] _grids;
         private Dictionary<IInventoryItem, Image> _items = new Dictionary<IInventoryItem, Image>();
 
-        /*
-         * Setup
-         */
         void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
 
-            // Create the image container
+            var imageContainer = ImageContainer();
+            _imagePool = new Pool<Image>(
+                delegate
+                {
+                    return ImageObject(imageContainer);
+                });
+        }
+
+        RectTransform ImageContainer()
+        {
             var imageContainer = new GameObject("Image Pool").AddComponent<RectTransform>();
             imageContainer.transform.SetParent(transform);
             imageContainer.transform.localPosition = Vector3.zero;
             imageContainer.transform.localScale = Vector3.one;
 
-            // Create pool of images
-            _imagePool = new Pool<Image>(
-                delegate
-                {
-                    var image = new GameObject("Image").AddComponent<Image>();
-                    image.transform.SetParent(imageContainer);
-                    image.transform.localScale = Vector3.one;
-                    return image;
-                });
+            return imageContainer;
+        }
+
+        Image ImageObject(RectTransform imageContainer)
+        {
+            var image = new GameObject("Image").AddComponent<Image>();
+            image.transform.SetParent(imageContainer);
+            image.transform.localScale = Vector3.one;
+
+            return image;
         }
 
         public void SetInventory(IInventoryManager inventoryManager, InventoryRenderMode renderMode)
@@ -63,26 +70,14 @@ namespace FarrokhGames.Inventory
             OnEnable();
         }
 
-        /// <summary>
-        /// Returns the RectTransform for this renderer
-        /// </summary>
         public RectTransform rectTransform { get; private set; }
-
-        /// <summary>
-        /// Returns the size of this inventory's cells
-        /// </summary>
         public Vector2 cellSize => _cellSize;
 
-        /* 
-        Invoked when the inventory inventoryRenderer is enabled
-        */
         void OnEnable()
         {
             if (inventory != null && !_haveListeners)
             {
-                if (_cellSpriteEmpty == null) { throw new NullReferenceException("Sprite for empty cell is null"); }
-                if (_cellSpriteSelected == null) { throw new NullReferenceException("Sprite for selected cells is null."); }
-                if (_cellSpriteBlocked == null) { throw new NullReferenceException("Sprite for blocked cells is null."); }
+                Check_Cell_Sprites();
 
                 inventory.onRebuilt += ReRenderAllItems;
                 inventory.onItemAdded += HandleItemAdded;
@@ -91,15 +86,11 @@ namespace FarrokhGames.Inventory
                 inventory.onResized += HandleResized;
                 _haveListeners = true;
 
-                // Render inventory
                 ReRenderGrid();
                 ReRenderAllItems();
             }
         }
 
-        /* 
-        Invoked when the inventory inventoryRenderer is disabled
-        */
         void OnDisable()
         {
             if (inventory != null && _haveListeners)
@@ -111,6 +102,13 @@ namespace FarrokhGames.Inventory
                 inventory.onResized -= HandleResized;
                 _haveListeners = false;
             }
+        }
+
+        void Check_Cell_Sprites()
+        {
+            if (_cellSpriteEmpty == null) { throw new NullReferenceException("Sprite for empty cell is null"); }
+            if (_cellSpriteSelected == null) { throw new NullReferenceException("Sprite for selected cells is null."); }
+            if (_cellSpriteBlocked == null) { throw new NullReferenceException("Sprite for blocked cells is null."); }
         }
 
         /*
@@ -174,19 +172,22 @@ namespace FarrokhGames.Inventory
 
         private void ReRenderAllItems()
         {
-            // Clear all items
+            ClearAllItems();
+
+            foreach (var item in inventory.allItems)
+            {
+                HandleItemAdded(item);
+            }
+        }
+
+        void ClearAllItems()
+        {
             foreach (var image in _items.Values)
             {
                 image.gameObject.SetActive(false);
                 RecycleImage(image);
             }
             _items.Clear();
-
-            // Add all items
-            foreach (var item in inventory.allItems)
-            {
-                HandleItemAdded(item);
-            }
         }
 
         private void HandleItemAdded(IInventoryItem item)
@@ -203,6 +204,25 @@ namespace FarrokhGames.Inventory
             }
 
             _items.Add(item, img);
+        }
+
+        internal Vector2 GetItemOffset(IInventoryItem item)
+        {
+            var x = (-(inventory.width * 0.5f) + item.position.x + item.width * 0.5f) * cellSize.x;
+            var y = (-(inventory.height * 0.5f) + item.position.y + item.height * 0.5f) * cellSize.y;
+            return new Vector2(x, y);
+        }
+
+        private Image CreateImage(Sprite sprite, bool raycastTarget)
+        {
+            var img = _imagePool.Take();
+            img.gameObject.SetActive(true);
+            img.sprite = sprite;
+            img.rectTransform.sizeDelta = new Vector2(img.sprite.rect.width / (40 / _cellSize.x), img.sprite.rect.height / (40 / _cellSize.y));
+            img.transform.SetAsLastSibling();
+            img.type = Image.Type.Simple;
+            img.raycastTarget = raycastTarget;
+            return img;
         }
 
         private void HandleItemRemoved(IInventoryItem item)
@@ -223,18 +243,6 @@ namespace FarrokhGames.Inventory
         {
             ReRenderGrid();
             ReRenderAllItems();
-        }
-
-        private Image CreateImage(Sprite sprite, bool raycastTarget)
-        {
-            var img = _imagePool.Take();
-            img.gameObject.SetActive(true);
-            img.sprite = sprite;
-            img.rectTransform.sizeDelta = new Vector2(img.sprite.rect.width / (40 / _cellSize.x), img.sprite.rect.height / (40 / _cellSize.y));
-            img.transform.SetAsLastSibling();
-            img.type = Image.Type.Simple;
-            img.raycastTarget = raycastTarget;
-            return img;
         }
 
         private void RecycleImage(Image image)
@@ -292,16 +300,6 @@ namespace FarrokhGames.Inventory
                 _grids[i].sprite = _cellSpriteEmpty;
                 _grids[i].color = Color.white;
             }
-        }
-
-        /*
-        Returns the appropriate offset of an item to make it fit nicely in the grid
-        */
-        internal Vector2 GetItemOffset(IInventoryItem item)
-        {
-            var x = (-(inventory.width * 0.5f) + item.position.x + item.width * 0.5f) * cellSize.x;
-            var y = (-(inventory.height * 0.5f) + item.position.y + item.height * 0.5f) * cellSize.y;
-            return new Vector2(x, y);
         }
     }
 }
