@@ -35,7 +35,7 @@ namespace FarrokhGames.Inventory
         {
             rectTransform = GetComponent<RectTransform>();
 
-            var imageContainer = ImageContainer();
+            var imageContainer = Set_Parent_For_ImageObjects();
             _imagePool = new Pool<Image>(
                 delegate
                 {
@@ -43,20 +43,20 @@ namespace FarrokhGames.Inventory
                 });
         }
 
-        RectTransform ImageContainer()
+        RectTransform Set_Parent_For_ImageObjects()
         {
-            var imageContainer = new GameObject("Image Pool").AddComponent<RectTransform>();
-            imageContainer.transform.SetParent(transform);
-            imageContainer.transform.localPosition = Vector3.zero;
-            imageContainer.transform.localScale = Vector3.one;
+            var parent_for_ImageObject = new GameObject("Image Pool").AddComponent<RectTransform>();
+            parent_for_ImageObject.transform.SetParent(transform);
+            parent_for_ImageObject.transform.localPosition = Vector3.zero;
+            parent_for_ImageObject.transform.localScale = Vector3.one;
 
-            return imageContainer;
+            return parent_for_ImageObject;
         }
 
-        Image ImageObject(RectTransform imageContainer)
+        Image ImageObject(RectTransform parent_for_ImageObject)
         {
             var image = new GameObject("Image").AddComponent<Image>();
-            image.transform.SetParent(imageContainer);
+            image.transform.SetParent(parent_for_ImageObject);
             image.transform.localScale = Vector3.one;
 
             return image;
@@ -111,35 +111,17 @@ namespace FarrokhGames.Inventory
             if (_cellSpriteBlocked == null) { throw new NullReferenceException("Sprite for blocked cells is null."); }
         }
 
-        /*
-        Clears and renders the grid. This must be done whenever the size of the inventory changes
-        */
         private void ReRenderGrid()
         {
-            // Clear the grid
-            if (_grids != null)
-            {
-                for (var i = 0; i < _grids.Length; i++)
-                {
-                    _grids[i].gameObject.SetActive(false);
-                    RecycleImage(_grids[i]);
-                    _grids[i].transform.SetSiblingIndex(i);
-                }
-            }
-            _grids = null;
+            Remove_All_Grids();
 
             // Render new grid
             var containerSize = new Vector2(cellSize.x * inventory.width, cellSize.y * inventory.height);
-            Image grid;
+            Image grid = null;
             switch (_renderMode)
             {
                 case InventoryRenderMode.Single:
-                    grid = CreateImage(_cellSpriteEmpty, true);
-                    grid.rectTransform.SetAsFirstSibling();
-                    grid.type = Image.Type.Sliced;
-                    grid.rectTransform.localPosition = Vector3.zero;
-                    grid.rectTransform.sizeDelta = containerSize;
-                    _grids = new[] { grid };
+                    OnReRenderGrid_Single(containerSize, grid);
                     break;
                 default:
                     // Spawn grid images
@@ -170,6 +152,30 @@ namespace FarrokhGames.Inventory
             rectTransform.sizeDelta = containerSize;
         }
 
+        void Remove_All_Grids()
+        {
+            if (_grids != null)
+            {
+                for (var i = 0; i < _grids.Length; i++)
+                {
+                    _grids[i].gameObject.SetActive(false);
+                    Set_Image_To_Inactive(_grids[i]);
+                    _grids[i].transform.SetSiblingIndex(i);
+                }
+            }
+            _grids = null;
+        }
+
+        void OnReRenderGrid_Single(Vector2 containerSize, Image grid)
+        {
+            grid = CreateImage(_cellSpriteEmpty, true);
+            grid.rectTransform.SetAsFirstSibling();
+            grid.type = Image.Type.Sliced;
+            grid.rectTransform.localPosition = Vector3.zero;
+            grid.rectTransform.sizeDelta = containerSize;
+            _grids = new[] { grid };
+        }
+
         private void ReRenderAllItems()
         {
             ClearAllItems();
@@ -185,8 +191,9 @@ namespace FarrokhGames.Inventory
             foreach (var image in _items.Values)
             {
                 image.gameObject.SetActive(false);
-                RecycleImage(image);
+                Set_Image_To_Inactive(image);
             }
+
             _items.Clear();
         }
 
@@ -206,16 +213,9 @@ namespace FarrokhGames.Inventory
             _items.Add(item, img);
         }
 
-        internal Vector2 GetItemOffset(IInventoryItem item)
-        {
-            var x = (-(inventory.width * 0.5f) + item.position.x + item.width * 0.5f) * cellSize.x;
-            var y = (-(inventory.height * 0.5f) + item.position.y + item.height * 0.5f) * cellSize.y;
-            return new Vector2(x, y);
-        }
-
         private Image CreateImage(Sprite sprite, bool raycastTarget)
         {
-            var img = _imagePool.Take();
+            var img = _imagePool.Activate_ImageObject_In_Pool();
             img.gameObject.SetActive(true);
             img.sprite = sprite;
             img.rectTransform.sizeDelta = new Vector2(img.sprite.rect.width / (40 / _cellSize.x), img.sprite.rect.height / (40 / _cellSize.y));
@@ -225,13 +225,20 @@ namespace FarrokhGames.Inventory
             return img;
         }
 
+        internal Vector2 GetItemOffset(IInventoryItem item)
+        {
+            var x = (-(inventory.width * 0.5f) + item.position.x + item.width * 0.5f) * cellSize.x;
+            var y = (-(inventory.height * 0.5f) + item.position.y + item.height * 0.5f) * cellSize.y;
+            return new Vector2(x, y);
+        }
+
         private void HandleItemRemoved(IInventoryItem item)
         {
             if (_items.ContainsKey(item))
             {
                 var image = _items[item];
                 image.gameObject.SetActive(false);
-                RecycleImage(image);
+                Set_Image_To_Inactive(image);
                 _items.Remove(item);
             }
         }
@@ -245,11 +252,11 @@ namespace FarrokhGames.Inventory
             ReRenderAllItems();
         }
 
-        private void RecycleImage(Image image)
+        private void Set_Image_To_Inactive(Image image)
         {
             image.gameObject.name = "Image";
             image.gameObject.SetActive(false);
-            _imagePool.Recycle(image);
+            _imagePool.Set_Image_To_Inactive(image);
         }
 
         /// <summary>

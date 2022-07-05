@@ -46,10 +46,10 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 8, true);
             Assert.That(pool.Count, Is.EqualTo(8));
-            var toRecycele = pool.Take();
-            pool.Take();
+            var toRecycele = pool.Activate_ImageObject_In_Pool();
+            pool.Activate_ImageObject_In_Pool();
             Assert.That(pool.Count, Is.EqualTo(6));
-            pool.Recycle(toRecycele);
+            pool.Set_Image_To_Inactive(toRecycele);
             Assert.That(pool.Count, Is.EqualTo(7));
         }
 
@@ -73,7 +73,7 @@ namespace FarrokhGames.Shared
         public void Take_Empty_ReturnsNull()
         {
             var pool = new Pool<PoolObject>(Creator, 0, false);
-            Assert.That(pool.Take(), Is.Null);
+            Assert.That(pool.Activate_ImageObject_In_Pool(), Is.Null);
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 5, false);
             _creatorCount = 0;
-            Assert.That(pool.Take(), Is.Not.Null);
+            Assert.That(pool.Activate_ImageObject_In_Pool(), Is.Not.Null);
             Assert.That(_creatorCount, Is.Zero);
         }
 
@@ -90,11 +90,11 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 2, true);
             _creatorCount = 0;
-            pool.Take();
-            pool.Take();
-            Assert.That(pool.Take(), Is.Not.Null);
-            Assert.That(pool.Take(), Is.Not.Null);
-            Assert.That(pool.Take(), Is.Not.Null);
+            pool.Activate_ImageObject_In_Pool();
+            pool.Activate_ImageObject_In_Pool();
+            Assert.That(pool.Activate_ImageObject_In_Pool(), Is.Not.Null);
+            Assert.That(pool.Activate_ImageObject_In_Pool(), Is.Not.Null);
+            Assert.That(pool.Activate_ImageObject_In_Pool(), Is.Not.Null);
             Assert.That(_creatorCount, Is.EqualTo(3));
         }
 
@@ -102,9 +102,9 @@ namespace FarrokhGames.Shared
         public void Take_ObjectAreNotTheSame()
         {
             var pool = new Pool<PoolObject>(Creator, 3, false);
-            var obj1 = pool.Take();
-            var obj2 = pool.Take();
-            var obj3 = pool.Take();
+            var obj1 = pool.Activate_ImageObject_In_Pool();
+            var obj2 = pool.Activate_ImageObject_In_Pool();
+            var obj3 = pool.Activate_ImageObject_In_Pool();
             Assert.That(obj1, Is.Not.SameAs(obj2));
             Assert.That(obj2, Is.Not.SameAs(obj3));
             Assert.That(obj3, Is.Not.SameAs(obj1));
@@ -114,7 +114,7 @@ namespace FarrokhGames.Shared
         public void Recycle_NotPartOfPool_InvalidOperationException()
         {
             var pool = new Pool<PoolObject>(Creator, 2, true);
-            Assert.Throws<InvalidOperationException>(() => pool.Recycle(new PoolObject()));
+            Assert.Throws<InvalidOperationException>(() => pool.Set_Image_To_Inactive(new PoolObject()));
         }
 
         [Test]
@@ -122,19 +122,19 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 2, true);
             _creatorCount = 0;
-            var obj = pool.Take();
+            var obj = pool.Activate_ImageObject_In_Pool();
             Assert.That(pool.Count, Is.EqualTo(1));
-            pool.Recycle(obj);
+            pool.Set_Image_To_Inactive(obj);
             Assert.That(pool.Count, Is.EqualTo(2));
-            var obj1 = pool.Take();
-            var obj2 = pool.Take();
-            var obj3 = pool.Take();
+            var obj1 = pool.Activate_ImageObject_In_Pool();
+            var obj2 = pool.Activate_ImageObject_In_Pool();
+            var obj3 = pool.Activate_ImageObject_In_Pool();
             Assert.That(_creatorCount, Is.EqualTo(1));
-            pool.Recycle(obj1);
+            pool.Set_Image_To_Inactive(obj1);
             Assert.That(pool.Count, Is.EqualTo(1));
-            pool.Recycle(obj2);
+            pool.Set_Image_To_Inactive(obj2);
             Assert.That(pool.Count, Is.EqualTo(2));
-            pool.Recycle(obj3);
+            pool.Set_Image_To_Inactive(obj3);
             Assert.That(pool.Count, Is.EqualTo(3));
         }
 
@@ -143,9 +143,9 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 5, true);
             Assert.That(pool.GetInactive().Count, Is.EqualTo(5));
-            var obj = pool.Take();
+            var obj = pool.Activate_ImageObject_In_Pool();
             Assert.That(pool.GetInactive().Count, Is.EqualTo(4));
-            pool.Recycle(obj);
+            pool.Set_Image_To_Inactive(obj);
             Assert.That(pool.GetInactive().Count, Is.EqualTo(5));
         }
 
@@ -163,9 +163,9 @@ namespace FarrokhGames.Shared
         {
             var pool = new Pool<PoolObject>(Creator, 1, true);
             Assert.That(pool.GetActive().Count, Is.EqualTo(0));
-            var obj = pool.Take();
+            var obj = pool.Activate_ImageObject_In_Pool();
             Assert.That(pool.GetActive().Count, Is.EqualTo(1));
-            pool.Recycle(obj);
+            pool.Set_Image_To_Inactive(obj);
             Assert.That(pool.GetActive().Count, Is.EqualTo(0));
         }
 

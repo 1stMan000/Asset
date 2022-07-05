@@ -35,7 +35,7 @@ namespace FarrokhGames.Shared
         public bool IsEmpty => Count == 0;
         public bool CanTake => _allowTakingWhenEmpty || !IsEmpty;
 
-        public T Take()
+        public T Activate_ImageObject_In_Pool()
         {
             if (IsEmpty)
             {
@@ -65,12 +65,7 @@ namespace FarrokhGames.Shared
             return obj;
         }
 
-        /// <summary>
-		/// Recycles an object into the pool. After this point, the object is
-		/// considered dead and should not be used until taken from the pool
-		/// again.
-        /// </summary>
-        public void Recycle(T item)
+        public void Set_Image_To_Inactive(T item)
         {
             if (!active_imageObjects.Contains(item)) { throw new InvalidOperationException("An item was recycled even though it was not part of the pool"); }
             inactive_imageObjects.Add(item);
