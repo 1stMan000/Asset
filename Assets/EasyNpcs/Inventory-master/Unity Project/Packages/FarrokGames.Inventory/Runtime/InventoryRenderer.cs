@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 namespace FarrokhGames.Inventory
 {
-    /// <summary>
-    /// Renders a given inventory
-    /// /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class InventoryRenderer : MonoBehaviour
     {
@@ -110,12 +107,12 @@ namespace FarrokhGames.Inventory
             if (_cellSpriteSelected == null) { throw new NullReferenceException("Sprite for selected cells is null."); }
             if (_cellSpriteBlocked == null) { throw new NullReferenceException("Sprite for blocked cells is null."); }
         }
-
+        
         private void ReRenderGrid()
         {
-            Remove_All_Grids();
+            GridsRenderer gridsRenderer = new GridsRenderer(_grids, _imagePool);
+            gridsRenderer.Remove_All_Grids();
 
-            // Render new grid
             var containerSize = new Vector2(cellSize.x * inventory.width, cellSize.y * inventory.height);
             Image grid = null;
             switch (_renderMode)
@@ -124,46 +121,34 @@ namespace FarrokhGames.Inventory
                     OnReRenderGrid_Single(containerSize, grid);
                     break;
                 default:
-                    // Spawn grid images
-                    var topLeft = new Vector3(-containerSize.x / 2, -containerSize.y / 2, 0); // Calculate topleft corner
-                    var halfCellSize = new Vector3(cellSize.x / 2, cellSize.y / 2, 0); // Calulcate cells half-size
-                    _grids = new Image[inventory.width * inventory.height];
-                    var c = 0;
-                    for (int y = 0; y < inventory.height; y++)
-                    {
-                        for (int x = 0; x < inventory.width; x++)
-                        {
-                            grid = CreateImage(_cellSpriteEmpty, true);
-                            grid.gameObject.name = "Grid " + c;
-                            grid.rectTransform.SetAsFirstSibling();
-                            grid.type = Image.Type.Sliced;
-                            grid.rectTransform.localPosition = topLeft + new Vector3(cellSize.x * ((inventory.width - 1) - x), cellSize.y * y, 0) + halfCellSize;
-                            grid.rectTransform.sizeDelta = cellSize;
-                            _grids[c] = grid;
-                            c++;
-                        }
-                    }
+                    OnRerenderGrid_Default(containerSize, grid);
                     break;
             }
 
-            // Set the size of the main RectTransform
-            // This is useful as it allowes custom graphical elements
-            // suchs as a border to mimic the size of the inventory.
             rectTransform.sizeDelta = containerSize;
         }
 
-        void Remove_All_Grids()
+        void OnRerenderGrid_Default(Vector2 containerSize, Image grid)
         {
-            if (_grids != null)
+            var move_to_origin_symmetry = new Vector3(-containerSize.x / 2, -containerSize.y / 2, 0);
+            var move_to_halfCellSize = new Vector3(cellSize.x / 2, cellSize.y / 2, 0);
+            var adjust = move_to_origin_symmetry + move_to_halfCellSize;
+            _grids = new Image[inventory.width * inventory.height];
+            var num = 0;
+            for (int y = 0; y < inventory.height; y++)
             {
-                for (var i = 0; i < _grids.Length; i++)
+                for (int x = 0; x < inventory.width; x++)
                 {
-                    _grids[i].gameObject.SetActive(false);
-                    Set_Image_To_Inactive(_grids[i]);
-                    _grids[i].transform.SetSiblingIndex(i);
+                    grid = CreateImage(_cellSpriteEmpty, true);
+                    grid.gameObject.name = "Grid " + num;
+                    grid.rectTransform.SetAsFirstSibling();
+                    grid.type = Image.Type.Sliced;
+                    grid.rectTransform.localPosition = new Vector3(cellSize.x * ((inventory.width - 1) - x), cellSize.y * y, 0) + adjust;
+                    grid.rectTransform.sizeDelta = cellSize;
+                    _grids[num] = grid;
+                    num++;
                 }
             }
-            _grids = null;
         }
 
         void OnReRenderGrid_Single(Vector2 containerSize, Image grid)
@@ -195,6 +180,13 @@ namespace FarrokhGames.Inventory
             }
 
             _items.Clear();
+        }
+
+        private void Set_Image_To_Inactive(Image image)
+        {
+            image.gameObject.name = "Image";
+            image.gameObject.SetActive(false);
+            _imagePool.Set_Image_To_Inactive(image);
         }
 
         private void HandleItemAdded(IInventoryItem item)
@@ -243,28 +235,12 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /*
-        Handler for when inventory.OnResized is invoked
-        */
         private void HandleResized()
         {
             ReRenderGrid();
             ReRenderAllItems();
         }
 
-        private void Set_Image_To_Inactive(Image image)
-        {
-            image.gameObject.name = "Image";
-            image.gameObject.SetActive(false);
-            _imagePool.Set_Image_To_Inactive(image);
-        }
-
-        /// <summary>
-        /// Selects a given item in the inventory
-        /// </summary>
-        /// <param name="item">Item to select</param>
-        /// <param name="blocked">Should the selection be rendered as blocked</param>
-        /// <param name="color">The color of the selection</param>
         public void SelectItem(IInventoryItem item, bool blocked, Color color)
         {
             if (item == null) { return; }
@@ -297,9 +273,6 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /// <summary>
-        /// Clears all selections made in this inventory
-        /// </summary>
         public void ClearSelection()
         {
             for (var i = 0; i < _grids.Length; i++)

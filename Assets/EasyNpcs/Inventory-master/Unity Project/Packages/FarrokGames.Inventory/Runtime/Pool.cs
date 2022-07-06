@@ -72,17 +72,11 @@ namespace FarrokhGames.Shared
             active_imageObjects.Remove(item);
         }
 
-        /// <summary>
-        /// Returns a copied list of all inactive items
-        /// </summary>
         public List<T> GetInactive()
         {
             return inactive_imageObjects.ToList();
         }
 
-        /// <summary>
-        /// Returns a copied list of all active items
-        /// </summary>
         public List<T> GetActive()
         {
             return active_imageObjects.ToList();
