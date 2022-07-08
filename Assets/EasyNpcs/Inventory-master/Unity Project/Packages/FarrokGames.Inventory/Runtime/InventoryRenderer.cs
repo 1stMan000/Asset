@@ -203,28 +203,37 @@ namespace FarrokhGames.Inventory
             switch (_renderMode)
             {
                 case InventoryRenderMode.Single:
-                    _grids[0].sprite = blocked ? _cellSpriteBlocked : _cellSpriteSelected;
-                    _grids[0].color = color;
+                    ColorGrid(0, blocked, color);
                     break;
                 default:
-                    for (var x = 0; x < item.width; x++)
-                    {
-                        for (var y = 0; y < item.height; y++)
-                        {
-                            if (item.IsPartOfShape(new Vector2Int(x, y)))
-                            {
-                                var p = item.position + new Vector2Int(x, y);
-                                if (p.x >= 0 && p.x < inventory.width && p.y >= 0 && p.y < inventory.height)
-                                {
-                                    var index = p.y * inventory.width + ((inventory.width - 1) - p.x);
-                                    _grids[index].sprite = blocked ? _cellSpriteBlocked : _cellSpriteSelected;
-                                    _grids[index].color = color;
-                                }
-                            }
-                        }
-                    }
+                    Color_All_Grids_Item_Is_On(item, blocked, color);
                     break;
             }
+        }
+
+        private void Color_All_Grids_Item_Is_On(IInventoryItem item, bool blocked, Color color)
+        {
+            for (var x = 0; x < item.width; x++)
+            {
+                for (var y = 0; y < item.height; y++)
+                {
+                    if (item.IsPartOfShape(new Vector2Int(x, y)))
+                    {
+                        var p = item.position + new Vector2Int(x, y);
+                        if (p.x >= 0 && p.x < inventory.width && p.y >= 0 && p.y < inventory.height)
+                        {
+                            var index = p.y * inventory.width + ((inventory.width - 1) - p.x);
+                            ColorGrid(index, blocked, color);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ColorGrid(int index, bool blocked, Color color)
+        {
+            _grids[index].sprite = blocked ? _cellSpriteBlocked : _cellSpriteSelected;
+            _grids[index].color = color;
         }
 
         public void ClearSelection()
