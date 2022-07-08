@@ -32,31 +32,12 @@ namespace FarrokhGames.Inventory
             cellSize = _cellSize;
             rectTransform = GetComponent<RectTransform>();
 
-            var imageContainer = Set_Parent_For_ImageObjects();
+            var imageContainer = Set_Images.Set_Parent_For_ImageObjects(transform);
             imagePool = new Pool<Image>(
                 delegate
                 {
-                    return ImageObject(imageContainer);
+                    return Set_Images.ImageObject(imageContainer);
                 });
-        }
-
-        RectTransform Set_Parent_For_ImageObjects()
-        {
-            var parent_for_ImageObject = new GameObject("Image Pool").AddComponent<RectTransform>();
-            parent_for_ImageObject.transform.SetParent(transform);
-            parent_for_ImageObject.transform.localPosition = Vector3.zero;
-            parent_for_ImageObject.transform.localScale = Vector3.one;
-
-            return parent_for_ImageObject;
-        }
-
-        Image ImageObject(RectTransform parent_for_ImageObject)
-        {
-            var image = new GameObject("Image").AddComponent<Image>();
-            image.transform.SetParent(parent_for_ImageObject);
-            image.transform.localScale = Vector3.one;
-
-            return image;
         }
 
         public void SetInventory(IInventoryManager inventoryManager, InventoryRenderMode renderMode)
