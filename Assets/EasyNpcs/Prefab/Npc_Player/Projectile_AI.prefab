@@ -30,6 +30,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4159233490237262849}
   m_Father: {fileID: 4159233491569455957}
@@ -145,6 +146,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4159233489792576086}
   m_RootOrder: 0
@@ -173,6 +175,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -258,6 +261,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4159233489792576086}
   - {fileID: 3885065028377793719}
@@ -348,29 +352,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  manager: {fileID: 0}
-  PatrolArea: {fileID: 0}
-  attackPoint: {fileID: 0}
-  VisualiseAgentActions: 0
-  VisionMask:
-    serializedVersion: 2
-    m_Bits: 256
   VisionRange: 100
-  WhatCanThisEnemyAttack:
+  VisionLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
+  patrolArea: {fileID: 0}
+  attackPoint: {fileID: 0}
   Tags:
   - Enemy
   Protects: []
   CurrentState: 0
   currentTarget: {fileID: 0}
   AttackDistance: 100
-  maximumAmountofAttackers: 1
-  changingState: 1
+  maximumAttackers: 1
   assignedWeapon: 1
   projectile: {fileID: 8054494596401598028, guid: b2c1908cc69dddd449e3d45602542157,
     type: 3}
   launchHight: 1.7
+  walkSpeed: 2
+  runSpeed: 4
 --- !u!114 &4159233491569455955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +464,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Char_BaseRig_chargeanims
       objectReference: {fileID: 0}
+    - target: {fileID: 2143624383668974679, guid: 936245b27b7e1384987051acb816c6af,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
     - target: {fileID: 2143624383668974679, guid: 936245b27b7e1384987051acb816c6af,
         type: 3}
       propertyPath: m_Controller

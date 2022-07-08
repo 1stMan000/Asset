@@ -351,27 +351,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096c17a238bc7e946806a109840208bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcName: 
+  agent: {fileID: 0}
   VisionRange: 10
   VisionLayers:
     serializedVersion: 2
     m_Bits: 768
-  age: 0
   job: 0
-  Gender: 0
-  home: {fileID: 0}
-  work: {fileID: 0}
-  _currentState: 0
-  OnNpcDataInspectorChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  gender: 0
   movementSpeed: 2
-  Attacker: {fileID: 0}
-  isAttacked: 0
   scaredRunningSpeed: 4
   runningDistance: 10
   runningTime: 5
+  Text: {fileID: 0}
   workScript: {fileID: 0}
+  home: {fileID: 0}
+  work: {fileID: 0}
   converChoose: 1
 --- !u!114 &699092563044135393
 MonoBehaviour:
@@ -466,6 +460,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Char_BaseRig_chargeanims
       objectReference: {fileID: 0}
+    - target: {fileID: 2143624383668974679, guid: 936245b27b7e1384987051acb816c6af,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 936245b27b7e1384987051acb816c6af, type: 3}
 --- !u!4 &5464174378618476685 stripped

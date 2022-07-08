@@ -2303,6 +2303,11 @@ PrefabInstance:
       propertyPath: converChoose
       value: 486
       objectReference: {fileID: 0}
+    - target: {fileID: 5882773425349556783, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
 --- !u!1 &1520356519

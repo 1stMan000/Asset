@@ -463,6 +463,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Char_BaseRig_chargeanims
       objectReference: {fileID: 0}
+    - target: {fileID: 2143624383668974679, guid: 936245b27b7e1384987051acb816c6af,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 936245b27b7e1384987051acb816c6af, type: 3}
 --- !u!4 &6795209965344229559 stripped
