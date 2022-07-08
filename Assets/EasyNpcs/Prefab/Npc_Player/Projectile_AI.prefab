@@ -355,7 +355,7 @@ MonoBehaviour:
   VisionRange: 100
   VisionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1280
   patrolArea: {fileID: 0}
   attackPoint: {fileID: 0}
   Tags:
