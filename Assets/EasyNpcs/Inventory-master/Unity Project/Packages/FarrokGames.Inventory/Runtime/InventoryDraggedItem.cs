@@ -77,7 +77,7 @@ namespace FarrokhGames.Inventory
                 if (currentController != null)
                 {
                     item.position = currentController.ScreenToGrid(value + _offset + GetDraggedItemOffset(currentController.inventoryRenderer, item));
-                    var canAdd = currentController.inventory.CanAddAt(item, item.position) || CanSwap();
+                    var canAdd = currentController.inventory.check_Addable.CanAddAt(item, item.position) || CanSwap();
                     currentController.inventoryRenderer.SelectItem(item, !canAdd, Color.white);
                 }
 
@@ -97,7 +97,7 @@ namespace FarrokhGames.Inventory
                 var grid = currentController.ScreenToGrid(pos + _offset + GetDraggedItemOffset(currentController.inventoryRenderer, item));
 
                 // Try to add new item
-                if (currentController.inventory.CanAddAt(item, grid))
+                if (currentController.inventory.check_Addable.CanAddAt(item, grid))
                 {
                     currentController.inventory.TryAddAt(item, grid); // Place the item in a new location
                     mode = DropMode.Added;

@@ -82,11 +82,6 @@ namespace FarrokhGames.Inventory
         bool TryAdd(IInventoryItem item);
 
         /// <summary>
-        /// Returns true if its possible to add item at location
-        /// </summary>
-        bool CanAddAt(IInventoryItem item, Vector2Int point);
-
-        /// <summary>
         /// Tries to add item att location and returns true if successful
         /// </summary>
         bool TryAddAt(IInventoryItem item, Vector2Int point);
