@@ -133,22 +133,6 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        public IInventoryItem[] GetAtPoint(Vector2Int point, Vector2Int size)
-        {
-            var posibleItems = new IInventoryItem[size.x * size.y];
-            var c = 0;
-            for (var x = 0; x < size.x; x++)
-            {
-                for (var y = 0; y < size.y; y++)
-                {
-                    posibleItems[c] = GetAtPoint(point + new Vector2Int(x, y));
-                    c++;
-                }
-            }
-
-            return posibleItems.Distinct().Where(x => x != null).ToArray();
-        }
-
         public bool TryRemove(IInventoryItem item)
         {
             if (!CanRemove(item)) return false;
@@ -184,7 +168,6 @@ namespace FarrokhGames.Inventory
 			return true;
 		}
 
-        /// <inheritdoc />
         public bool CanAddAt(IInventoryItem item, Vector2Int point)
         {
             if (!_provider.CanAddInventoryItem(item) || _provider.isInventoryFull)
@@ -201,20 +184,17 @@ namespace FarrokhGames.Inventory
             item.position = point;
             var padding = Vector2.one * 0.01f;
 
-            // Check if item is outside of inventory
             if (!_fullRect.Contains(item.GetLowerLeftPoint() + padding) || !_fullRect.Contains(item.GetTopRightPoint() - padding))
             {
                 item.position = previousPoint;
                 return false;
             }
 
-            // Check if item overlaps another item already in the inventory
-            if (!allItems.Any(otherItem => item.Overlaps(otherItem))) return true; // Item can be added
+            if (!allItems.Any(otherItem => item.Overlaps(otherItem))) return true; 
             item.position = previousPoint;
             return false;
         }
 
-        /// <inheritdoc />
         public bool TryAddAt(IInventoryItem item, Vector2Int point)
         {
             if (!CanAddAt(item, point) || !_provider.AddInventoryItem(item)) 
@@ -255,7 +235,6 @@ namespace FarrokhGames.Inventory
             return GetFirstPointThatFitsItem(item, out point) && TryAddAt(item, point);
         }
 
-        /// <inheritdoc />
         public bool CanSwap(IInventoryItem item)
         {
             return _provider.inventoryRenderMode == InventoryRenderMode.Single &&
@@ -263,7 +242,6 @@ namespace FarrokhGames.Inventory
                 _provider.CanAddInventoryItem(item);
         }
 
-        /// <inheritdoc />
         public void DropAll()
         {
             var itemsToDrop = allItems.ToArray();
@@ -273,7 +251,6 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /// <inheritdoc />
         public void Clear()
         {
             foreach (var item in allItems)
@@ -282,18 +259,12 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        /// <inheritdoc />
         public bool Contains(IInventoryItem item) => allItems.Contains(item);
         
-        /// <inheritdoc />
         public bool CanRemove(IInventoryItem item) => Contains(item) && _provider.CanRemoveInventoryItem(item);
 
-        /// <inheritdoc />
         public bool CanDrop(IInventoryItem item) => Contains(item) && _provider.CanDropInventoryItem(item) && item.canDrop;
         
-        /*
-         * Get first free point that will fit the given item
-         */
         private bool GetFirstPointThatFitsItem(IInventoryItem item, out Vector2Int point)
         {
             if (DoesItemFit(item))
@@ -311,14 +282,8 @@ namespace FarrokhGames.Inventory
             return false;
         }
 
-        /* 
-         * Returns true if given items physically fits within this inventory
-         */
         private bool DoesItemFit(IInventoryItem item) => item.width <= width && item.height <= height;
 
-        /*
-         * Returns the center post position for a given item within this inventory
-         */
         private Vector2Int GetCenterPosition(IInventoryItem item)
         {
             return new Vector2Int(

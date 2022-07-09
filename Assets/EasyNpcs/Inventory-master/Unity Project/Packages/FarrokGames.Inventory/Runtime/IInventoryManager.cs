@@ -137,10 +137,5 @@ namespace FarrokhGames.Inventory
         /// Get an item at given point within this inventory
         /// </summary>
         IInventoryItem GetAtPoint(Vector2Int point);
-
-        /// <summary>
-        /// Returns all items under given rectangle
-        /// </summary>
-        IInventoryItem[] GetAtPoint(Vector2Int point, Vector2Int size);
     }
 }
