@@ -2203,6 +2203,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 140356450750476849, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_Transforms.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 458185429801109861, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_Enabled
@@ -2308,7 +2313,8 @@ PrefabInstance:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 140356450750476849, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
 --- !u!1 &1520356519
 GameObject:
