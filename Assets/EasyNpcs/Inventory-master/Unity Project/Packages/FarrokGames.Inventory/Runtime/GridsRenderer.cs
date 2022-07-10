@@ -7,10 +7,10 @@ namespace FarrokhGames.Inventory
     public class GridsRenderer : BaseRenderer
     {
         private Image[] grids;
-        IInventoryManager inventory;
+        InventoryManager inventory;
         Sprite cellSpriteEmpty;
 
-        public GridsRenderer(Image[] _grids, Pool<Image> _imagePool, Vector2 _cellSize, IInventoryManager _inventory, Sprite _cellSpriteEmpty)
+        public GridsRenderer(Image[] _grids, Pool<Image> _imagePool, Vector2 _cellSize, InventoryManager _inventory, Sprite _cellSpriteEmpty)
         {
             grids = _grids;
             imagePool = _imagePool;

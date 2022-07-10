@@ -23,7 +23,6 @@ namespace FarrokhGames.Inventory
         }
 
         public IInventoryItem[] allItems { get; private set; }
-        public Action onRebuilt { get; set; }
 
         private void Rebuild(bool notFromScratch)
         {
@@ -93,18 +92,6 @@ namespace FarrokhGames.Inventory
                 return true;
             }
         }
-
-        public Action<IInventoryItem> onItemDropped { get; set; }
-
-        public Action<IInventoryItem> onItemDroppedFailed { get; set; }
-        
-        public Action<IInventoryItem> onItemAdded { get; set; }
-        
-        public Action<IInventoryItem> onItemAddedFailed { get; set; }
-
-        public Action<IInventoryItem> onItemRemoved { get; set; }
- 
-        public Action onResized { get; set; }
 
         public IInventoryItem GetAtPoint(Vector2Int point)
         {

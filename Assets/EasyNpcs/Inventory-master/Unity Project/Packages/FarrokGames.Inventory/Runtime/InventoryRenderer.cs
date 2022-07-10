@@ -21,7 +21,7 @@ namespace FarrokhGames.Inventory
         [SerializeField, Tooltip("The sprite to use for blocked cells")]
         private Sprite _cellSpriteBlocked = null;
 
-        internal IInventoryManager inventory;
+        internal InventoryManager inventory;
         InventoryRenderMode _renderMode;
         private bool _haveListeners;
         private Image[] _grids;
@@ -40,7 +40,7 @@ namespace FarrokhGames.Inventory
                 });
         }
 
-        public void SetInventory(IInventoryManager inventoryManager, InventoryRenderMode renderMode)
+        public void SetInventory(InventoryManager inventoryManager, InventoryRenderMode renderMode)
         {
             OnDisable();
             inventory = inventoryManager ?? throw new ArgumentNullException(nameof(inventoryManager)); 
