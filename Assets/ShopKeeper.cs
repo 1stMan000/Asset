@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using Rotation;
 
 public class ShopKeeper : MonoBehaviour
 {
@@ -9,16 +10,26 @@ public class ShopKeeper : MonoBehaviour
 
     public GameObject rightPlacement;
     public GameObject leftPlacement;
+    public GameObject shop;
 
-    void Start()
+    Rotate rotate;
+
+    private void OnEnable()
     {
+        rotate = gameObject.AddComponent<Rotate>();
+        rotate.RotateTo(shop);
+
         right.data.target = rightPlacement.transform;
         left.data.target = leftPlacement.transform;
         rigBuilder.Build();
     }
 
-    void Update()
+    private void OnDisable()
     {
-        
+        right.data.target = null;
+        left.data.target = null;
+        rigBuilder.Build();
+
+        Destroy(rotate);
     }
 }
