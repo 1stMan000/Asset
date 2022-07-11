@@ -187,10 +187,7 @@ namespace Npc_AI
                 return;
 
             ChangeState(NpcState.GoingToWork);
-
-            LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
-            lifeCycle.Set(this);
-            lifeCycle.Start_GOTOWork();
+            Set_Cycle_Class().Start_GOTOWork();
         }
 
         void GoHome()
@@ -202,10 +199,15 @@ namespace Npc_AI
                 return;
 
             ChangeState(NpcState.GoingHome);
+            Set_Cycle_Class().Start_GOTOHome();
+        }
 
+        LifeCycle Set_Cycle_Class()
+        {
             LifeCycle lifeCycle = gameObject.AddComponent<LifeCycle>();
             lifeCycle.Set(this);
-            lifeCycle.Start_GOTOHome();
+
+            return lifeCycle;
         }
 
         [Range(0, 10000)]

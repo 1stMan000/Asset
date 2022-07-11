@@ -21,7 +21,7 @@ public class LifeCycle : MonoBehaviour
     {
         npcAI.agent.speed = npcAI.movementSpeed;
         npcAI.agent.SetDestination(npcAI.work.position);
-        yield return new WaitUntil(() => Vector3.Distance(transform.position, npcAI.work.position) <= npcAI.agent.stoppingDistance);
+        yield return new WaitUntil(() => Vector3.Distance(transform.position, npcAI.work.position) <= 0.1f);
 
         npcAI.ChangeState(NpcState.Working);
     }
