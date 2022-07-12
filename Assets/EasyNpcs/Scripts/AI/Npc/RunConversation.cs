@@ -18,6 +18,9 @@ public class RunConversation : MonoBehaviour
     private void Start()
     {
         me.ChangeState(NpcState.Talking);
+
+        rotate = gameObject.AddComponent<Rotate>();
+        rotate.RotateTo(partner.gameObject);
     }
 
     public void Set(bool order, NpcAI npcMe, NpcAI npcPartner, Tuple<List<string>, List<string>> conver = null)
@@ -30,9 +33,6 @@ public class RunConversation : MonoBehaviour
 
     public void StartConversation()
     {
-        rotate = gameObject.AddComponent<Rotate>();
-        rotate.RotateTo(partner.gameObject);
-
         if (first)
         {
             If_First();
@@ -70,11 +70,12 @@ public class RunConversation : MonoBehaviour
 
     IEnumerator Speak_First_Lines(Tuple<List<string>, List<string>> chosenConv)
     {
+        RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
+        partnerConv.Set(false, partner, me);
+
         StartCoroutine(Talk(chosenConv.Item1));
         yield return new WaitForSeconds(4);
 
-        RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
-        partnerConv.Set(false, partner, me);
         partnerConv.StartConversation();
         partnerConv.RecieveRequest(chosenConv);
     }

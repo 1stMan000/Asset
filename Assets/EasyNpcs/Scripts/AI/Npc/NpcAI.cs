@@ -76,7 +76,7 @@ namespace Npc_AI
             }
             else
             {
-                TriggerConversation(SenseSurroundings.Sense_Nearby_Npc(transform.position, VisionRange, VisionLayers));
+                TriggerConversation(SenseSurroundings.Sense_Nearby_Npc(transform.position, 5, VisionLayers, this));
             }
         }
 
@@ -210,7 +210,7 @@ namespace Npc_AI
             return lifeCycle;
         }
 
-        [Range(0, 10000)]
+        [Range(0, 5)]
         public int converChoose = 0;
 
         void TriggerConversation(NpcAI npc)

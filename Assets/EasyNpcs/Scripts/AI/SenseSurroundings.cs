@@ -22,7 +22,7 @@ namespace Sense
             return null;
         }
 
-        public static NpcAI Sense_Nearby_Npc(Vector3 position, float VisionRange, LayerMask VisionLayers)
+        public static NpcAI Sense_Nearby_Npc(Vector3 position, float VisionRange, LayerMask VisionLayers, NpcAI thisNpc)
         {
             Collider[] cols = Physics.OverlapSphere(position, VisionRange, VisionLayers);
             foreach (Collider col in cols)
@@ -30,7 +30,8 @@ namespace Sense
                 if (col.gameObject.GetComponent<NpcAI>())
                 {
                     NpcAI npc = col.gameObject.GetComponent<NpcAI>();
-                    return npc;
+                    if (npc != thisNpc)
+                        return npc;
                 }
             }
 

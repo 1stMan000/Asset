@@ -495,7 +495,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -4.69
       objectReference: {fileID: 0}
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
@@ -580,7 +580,7 @@ PrefabInstance:
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: converChoose
-      value: 396
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
@@ -1003,7 +1003,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 491524131}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.53, y: 0, z: -22.27}
+  m_LocalPosition: {x: -12.53, y: 0, z: -12.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1654,7 +1654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897044828}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.53, y: 0, z: -10.37}
+  m_LocalPosition: {x: -12.53, y: 0, z: -7.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2221,7 +2221,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -6.42
       objectReference: {fileID: 0}
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
@@ -2231,7 +2231,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -23.14
       objectReference: {fileID: 0}
     - target: {fileID: 699092563044135191, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
@@ -2271,7 +2271,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_Name
-      value: Npc (1)
+      value: Bob
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
@@ -2306,7 +2306,7 @@ PrefabInstance:
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: converChoose
-      value: 486
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5882773425349556783, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
