@@ -70,6 +70,8 @@ namespace FarrokhGames.Inventory
 
         void OnDisable()
         {
+            ClearAllItems();
+
             if (inventory != null && _haveListeners)
             {
                 inventory.onRebuilt -= ReRenderAllItems;
@@ -110,8 +112,6 @@ namespace FarrokhGames.Inventory
 
         private void ReRenderAllItems()
         {
-            ClearAllItems();
-
             foreach (var item in inventory.allItems)
             {
                 HandleItemAdded(item);

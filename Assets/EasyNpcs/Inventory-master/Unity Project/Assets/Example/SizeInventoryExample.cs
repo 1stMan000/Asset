@@ -27,6 +27,12 @@ namespace FarrokhGames.Inventory.Examples
             Tests();
         }
 
+        public void RenderInventory()
+        {
+            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+
         void FillRandomly()
         {
             if (_fillRandomly)
@@ -66,12 +72,6 @@ namespace FarrokhGames.Inventory.Examples
             {
                 Debug.Log($"You can't put {(item as ItemDefinition).Name} there!");
             };
-        }
-
-        public void RenderInventory()
-        {
-            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
-            transform.GetChild(0).gameObject.SetActive(true);
         }
     }
 }

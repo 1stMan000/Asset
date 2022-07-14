@@ -214,6 +214,9 @@ namespace Player_Actions
             Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on;
         }
 
+        bool isFirst_Time = false;
+        public HorizontalLayoutGroup horizontalLayout;
+
         void Switch_To_Inventory(bool on)
         {
             if (Input.GetKeyDown(InventoryButton))
@@ -227,9 +230,16 @@ namespace Player_Actions
                 Cursor.visible = on;
 
                 inventory.SetActive(on);
-                if (on)
+                if (isFirst_Time == false)
                 {
-                    inventory.transform.GetChild(0).GetComponent<SizeInventoryExample>().RenderInventory();
+                    SizeInventoryExample[] InventoryExamples = inventory.GetComponentsInChildren<SizeInventoryExample>();
+                    foreach (SizeInventoryExample inventoryExample in InventoryExamples)
+                    {
+                        inventoryExample.RenderInventory();
+                    }
+                    
+                    horizontalLayout.enabled = true;
+                    isFirst_Time = true;
                 }
             }
         }
