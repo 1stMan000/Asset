@@ -227,6 +227,10 @@ namespace Player_Actions
                 Cursor.visible = on;
 
                 inventory.SetActive(on);
+                if (on)
+                {
+                    inventory.transform.GetChild(0).GetComponent<SizeInventoryExample>().RenderInventory();
+                }
             }
         }
 

@@ -14,16 +14,15 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private bool _fillRandomly = true; 
         [SerializeField] private bool _fillEmpty = false; 
         public InventoryManager inventory;
+        InventoryProvider provider;
 
         void Start()
         {
-            var provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
+            provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
             inventory = new InventoryManager(provider, _width, _height);
 
             FillRandomly();
             FillEmpty();
-
-            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
 
             Tests();
         }
@@ -67,6 +66,12 @@ namespace FarrokhGames.Inventory.Examples
             {
                 Debug.Log($"You can't put {(item as ItemDefinition).Name} there!");
             };
+        }
+
+        public void RenderInventory()
+        {
+            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
+            transform.GetChild(0).gameObject.SetActive(true);
         }
     }
 }
