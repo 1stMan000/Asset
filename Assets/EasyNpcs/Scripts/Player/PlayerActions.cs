@@ -68,7 +68,7 @@ namespace Player_Actions
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 1))
                 {
                     GameObject chosenObject = hit.transform.gameObject;
-                    if (Check_CharacterManager(chosenObject))
+                    if (CheckState.Check_CharacterManager(chosenObject))
                     {
                         StartDialogue(chosenObject);
                     }
@@ -81,24 +81,6 @@ namespace Player_Actions
             }
         }
 
-        bool Check_CharacterManager(GameObject npc)
-        {
-            if (npc.GetComponent<CharacterManager>() != null)
-            {
-                if (!npc.GetComponentInParent<CharacterManager>().isDead)
-                {
-                    return true;
-                }
-
-                Debug.Log("Npc is dead");
-                return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         DialogueManager Npc_Dialogue;
 
         void StartDialogue(GameObject npc)
@@ -106,45 +88,11 @@ namespace Player_Actions
             if (npc.GetComponentInParent<DialogueManager>() != null)
             {
                 Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
-                if (Check_State(npc))
+                if (CheckState.Check_State(npc))
                 {
                     Switch_To_DialogueState(true);
                     dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
-            }
-        }
-
-        bool Check_State(GameObject npc)
-        {
-            if (npc.GetComponentInParent<NpcAI>() != null)
-            {
-                NpcAI npcAI = npc.GetComponentInParent<NpcAI>();
-                if (npcAI.enabled)
-                {
-                    return State_NotScared(npcAI);
-                }
-
-                Debug.Log("NpcAI of" + npc + "is not enabled");
-                return false;
-            }
-            else
-            {
-                Debug.LogWarning(npc + "does not have NpcAi attached");
-                return false;
-            }
-        }
-
-        bool State_NotScared(NpcAI npcAI)
-        {
-            if (npcAI.currentState == NpcState.Scared)
-            {
-                Debug.Log("The npc's current state blocks interaction");
-                return false;
-            }
-            else
-            {
-                npcAI.enabled = false;
-                return true;
             }
         }
 
@@ -208,7 +156,8 @@ namespace Player_Actions
             Set_Character_Script(on);
             dialogueWindow.SetActive(on);
 
-            DialogueSequence dialogueSequence = new DialogueSequence(Npc_Dialogue, textAndButtons, on);
+            Npc_Dialogue.enabled = on;
+            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on;
         }
 
         bool isFirst_Time = false;
@@ -225,17 +174,22 @@ namespace Player_Actions
                 Set_Character_Script(on);
 
                 inventory.SetActive(on);
-                if (isFirst_Time == false)
+                InventoryInitialization();
+            }
+        }
+
+        void InventoryInitialization()
+        {
+            if (isFirst_Time == false)
+            {
+                SizeInventoryExample[] InventoryExamples = inventory.GetComponentsInChildren<SizeInventoryExample>();
+                foreach (SizeInventoryExample inventoryExample in InventoryExamples)
                 {
-                    SizeInventoryExample[] InventoryExamples = inventory.GetComponentsInChildren<SizeInventoryExample>();
-                    foreach (SizeInventoryExample inventoryExample in InventoryExamples)
-                    {
-                        inventoryExample.RenderInventory();
-                    }
-                    
-                    horizontalLayout.enabled = true;
-                    isFirst_Time = true;
+                    inventoryExample.RenderInventory();
                 }
+
+                horizontalLayout.enabled = true;
+                isFirst_Time = true;
             }
         }
 
