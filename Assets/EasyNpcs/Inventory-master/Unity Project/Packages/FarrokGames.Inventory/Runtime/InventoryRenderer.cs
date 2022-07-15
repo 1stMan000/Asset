@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace FarrokhGames.Inventory
 {
     [RequireComponent(typeof(RectTransform))]
-    public class InventoryRenderer : BaseRenderer
+    public class InventoryRenderer : MonoBehaviour
     {
         [SerializeField, Tooltip("The size of the cells building up the inventory")]
         private Vector2Int _cellSize = new Vector2Int(32, 32);
@@ -21,6 +21,8 @@ namespace FarrokhGames.Inventory
         [SerializeField, Tooltip("The sprite to use for blocked cells")]
         private Sprite _cellSpriteBlocked = null;
 
+        public Pool<Image> imagePool;
+        public Vector2 cellSize;
         internal InventoryManager inventory;
         InventoryRenderMode _renderMode;
         private bool _haveListeners;
@@ -93,10 +95,9 @@ namespace FarrokhGames.Inventory
         private void ReRenderGrid()
         {
             GridsRenderer gridsRenderer = new GridsRenderer(_grids, imagePool, cellSize, inventory, _cellSpriteEmpty);
-            gridsRenderer.Remove_All_Grids();
-
             var containerSize = new Vector2(cellSize.x * inventory.width, cellSize.y * inventory.height);
             Image grid = null;
+
             switch (_renderMode)
             {
                 case InventoryRenderMode.Single:
@@ -138,7 +139,7 @@ namespace FarrokhGames.Inventory
 
         private void HandleItemAdded(IInventoryItem item)
         {
-            var img = CreateImage(item.sprite, false);
+            var img = BaseRenderer.CreateImage(item.sprite, imagePool, cellSize, false);
 
             if (_renderMode == InventoryRenderMode.Single)
             {

@@ -20,8 +20,6 @@ namespace Player_Actions
 
         public LayerMask mask;
 
-        DialogueManager Npc_Dialogue;
-
         enum PlayerState { Normal, Dialogue, Inventory }
         PlayerState playerState;
 
@@ -100,6 +98,8 @@ namespace Player_Actions
                 return false;
             }
         }
+
+        DialogueManager Npc_Dialogue;
 
         void StartDialogue(GameObject npc)
         {
@@ -205,13 +205,10 @@ namespace Player_Actions
                 playerState = PlayerState.Dialogue;
             else
                 playerState = PlayerState.Normal;
-            GetComponent<FirstPersonAIO>().enabled = !on;
-            Cursor_Lock_State(on);
-            Cursor.visible = on;
-
+            Set_Character_Script(on);
             dialogueWindow.SetActive(on);
-            Npc_Dialogue.enabled = on;
-            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on;
+
+            DialogueSequence dialogueSequence = new DialogueSequence(Npc_Dialogue, textAndButtons, on);
         }
 
         bool isFirst_Time = false;
@@ -225,9 +222,7 @@ namespace Player_Actions
                     playerState = PlayerState.Inventory;
                 else
                     playerState = PlayerState.Normal;
-                GetComponent<FirstPersonAIO>().enabled = !on;
-                Cursor_Lock_State(on);
-                Cursor.visible = on;
+                Set_Character_Script(on);
 
                 inventory.SetActive(on);
                 if (isFirst_Time == false)
@@ -244,16 +239,10 @@ namespace Player_Actions
             }
         }
 
-        void Cursor_Lock_State(bool on_Off_Switch)
+        void Set_Character_Script(bool on)
         {
-            if (on_Off_Switch)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            GetComponent<FirstPersonAIO>().enabled = !on;
+            CursorManager.SetCursor(on);
         }
 
         public void PressButton(int i)
@@ -270,6 +259,7 @@ namespace Player_Actions
             {
                 button.SetActive(false);
             }
+
             textAndButtons.text.SetActive(true);
         }
     }

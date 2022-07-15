@@ -4,12 +4,9 @@ using FarrokhGames.Shared;
 
 namespace FarrokhGames.Inventory
 {
-    public class BaseRenderer : MonoBehaviour
+    public static class BaseRenderer 
     {
-        public Pool<Image> imagePool;
-        public Vector2 cellSize;
-
-        protected Image CreateImage(Sprite sprite, bool raycastTarget)
+        public static Image CreateImage(Sprite sprite, Pool<Image> imagePool, Vector2 cellSize, bool raycastTarget)
         {
             var img = imagePool.Activate_ImageObject_In_Pool();
             img.gameObject.SetActive(true);

@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 namespace FarrokhGames.Inventory
 {
-    public class GridsRenderer : BaseRenderer
+    public class GridsRenderer 
     {
+        public Pool<Image> imagePool;
+        public Vector2 cellSize;
         private Image[] grids;
         InventoryManager inventory;
         Sprite cellSpriteEmpty;
@@ -17,6 +19,8 @@ namespace FarrokhGames.Inventory
             cellSize = _cellSize;
             inventory = _inventory;
             cellSpriteEmpty = _cellSpriteEmpty;
+
+            Remove_All_Grids();
         }
 
         public void Remove_All_Grids()
@@ -52,7 +56,7 @@ namespace FarrokhGames.Inventory
             {
                 for (int x = 0; x < inventory.width; x++)
                 {
-                    grid = CreateImage(cellSpriteEmpty, true);
+                    grid = BaseRenderer.CreateImage(cellSpriteEmpty, imagePool, cellSize, true);
                     grid.gameObject.name = "Grid " + num;
                     grid.rectTransform.SetAsFirstSibling();
                     grid.type = Image.Type.Sliced;
@@ -66,7 +70,7 @@ namespace FarrokhGames.Inventory
 
         public void OnReRenderGrid_Single(Vector2 containerSize, Image grid, out Image[] grids)
         {
-            grid = CreateImage(cellSpriteEmpty, true);
+            grid = BaseRenderer.CreateImage(cellSpriteEmpty, imagePool, cellSize, true);
             grid.rectTransform.SetAsFirstSibling();
             grid.type = Image.Type.Sliced;
             grid.rectTransform.localPosition = Vector3.zero;
