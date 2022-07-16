@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 using Npc_Manager;
 using Npc_AI;
 using PlayerController;
@@ -157,7 +158,7 @@ namespace Player_Actions
             dialogueWindow.SetActive(on);
 
             Npc_Dialogue.enabled = on;
-            Npc_Dialogue.gameObject.GetComponent<NpcAI>().enabled = !on;
+            Npc_Dialogue.GetComponent<NpcAI>().enabled = !on;
         }
 
         bool isFirst_Time = false;

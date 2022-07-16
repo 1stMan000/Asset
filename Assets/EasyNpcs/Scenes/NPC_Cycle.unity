@@ -532,6 +532,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 699092563044135193, guid: b86cc184d031bd2459e823476bddbfc9,
+        type: 3}
+      propertyPath: m_Direction
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_Name
@@ -1097,6 +1102,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3196711686822799372, guid: 30e28d8fbe3c0dc4393b72f21e770909,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276626373553872358, guid: 30e28d8fbe3c0dc4393b72f21e770909,
+        type: 3}
+      propertyPath: m_Drag
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276626373553872358, guid: 30e28d8fbe3c0dc4393b72f21e770909,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276626373553872358, guid: 30e28d8fbe3c0dc4393b72f21e770909,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3294040125532738620, guid: 30e28d8fbe3c0dc4393b72f21e770909,
         type: 3}
       propertyPath: m_RootOrder
@@ -2314,7 +2339,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9000000, guid: 773b27f83e6b8a24682e4438d851b646, type: 3}
     m_RemovedComponents:
-    - {fileID: 140356450750476849, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
 --- !u!1 &1520356519
 GameObject:
