@@ -343,11 +343,10 @@ namespace PlayerController
             speed = walkByDefault ? isCrouching ? walkSpeedInternal : (isSprinting ? inrSprintSpeed : walkSpeedInternal) : (isSprinting ? walkSpeedInternal : inrSprintSpeed);
             Ray ray = new Ray(transform.position - new Vector3(0, (capsule.height / 2) - 0.01f, 0), -transform.up);
             Debug.DrawLine(ray.origin, ray.origin - new Vector3(0, 0.05f, 0), Color.black);
-            if (IsGrounded || fps_Rigidbody.velocity.y < 0.1)
+            if (!IsGrounded)
             {
                 RaycastHit[] hits = Physics.RaycastAll(ray, 0.05f);
                 float nearest = float.PositiveInfinity;
-                IsGrounded = false;
                 for (int i = 0; i < hits.Length; i++)
                 {
                     if (!hits[i].collider.isTrigger && hits[i].distance < nearest)

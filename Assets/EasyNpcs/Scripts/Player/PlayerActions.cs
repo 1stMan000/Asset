@@ -168,15 +168,18 @@ namespace Player_Actions
         {
             if (Input.GetKeyDown(InventoryButton))
             {
-                if (on)
-                    playerState = PlayerState.Inventory;
-                else
-                    playerState = PlayerState.Normal;
+                ChangeState_To_Inventory(on);
                 Set_Character_Script(on);
-
-                inventory.SetActive(on);
-                InventoryInitialization();
+                Activate_Inventory(on);
             }
+        }
+
+        void ChangeState_To_Inventory(bool on)
+        {
+            if (on)
+                playerState = PlayerState.Inventory;
+            else
+                playerState = PlayerState.Normal;
         }
 
         void InventoryInitialization()
@@ -198,6 +201,12 @@ namespace Player_Actions
         {
             GetComponent<FirstPersonAIO>().enabled = !on;
             CursorManager.SetCursor(on);
+        }
+
+        void Activate_Inventory(bool on)
+        {
+            inventory.SetActive(on);
+            InventoryInitialization();
         }
 
         public void PressButton(int i)
