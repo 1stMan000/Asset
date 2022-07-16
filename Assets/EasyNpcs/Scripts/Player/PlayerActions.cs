@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.AI;
 using Npc_Manager;
 using Npc_AI;
 using PlayerController;
@@ -161,9 +160,6 @@ namespace Player_Actions
             Npc_Dialogue.GetComponent<NpcAI>().enabled = !on;
         }
 
-        bool isFirst_Time = false;
-        public HorizontalLayoutGroup horizontalLayout;
-
         void Switch_To_Inventory(bool on)
         {
             if (Input.GetKeyDown(InventoryButton))
@@ -182,31 +178,18 @@ namespace Player_Actions
                 playerState = PlayerState.Normal;
         }
 
-        void InventoryInitialization()
-        {
-            if (isFirst_Time == false)
-            {
-                SizeInventoryExample[] InventoryExamples = inventory.GetComponentsInChildren<SizeInventoryExample>();
-                foreach (SizeInventoryExample inventoryExample in InventoryExamples)
-                {
-                    inventoryExample.RenderInventory();
-                }
-
-                horizontalLayout.enabled = true;
-                isFirst_Time = true;
-            }
-        }
-
         void Set_Character_Script(bool on)
         {
             GetComponent<FirstPersonAIO>().enabled = !on;
             CursorManager.SetCursor(on);
         }
 
+        public InventoryInitialation inventoryInitialation;
+
         void Activate_Inventory(bool on)
         {
             inventory.SetActive(on);
-            InventoryInitialization();
+            inventoryInitialation.Inventory_Initialization();
         }
 
         public void PressButton(int i)
