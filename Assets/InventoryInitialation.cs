@@ -7,6 +7,7 @@ namespace FarrokhGames.Inventory.Examples
     {
         bool isFirst_Time;
         public HorizontalLayoutGroup horizontalLayout;
+        public GameObject Footer;
 
         private void Start()
         {
@@ -23,6 +24,7 @@ namespace FarrokhGames.Inventory.Examples
                     inventoryExample.RenderInventory();
                 }
 
+                Footer.SetActive(true);
                 horizontalLayout.enabled = true;
                 isFirst_Time = true;
             }
