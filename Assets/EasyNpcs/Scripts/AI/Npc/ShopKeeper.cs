@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Rotation;
 
-public class ShopKeeper : MonoBehaviour
+public class ShopKeeper : MonoBehaviour, IWork
 {
     public RigBuilder rigBuilder;
     public TwoBoneIKConstraint right;
@@ -31,5 +31,10 @@ public class ShopKeeper : MonoBehaviour
         rigBuilder.Build();
 
         Destroy(rotate);
+    }
+
+    public Behaviour GetScript()
+    {
+        return this;
     }
 }

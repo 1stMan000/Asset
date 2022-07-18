@@ -42,6 +42,7 @@ namespace Npc_AI
             base.Start();
             Text = GetComponentInChildren<TextMesh>();
             DayAndNightCycle_Initialize();
+            workScript = GetComponent<IWork>().GetScript();
         }
 
         void DayAndNightCycle_Initialize()
@@ -215,20 +216,23 @@ namespace Npc_AI
 
         void TriggerConversation(NpcAI npc)
         {
-            if (currentState != NpcState.Scared && npc.currentState != NpcState.Scared)
+            if (npc != null)
             {
-                if (UnityEngine.Random.Range(0, 10000) < converChoose) 
+                if (currentState != NpcState.Scared && npc.currentState != NpcState.Scared)
                 {
-                    //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
-                    if (GetInstanceID() > npc.GetInstanceID())
+                    if (UnityEngine.Random.Range(0, 10000) < converChoose)
                     {
-                        if (GetComponent<RunConversation>() == null && npc.GetComponent<RunConversation>() == null)
+                        //Each script has it's own ID. We can use these so one of the npc scripts is more prioritized
+                        if (GetInstanceID() > npc.GetInstanceID())
                         {
-                            RunConversation runConversation = gameObject.AddComponent<RunConversation>();
-                            runConversation.Set(true, this, npc, null);
-                            runConversation.StartConversation();
+                            if (GetComponent<RunConversation>() == null && npc.GetComponent<RunConversation>() == null)
+                            {
+                                RunConversation runConversation = gameObject.AddComponent<RunConversation>();
+                                runConversation.Set(true, this, npc, null);
+                                runConversation.StartConversation();
 
-                            ChangeState(NpcState.Talking);
+                                ChangeState(NpcState.Talking);
+                            }
                         }
                     }
                 }
