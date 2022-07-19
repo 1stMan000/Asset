@@ -15,6 +15,12 @@ public class RunConversation : MonoBehaviour
 
     Rotate rotate;
 
+    private void Awake()
+    {
+        me = GetComponent<NpcAI>();
+        
+    }
+
     private void Start()
     {
         me.ChangeState(NpcState.Talking);
@@ -23,10 +29,9 @@ public class RunConversation : MonoBehaviour
         rotate.RotateTo(partner.gameObject);
     }
 
-    public void Set(bool order, NpcAI npcMe, NpcAI npcPartner, Tuple<List<string>, List<string>> conver = null)
+    public void Set(NpcAI npcPartner, bool order = false, Tuple<List<string>, List<string>> conver = null)
     {
         first = order;
-        me = npcMe;
         partner = npcPartner;
         conversation = conver;
     }
@@ -44,7 +49,7 @@ public class RunConversation : MonoBehaviour
         Tuple<List<string>, List<string>> chosenConv = Choose_Conversation();
         if (chosenConv != null)
         {
-            StartCoroutine(Speak_First_Lines(chosenConv));
+            StartCoroutine(Start_Talk(chosenConv));
         }
     }
 
@@ -68,15 +73,14 @@ public class RunConversation : MonoBehaviour
         return TextLoader.GetDialgoue(genders, jobs);
     }
 
-    IEnumerator Speak_First_Lines(Tuple<List<string>, List<string>> chosenConv)
+    IEnumerator Start_Talk(Tuple<List<string>, List<string>> chosenConv)
     {
         RunConversation partnerConv = partner.gameObject.AddComponent<RunConversation>();
-        partnerConv.Set(false, partner, me);
+        partnerConv.Set(me);
 
         StartCoroutine(Talk(chosenConv.Item1));
         yield return new WaitForSeconds(4);
 
-        partnerConv.StartConversation();
         partnerConv.RecieveRequest(chosenConv);
     }
 

@@ -1,10 +1,8 @@
 ﻿//2016 Spyblood Games
 
 using UnityEngine;
-using System.Collections;
-using UnityEngine.Rendering;
 
-namespace DayandNight
+namespace Npc_AI
 {
 	[System.Serializable]
 	public class DayColors

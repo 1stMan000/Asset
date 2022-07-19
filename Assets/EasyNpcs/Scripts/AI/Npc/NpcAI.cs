@@ -1,15 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using DayandNight;
 using Sense;
 
 namespace Npc_AI
 {
     public class NpcAI : NpcData, IDestructible
     {
-        public Job job;
-        public Gender gender;
-
         public float movementSpeed;
         public float scaredRunningSpeed;
         public float runningDistance;
@@ -19,7 +15,7 @@ namespace Npc_AI
         public TextMesh Text;
 
         DayAndNightControl dayAndNightControl;
-        public Behaviour workScript;
+        Behaviour workScript;
         public Transform home;
         public Transform work;
 
@@ -211,6 +207,9 @@ namespace Npc_AI
             return lifeCycle;
         }
 
+        public Job job;
+        public Gender gender;
+
         [Range(0, 5)]
         public int converChoose = 0;
 
@@ -228,7 +227,7 @@ namespace Npc_AI
                             if (GetComponent<RunConversation>() == null && npc.GetComponent<RunConversation>() == null)
                             {
                                 RunConversation runConversation = gameObject.AddComponent<RunConversation>();
-                                runConversation.Set(true, this, npc, null);
+                                runConversation.Set(npc, true);
                                 runConversation.StartConversation();
 
                                 ChangeState(NpcState.Talking);
