@@ -2296,7 +2296,7 @@ PrefabInstance:
     - target: {fileID: 699092563044135396, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}
       propertyPath: m_Name
-      value: Bob
+      value: Npc1
       objectReference: {fileID: 0}
     - target: {fileID: 3533866932084139170, guid: b86cc184d031bd2459e823476bddbfc9,
         type: 3}

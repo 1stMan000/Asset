@@ -14,35 +14,19 @@ namespace FarrokhGames.Inventory
         Action<IInventoryItem> onItemDropped { get; set; }
     }
 
-    /// <summary>
-    /// Enables human interaction with an inventory renderer using Unity's event systems
-    /// </summary>
     [RequireComponent(typeof(InventoryRenderer))]
     public class InventoryController : MonoBehaviour,
         IPointerDownHandler, IBeginDragHandler, IDragHandler,
         IEndDragHandler, IPointerExitHandler, IPointerEnterHandler,
         IInventoryController
         {
-            // The dragged item is static and shared by all controllers
-            // This way items can be moved between controllers easily
             private static InventoryDraggedItem _draggedItem;
 
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemHovered { get; set; }
-
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemPickedUp { get; set; }
-
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemAdded { get; set; }
-
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemSwapped { get; set; }
-
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemReturned { get; set; }
-
-            /// <inheritdoc />
             public Action<IInventoryItem> onItemDropped { get; set; }
 
             private Canvas _canvas;
@@ -55,9 +39,6 @@ namespace FarrokhGames.Inventory
             
             public GameObject player;
 
-            /*
-             * Setup
-             */
             void Awake()
             {
                 inventoryRenderer = GetComponent<InventoryRenderer>();
@@ -74,18 +55,16 @@ namespace FarrokhGames.Inventory
             void DropItemToWorld(IInventoryItem item)
             {
                 _draggedItem = null;
+
                 Instantiate(item.dropObject);
                 item.dropObject.transform.position = player.transform.position + Vector3.forward;
             }
 
-            /*
-             * Grid was clicked (IPointerDownHandler)
-             */
             public void OnPointerDown(PointerEventData eventData)
             {
                 if (_draggedItem != null) return;
-                // Get which item to drag (item will be null of none were found)
-                var grid = ScreenToGrid(eventData.position);
+                
+                var grid = ScreenPosition_To_GridPosition(eventData.position);
                 _itemToDrag = inventory.GetAtPoint(grid);
             }
 
@@ -113,9 +92,6 @@ namespace FarrokhGames.Inventory
                 onItemPickedUp?.Invoke(_itemToDrag);
             }
 
-            /*
-             * Dragging is continuing (IDragHandler)
-             */
             public void OnDrag(PointerEventData eventData)
             {
                 _currentEventData = eventData;
@@ -126,9 +102,6 @@ namespace FarrokhGames.Inventory
                 }
             }
 
-            /*
-             * Dragging stopped (IEndDragHandler)
-             */
             public void OnEndDrag(PointerEventData eventData)
             {
                 if (_draggedItem == null) return;
@@ -155,9 +128,6 @@ namespace FarrokhGames.Inventory
                 _draggedItem = null;
             }
 
-            /*
-             * Pointer left the inventory (IPointerExitHandler)
-             */
             public void OnPointerExit(PointerEventData eventData)
             {
                 if (_draggedItem != null)
@@ -170,9 +140,6 @@ namespace FarrokhGames.Inventory
                 _currentEventData = null;
             }
 
-            /*
-             * Pointer entered the inventory (IPointerEnterHandler)
-             */
             public void OnPointerEnter(PointerEventData eventData)
             {
                 if (_draggedItem != null)
@@ -183,9 +150,6 @@ namespace FarrokhGames.Inventory
                 _currentEventData = eventData;
             }
 
-            /*
-             * Update loop
-             */
             void Update()
             {
                 if (_currentEventData == null) return;
@@ -193,7 +157,7 @@ namespace FarrokhGames.Inventory
                 if (_draggedItem == null)
                 {
                     // Detect hover
-                    var grid = ScreenToGrid(_currentEventData.position);
+                    var grid = ScreenPosition_To_GridPosition(_currentEventData.position);
                     var item = inventory.GetAtPoint(grid);
                     if (item == _lastHoveredItem) return;
                     onItemHovered?.Invoke(item);
@@ -206,9 +170,6 @@ namespace FarrokhGames.Inventory
                 }
             }
 
-            /* 
-             * 
-             */
             private void ClearHoveredItem()
             {
                 if (_lastHoveredItem != null)
@@ -218,10 +179,7 @@ namespace FarrokhGames.Inventory
                 _lastHoveredItem = null;
             }
 
-            /*
-             * Get a point on the grid from a given screen point
-             */
-            internal Vector2Int ScreenToGrid(Vector2 screenPoint)
+            internal Vector2Int ScreenPosition_To_GridPosition(Vector2 screenPoint)
             {
                 var pos = ScreenToLocalPositionInRenderer(screenPoint);
                 var sizeDelta = inventoryRenderer.rectTransform.sizeDelta;

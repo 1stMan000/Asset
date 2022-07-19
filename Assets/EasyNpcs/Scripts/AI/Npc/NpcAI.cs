@@ -177,11 +177,8 @@ namespace Npc_AI
 
         void GoToWork()
         {
-            if (ScriptEnabled())
+            if (ScriptEnabled() && Appropriate_State())
             {
-                if (currentState == NpcState.GoingToWork || currentState == NpcState.Talking || currentState == NpcState.Scared)
-                    return;
-
                 ChangeState(NpcState.GoingToWork);
                 Set_Cycle_Class().Start_GOTOWork();
             }
@@ -189,11 +186,8 @@ namespace Npc_AI
 
         void GoHome()
         {
-            if (ScriptEnabled())
+            if (ScriptEnabled() && Appropriate_State())
             {
-                if (currentState == NpcState.GoingHome || currentState == NpcState.Talking || currentState == NpcState.Scared)
-                    return;
-
                 ChangeState(NpcState.GoingHome);
                 Set_Cycle_Class().Start_GOTOHome();
             }
@@ -205,6 +199,14 @@ namespace Npc_AI
                 return true;
             else
                 return false;
+        }
+
+        bool Appropriate_State()
+        {
+            if (currentState == NpcState.GoingHome || currentState == NpcState.Talking || currentState == NpcState.Scared)
+                return false;
+            else
+                return true;
         }
 
         LifeCycle Set_Cycle_Class()
