@@ -149,11 +149,11 @@ namespace Npc_AI
 
         public void OnAttack(GameObject attacker, Attack attack)
         {
-            if (this.enabled == false)
-                return;
-
-            Attacker = attacker;
-            ChangeState(NpcState.Scared);
+            if (ScriptEnabled())
+            {
+                Attacker = attacker;
+                ChangeState(NpcState.Scared);
+            }
         }
 
         void OnScared()
@@ -177,26 +177,34 @@ namespace Npc_AI
 
         void GoToWork()
         {
-            if (!enabled)
-                return;
+            if (ScriptEnabled())
+            {
+                if (currentState == NpcState.GoingToWork || currentState == NpcState.Talking || currentState == NpcState.Scared)
+                    return;
 
-            if (currentState == NpcState.GoingToWork || currentState == NpcState.Talking || currentState == NpcState.Scared)
-                return;
-
-            ChangeState(NpcState.GoingToWork);
-            Set_Cycle_Class().Start_GOTOWork();
+                ChangeState(NpcState.GoingToWork);
+                Set_Cycle_Class().Start_GOTOWork();
+            }
         }
 
         void GoHome()
         {
-            if (!enabled)
-                return;
+            if (ScriptEnabled())
+            {
+                if (currentState == NpcState.GoingHome || currentState == NpcState.Talking || currentState == NpcState.Scared)
+                    return;
 
-            if (currentState == NpcState.GoingHome || currentState == NpcState.Talking || currentState == NpcState.Scared)
-                return;
+                ChangeState(NpcState.GoingHome);
+                Set_Cycle_Class().Start_GOTOHome();
+            }
+        }
 
-            ChangeState(NpcState.GoingHome);
-            Set_Cycle_Class().Start_GOTOHome();
+        bool ScriptEnabled()
+        {
+            if (enabled)
+                return true;
+            else
+                return false;
         }
 
         LifeCycle Set_Cycle_Class()
