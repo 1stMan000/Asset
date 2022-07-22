@@ -7,8 +7,8 @@ namespace FarrokhGames.Inventory
     public class InventoryManager : IInventoryManager
     {
         private Vector2Int _size = Vector2Int.one;
-        private IInventoryProvider _provider;
-        private Rect _fullRect;
+        public IInventoryProvider _provider { get; private set;}
+        public Rect _fullRect { get; private set; }
 
         public InventoryManager(IInventoryProvider provider, int width, int height)
         {
@@ -155,36 +155,9 @@ namespace FarrokhGames.Inventory
 			return true;
 		}
 
-        public bool CanAddAt(IInventoryItem item, Vector2Int point)
-        {
-            if (!_provider.CanAddInventoryItem(item) || _provider.isInventoryFull)
-            {
-                return false;
-            }
-
-            if (_provider.inventoryRenderMode == InventoryRenderMode.Single)
-            {
-                return true;
-            }
-
-            var previousPoint = item.position;
-            item.position = point;
-            var padding = Vector2.one * 0.01f;
-
-            if (!_fullRect.Contains(item.GetLowerLeftPoint() + padding) || !_fullRect.Contains(item.GetTopRightPoint() - padding))
-            {
-                item.position = previousPoint;
-                return false;
-            }
-
-            if (!allItems.Any(otherItem => item.Overlaps(otherItem))) return true; 
-            item.position = previousPoint;
-            return false;
-        }
-
         public bool TryAddAt(IInventoryItem item, Vector2Int point)
         {
-            if (!CanAddAt(item, point) || !_provider.AddInventoryItem(item)) 
+            if (!ItemAddable_Check.CanAddAt(item, point, this) || !_provider.AddInventoryItem(item)) 
 			{
 				onItemAddedFailed?.Invoke(item);
 				return false;
@@ -210,7 +183,7 @@ namespace FarrokhGames.Inventory
             Vector2Int point;
             if (!Contains(item) && GetFirstPointThatFitsItem(item, out point))
             {
-                return CanAddAt(item, point);
+                return ItemAddable_Check.CanAddAt(item, point, this);
             }
             return false;
         }
@@ -261,7 +234,7 @@ namespace FarrokhGames.Inventory
                     for (var y = 0; y < height - (item.height - 1); y++)
                     {
                         point = new Vector2Int(x, y);
-                        if (CanAddAt(item, point))return true;
+                        if (ItemAddable_Check.CanAddAt(item, point, this))return true;
                     }
                 }
             }
