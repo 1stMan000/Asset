@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 51
+  controlID: 42
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 52
+  controlID: 89
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 53
+  controlID: 90
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: c4640000
+      m_SelectedIDs: e0090000
       m_LastClickedID: 0
       m_ExpandedIDs: 1efaffff
       m_RenameOverlay:
@@ -667,9 +667,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -2.3455873, y: 15.412389, z: 18.402948}
+    m_Target: {x: 0.9228995, y: 5.901966, z: 0.7224207}
     speed: 2
-    m_Value: {x: -2.3455873, y: 15.412389, z: 18.402948}
+    m_Value: {x: 0.9228995, y: 5.901966, z: 0.7224207}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -716,9 +716,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.07305352, y: -0.91609836, z: 0.34215134, w: -0.19742702}
+    m_Target: {x: -0.0882697, y: -0.9113353, z: 0.2779241, w: -0.29163843}
     speed: 2
-    m_Value: {x: -0.07303095, y: -0.91581535, z: 0.34204566, w: -0.19736603}
+    m_Value: {x: 0.08826971, y: 0.9113353, z: -0.27792412, w: 0.29163843}
   m_Size:
     m_Target: 1.0392305
     speed: 2
@@ -789,36 +789,36 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/EasyNpcs/Inventory-master/Unity Project/Packages/FarrokGames.Inventory/Runtime
+    - Assets/EasyNpcs/Inventory-master/Unity Project/Packages/FarrokGames.Inventory
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/EasyNpcs/Inventory-master/Unity Project/Packages/FarrokGames.Inventory/Runtime
+  - Assets/EasyNpcs/Inventory-master/Unity Project/Packages/FarrokGames.Inventory
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\forStore
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 177}
-    m_SelectedIDs: 7c640000
-    m_LastClickedID: 25724
-    m_ExpandedIDs: 00000000025f0000045f0000065f0000085f0000185f000090630000666400006a6400006e6400007264000000ca9a3b
+    scrollPos: {x: 0, y: 60}
+    m_SelectedIDs: 165f0000
+    m_LastClickedID: 24342
+    m_ExpandedIDs: 00000000045f0000065f0000085f00000a5f00000c5f00000e5f0000105f0000125f0000145f0000165f000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Dialogue Scripts
-      m_OriginalName: Dialogue Scripts
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 24356
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 10}
     m_SearchString: 
@@ -832,7 +832,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000025f0000045f0000065f0000085f0000
+    m_ExpandedIDs: 00000000045f0000065f0000085f00000a5f00000c5f00000e5f0000105f0000125f0000145f0000165f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

@@ -44,7 +44,6 @@ namespace FarrokhGames.Inventory
                 inventoryRenderer = GetComponent<InventoryRenderer>();
                 if (inventoryRenderer == null) { throw new NullReferenceException("Could not find a renderer. This is not allowed!"); }
 
-                // Find the canvas
                 var canvases = GetComponentsInParent<Canvas>();
                 if (canvases.Length == 0) { throw new NullReferenceException("Could not find a canvas."); }
                 _canvas = canvases[canvases.Length - 1];
@@ -95,11 +94,6 @@ namespace FarrokhGames.Inventory
             public void OnDrag(PointerEventData eventData)
             {
                 _currentEventData = eventData;
-                if (_draggedItem != null)
-                {
-                    // Update the items position
-                    //_draggedItem.Position = eventData.position;
-                }
             }
 
             public void OnEndDrag(PointerEventData eventData)

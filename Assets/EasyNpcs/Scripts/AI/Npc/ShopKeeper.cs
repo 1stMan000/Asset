@@ -10,14 +10,14 @@ public class ShopKeeper : MonoBehaviour, IWork
 
     public GameObject rightPlacement;
     public GameObject leftPlacement;
-    public GameObject shop;
+    public GameObject lookDirection;
 
     Rotate rotate;
 
     private void OnEnable()
     {
         rotate = gameObject.AddComponent<Rotate>();
-        rotate.RotateTo(shop);
+        rotate.RotateTo(lookDirection);
 
         right.data.target = rightPlacement.transform;
         left.data.target = leftPlacement.transform;
