@@ -208,7 +208,7 @@ namespace Enemy_AI
             {
                 case EnemeyState.Attack:
                     Rotate rotate = gameObject.AddComponent<Rotate>();
-                    rotate.RotateTo(currentTarget.gameObject);
+                    rotate.RotateTo(currentTarget);
                     break;
                 case EnemeyState.Chase:
                     break;

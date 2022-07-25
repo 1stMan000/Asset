@@ -10,7 +10,7 @@ public class ShopKeeper : MonoBehaviour, IWork
 
     public GameObject rightPlacement;
     public GameObject leftPlacement;
-    public GameObject lookDirection;
+    public Transform lookDirection;
 
     Rotate rotate;
 

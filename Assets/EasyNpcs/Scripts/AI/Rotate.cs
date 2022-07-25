@@ -6,17 +6,17 @@ namespace Rotation
 {
     public class Rotate : MonoBehaviour
     {
-        public void RotateTo(GameObject target)
+        public void RotateTo(Transform target)
         {
             StartCoroutine(RotateToObject(target));
         }
 
-        IEnumerator RotateToObject(GameObject target)
+        IEnumerator RotateToObject(Transform target)
         {
             Quaternion lookRotation;
             do
             {
-                Vector3 direction = (target.transform.position - transform.position).normalized;
+                Vector3 direction = (target.position - transform.position).normalized;
                 lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime / (Quaternion.Angle(transform.rotation, lookRotation) / GetComponent<NavMeshAgent>().angularSpeed));
                 yield return new WaitForFixedUpdate();

@@ -61,6 +61,9 @@ namespace Player_Actions
             }
         }
 
+        enum InventoryState { Default, Trade}
+        InventoryState inventoryState;
+
         void Interact()
         {
             if (Input.GetKeyDown(InteractButton))
@@ -70,7 +73,17 @@ namespace Player_Actions
                     GameObject chosenObject = hit.transform.gameObject;
                     if (CheckState.Check_CharacterManager(chosenObject))
                     {
-                        StartDialogue(chosenObject);
+                        if (chosenObject.GetComponentInParent<DialogueManager>().currentSentence != null)
+                        {
+                            StartDialogue(chosenObject);
+                        }
+                        else
+                        {
+                            inventoryState = InventoryState.Trade;
+                            ChangeState_To_Inventory(true);
+                            Set_Character_Script(true);
+                            Activate_Inventory(true);
+                        }
                     }
                     else
                     {

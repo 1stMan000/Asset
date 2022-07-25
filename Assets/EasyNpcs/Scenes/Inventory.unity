@@ -533,10 +533,15 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2537809336066481448, guid: 48a3257b2fa87467d8f95a41140cd3ce,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 856036283}
     - target: {fileID: 2568100019937499060, guid: 48a3257b2fa87467d8f95a41140cd3ce,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2675096465361911025, guid: 48a3257b2fa87467d8f95a41140cd3ce,
         type: 3}
@@ -656,7 +661,7 @@ PrefabInstance:
     - target: {fileID: 7493276312931344181, guid: 48a3257b2fa87467d8f95a41140cd3ce,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7636310937544795877, guid: 48a3257b2fa87467d8f95a41140cd3ce,
         type: 3}
@@ -1037,6 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit

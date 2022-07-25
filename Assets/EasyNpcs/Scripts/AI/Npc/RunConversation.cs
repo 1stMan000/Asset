@@ -26,7 +26,7 @@ public class RunConversation : MonoBehaviour
         me.ChangeState(NpcState.Talking);
 
         rotate = gameObject.AddComponent<Rotate>();
-        rotate.RotateTo(partner.gameObject);
+        rotate.RotateTo(partner.transform);
     }
 
     public void Set(NpcAI npcPartner, bool order = false, Tuple<List<string>, List<string>> conver = null)
