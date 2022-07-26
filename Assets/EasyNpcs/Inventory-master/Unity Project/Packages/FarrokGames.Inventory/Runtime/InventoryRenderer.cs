@@ -29,12 +29,13 @@ namespace FarrokhGames.Inventory
         private Image[] _grids;
         private Dictionary<IInventoryItem, Image> _items = new Dictionary<IInventoryItem, Image>();
 
-        void Awake()
+        private void Awake()
         {
             cellSize = _cellSize;
             rectTransform = GetComponent<RectTransform>();
 
             var imageContainer = Set_Images.Set_Parent_For_ImageObjects(transform);
+
             imagePool = new Pool<Image>(
                 delegate
                 {

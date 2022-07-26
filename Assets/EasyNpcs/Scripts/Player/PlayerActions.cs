@@ -20,13 +20,20 @@ namespace Player_Actions
 
         public LayerMask mask;
 
-        enum PlayerState { Normal, Dialogue, Inventory }
+        enum PlayerState { Normal, Dialogue, Inventory, Trade }
         PlayerState playerState;
+
+        InventoryActions inventoryActions;
 
         private void Start()
         {
             playerState = PlayerState.Normal;
-            textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
+            if (dialogueWindow != null)
+            {
+                textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
+            }
+
+            inventoryActions = gameObject.AddComponent<InventoryActions>();
         }
 
         void Update()
@@ -35,7 +42,7 @@ namespace Player_Actions
             {
                 Attack();
                 Interact();
-                Switch_To_Inventory(true);
+                On_InventoryButton_Down(true);
             }
             else
             {
@@ -45,7 +52,7 @@ namespace Player_Actions
                 }
                 else
                 {
-                    Switch_To_Inventory(false);
+                    On_InventoryButton_Down(false);
                 }
             }
         }
@@ -61,9 +68,6 @@ namespace Player_Actions
             }
         }
 
-        enum InventoryState { Default, Trade}
-        InventoryState inventoryState;
-
         void Interact()
         {
             if (Input.GetKeyDown(InteractButton))
@@ -73,17 +77,7 @@ namespace Player_Actions
                     GameObject chosenObject = hit.transform.gameObject;
                     if (CheckState.Check_CharacterManager(chosenObject))
                     {
-                        if (chosenObject.GetComponentInParent<DialogueManager>().currentSentence != null)
-                        {
-                            StartDialogue(chosenObject);
-                        }
-                        else
-                        {
-                            inventoryState = InventoryState.Trade;
-                            ChangeState_To_Inventory(true);
-                            Set_Character_Script(true);
-                            Activate_Inventory(true);
-                        }
+                        NpcInteract(chosenObject);
                     }
                     else
                     {
@@ -91,6 +85,21 @@ namespace Player_Actions
                         Destroy(chosenObject);
                     }
                 }
+            }
+        }
+
+        public GameObject tradeInventory;
+
+        void NpcInteract(GameObject npc)
+        {
+            if (npc.GetComponentInParent<DialogueManager>().currentSentence != null)
+            {
+                StartDialogue(npc);
+            }
+            else
+            {
+                playerState = PlayerState.Trade;
+                inventoryActions.Activate_Trade();
             }
         }
 
@@ -173,14 +182,19 @@ namespace Player_Actions
             Npc_Dialogue.GetComponent<NpcAI>().enabled = !on;
         }
 
-        void Switch_To_Inventory(bool on)
+        void On_InventoryButton_Down(bool on)
         {
             if (Input.GetKeyDown(InventoryButton))
             {
-                ChangeState_To_Inventory(on);
-                Set_Character_Script(on);
-                Activate_Inventory(on);
+                Enable_Inventory(on);
             }
+        }
+
+        public void Enable_Inventory(bool on)
+        {
+            ChangeState_To_Inventory(on);
+            Set_Character_Script(on);
+            inventoryActions.Activate_Inventory(on);
         }
 
         void ChangeState_To_Inventory(bool on)
@@ -195,14 +209,6 @@ namespace Player_Actions
         {
             GetComponent<FirstPersonAIO>().enabled = !on;
             CursorManager.SetCursor(on);
-        }
-
-        public InventoryInitialation inventoryInitialation;
-
-        void Activate_Inventory(bool on)
-        {
-            inventory.SetActive(on);
-            inventoryInitialation.Inventory_Initialization();
         }
 
         public void PressButton(int i)
