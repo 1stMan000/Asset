@@ -10,6 +10,7 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private ItemType _type = ItemType.Utility;
         [SerializeField] private bool _canDrop = true;
         [SerializeField] private GameObject _gameObject;
+        [SerializeField] private int _price;
         [SerializeField, HideInInspector] private Vector2Int _position = Vector2Int.zero;
 
         public string Name => this.name;
@@ -17,6 +18,7 @@ namespace FarrokhGames.Inventory.Examples
         public Sprite sprite => _sprite;
         public int width => _shape.width;
         public int height => _shape.height;
+        public int price => _price;
 
         public GameObject dropObject => _gameObject;
 

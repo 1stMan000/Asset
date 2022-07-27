@@ -100,7 +100,10 @@ namespace FarrokhGames.Inventory
                 if (ItemAddable_Check.CanAddAt(item, grid, currentController.inventory))
                 {
                     currentController.inventory.TryAddAt(item, grid); // Place the item in a new location
-                    mode = DropMode.Added;
+                    if (TradeManager.originalController != currentController)
+                        mode = DropMode.Added;
+                    else
+                        mode = DropMode.Returned;
                 }
                 // Adding did not work, try to swap
                 else if (CanSwap())

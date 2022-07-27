@@ -16,6 +16,8 @@ namespace FarrokhGames.Inventory
         
         bool canDrop { get; }
 
+        int price { get; }
+
         GameObject dropObject { get; }
     }
 

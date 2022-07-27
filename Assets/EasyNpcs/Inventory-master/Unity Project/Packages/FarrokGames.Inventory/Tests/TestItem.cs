@@ -7,6 +7,7 @@ namespace FarrokhGames.Inventory
         bool _canDrop = true;
         private readonly InventoryShape _shape;
         GameObject _gameObject;
+        int _price;
         
         public TestItem(Sprite sprite, InventoryShape shape, bool canDrop)
         {
@@ -22,6 +23,7 @@ namespace FarrokhGames.Inventory
         public Vector2Int position { get; set; }
         public bool IsPartOfShape(Vector2Int localPosition) => _shape.IsPartOfShape(localPosition);
         public bool canDrop => _canDrop;
+        public int price => _price;
 
         public GameObject dropObject => _gameObject;
     }

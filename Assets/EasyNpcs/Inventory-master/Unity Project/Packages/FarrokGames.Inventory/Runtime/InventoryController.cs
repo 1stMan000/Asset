@@ -19,8 +19,8 @@ namespace FarrokhGames.Inventory
         IPointerDownHandler, IBeginDragHandler, IDragHandler,
         IEndDragHandler, IPointerExitHandler, IPointerEnterHandler,
         IInventoryController
-        {
-            private static InventoryDraggedItem _draggedItem;
+    {
+            protected static InventoryDraggedItem _draggedItem;
 
             public Action<IInventoryItem> onItemHovered { get; set; }
             public Action<IInventoryItem> onItemPickedUp { get; set; }
@@ -36,7 +36,7 @@ namespace FarrokhGames.Inventory
             private IInventoryItem _itemToDrag;
             private PointerEventData _currentEventData;
             private IInventoryItem _lastHoveredItem;
-            
+
             public GameObject player;
 
             void Awake()
@@ -49,7 +49,8 @@ namespace FarrokhGames.Inventory
                 _canvas = canvases[canvases.Length - 1];
 
                 onItemDropped += DropItemToWorld;
-            }
+                onItemPickedUp += Store_OriginalController;
+            }   
 
             void DropItemToWorld(IInventoryItem item)
             {
@@ -57,6 +58,11 @@ namespace FarrokhGames.Inventory
 
                 Instantiate(item.dropObject);
                 item.dropObject.transform.position = player.transform.position + Vector3.forward;
+            }
+
+            void Store_OriginalController(IInventoryItem item)
+            {
+                TradeManager.originalController = _draggedItem.currentController;
             }
 
             public void OnPointerDown(PointerEventData eventData)
@@ -192,5 +198,5 @@ namespace FarrokhGames.Inventory
                 );
                 return localPosition;
             }
-        }
+    }
 }

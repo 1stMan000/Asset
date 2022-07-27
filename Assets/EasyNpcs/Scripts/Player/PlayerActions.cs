@@ -25,6 +25,8 @@ namespace Player_Actions
 
         InventoryActions inventoryActions;
 
+        public int totalCoins;
+
         private void Start()
         {
             playerState = PlayerState.Normal;
