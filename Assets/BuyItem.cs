@@ -21,6 +21,7 @@ namespace FarrokhGames.Inventory
 
         protected override void Item_Dropped()
         {
+            inventory.TryAddAt(_itemToDrag, _draggedItem.originPoint);
             onItemReturned?.Invoke(_itemToDrag);
         }
     }

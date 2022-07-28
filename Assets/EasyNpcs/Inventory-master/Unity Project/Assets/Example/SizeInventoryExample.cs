@@ -16,7 +16,7 @@ namespace FarrokhGames.Inventory.Examples
         public InventoryManager inventory;
         InventoryProvider provider;
 
-        void OnEnable()
+        void Start()
         {
             provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
             inventory = new InventoryManager(provider, _width, _height);

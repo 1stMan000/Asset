@@ -31,13 +31,11 @@ namespace FarrokhGames.Inventory
 
             private Canvas _canvas;
             internal InventoryRenderer inventoryRenderer;
-            internal InventoryManager inventory => (InventoryManager) inventoryRenderer.inventory;
+            public InventoryManager inventory => (InventoryManager) inventoryRenderer.inventory;
 
             protected IInventoryItem _itemToDrag;
             private PointerEventData _currentEventData;
             private IInventoryItem _lastHoveredItem;
-
-            public GameObject player;
 
             void Awake()
             {
