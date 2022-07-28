@@ -20,7 +20,7 @@ namespace FarrokhGames.Inventory
         IEndDragHandler, IPointerExitHandler, IPointerEnterHandler,
         IInventoryController
     {
-            protected static InventoryDraggedItem _draggedItem;
+        protected static InventoryDraggedItem _draggedItem;
 
             public Action<IInventoryItem> onItemHovered { get; set; }
             public Action<IInventoryItem> onItemPickedUp { get; set; }
@@ -33,7 +33,7 @@ namespace FarrokhGames.Inventory
             internal InventoryRenderer inventoryRenderer;
             internal InventoryManager inventory => (InventoryManager) inventoryRenderer.inventory;
 
-            private IInventoryItem _itemToDrag;
+            protected IInventoryItem _itemToDrag;
             private PointerEventData _currentEventData;
             private IInventoryItem _lastHoveredItem;
 
@@ -57,7 +57,7 @@ namespace FarrokhGames.Inventory
                 _draggedItem = null;
 
                 Instantiate(item.dropObject);
-                item.dropObject.transform.position = player.transform.position + Vector3.forward;
+                item.dropObject.transform.position = GameObject.Find("Player").transform.position + Vector3.forward;
             }
 
             void Store_OriginalController(IInventoryItem item)
@@ -120,13 +120,18 @@ namespace FarrokhGames.Inventory
                         onItemReturned?.Invoke(_itemToDrag);
                         break;
                     case InventoryDraggedItem.DropMode.Dropped:
-                        onItemDropped?.Invoke(_itemToDrag);
-                        ClearHoveredItem();
+                        Item_Dropped();
                         break;
                 }
 
                 _draggedItem = null;
             }
+
+        protected virtual void Item_Dropped()
+        {
+            onItemDropped?.Invoke(_itemToDrag);
+            ClearHoveredItem();
+        }
 
             public void OnPointerExit(PointerEventData eventData)
             {
