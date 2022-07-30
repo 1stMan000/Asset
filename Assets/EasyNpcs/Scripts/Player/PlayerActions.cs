@@ -23,7 +23,7 @@ namespace Player_Actions
         enum PlayerState { Normal, Dialogue, Inventory, Trade }
         PlayerState playerState;
 
-        InventoryActions inventoryActions;
+        Close_Open_TradeInven inventoryActions;
 
         public int totalCoins;
 
@@ -35,7 +35,7 @@ namespace Player_Actions
                 textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
             }
 
-            inventoryActions = gameObject.AddComponent<InventoryActions>();
+            inventoryActions = gameObject.AddComponent<Close_Open_TradeInven>();
         }
 
         void Update()
