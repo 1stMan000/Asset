@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace FarrokhGames.Inventory
 {
-    public class InventoryManager : IInven_Manager
+    public class Inven_Manager : IInven_Manager
     {
         private Vector2Int _size = Vector2Int.one;
         public IInven_Provider _provider { get; private set;}
         public Rect _fullRect { get; private set; }
 
-        public InventoryManager(IInven_Provider provider, int width, int height)
+        public Inven_Manager(IInven_Provider provider, int width, int height)
         {
             _provider = provider;
             Rebuild();
@@ -110,7 +110,7 @@ namespace FarrokhGames.Inventory
 
         bool GetAtPoint_SingleRender_Inventory()
         {
-            if (_provider.inventoryRenderMode == InventoryRenderMode.Single && _provider.isInventoryFull && allItems.Length > 0)
+            if (_provider.inventoryRenderMode == Inven_RenderMode.Single && _provider.isInventoryFull && allItems.Length > 0)
             {
                 return true;
             }
@@ -164,10 +164,10 @@ namespace FarrokhGames.Inventory
 			}
             switch (_provider.inventoryRenderMode)
             {
-                case InventoryRenderMode.Single:
+                case Inven_RenderMode.Single:
                     item.position = GetCenterPosition(item);
                     break;
-                case InventoryRenderMode.Grid:
+                case Inven_RenderMode.Grid:
                     item.position = point;
                     break;
                 default:
@@ -197,7 +197,7 @@ namespace FarrokhGames.Inventory
 
         public bool CanSwap(IInven_Item item)
         {
-            return _provider.inventoryRenderMode == InventoryRenderMode.Single &&
+            return _provider.inventoryRenderMode == Inven_RenderMode.Single &&
                 DoesItemFit(item) &&
                 _provider.CanAddInventoryItem(item);
         }

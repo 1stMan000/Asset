@@ -2,10 +2,10 @@
 
 namespace FarrokhGames.Inventory.Examples
 {
-    [RequireComponent(typeof(InventoryRenderer))]
+    [RequireComponent(typeof(Inven_Renderer))]
     public class SizeInventoryExample : MonoBehaviour
     {
-        [SerializeField] private InventoryRenderMode _renderMode = InventoryRenderMode.Grid;
+        [SerializeField] private Inven_RenderMode _renderMode = Inven_RenderMode.Grid;
         [SerializeField] private int _maximumAlowedItemCount = -1;
         [SerializeField] private ItemType _allowedItem = ItemType.Any;
         [SerializeField] private int _width = 8;
@@ -13,13 +13,13 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private ItemDefinition[] _definitions = null;
         [SerializeField] private bool _fillRandomly = true; 
         [SerializeField] private bool _fillEmpty = false; 
-        public InventoryManager inventory;
+        public Inven_Manager inventory;
         InventoryProvider provider;
 
         void Start()
         {
             provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
-            inventory = new InventoryManager(provider, _width, _height);
+            inventory = new Inven_Manager(provider, _width, _height);
 
             RenderInventory();
 
@@ -31,7 +31,7 @@ namespace FarrokhGames.Inventory.Examples
 
         public void RenderInventory()
         {
-            GetComponent<InventoryRenderer>().SetInventory(inventory, provider.inventoryRenderMode);
+            GetComponent<Inven_Renderer>().SetInventory(inventory, provider.inventoryRenderMode);
             transform.GetChild(0).gameObject.SetActive(true);
         }
 

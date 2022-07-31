@@ -26,7 +26,7 @@ public class Close_Open_TradeInven : MonoBehaviour
         else
         {
             playerInventory.GetComponent<SellItem>().enabled = false;
-            playerInventory.GetComponent<InventoryController>().enabled = true;
+            playerInventory.GetComponent<Inven_Controller>().enabled = true;
             playerActions.tradeInventory.gameObject.SetActive(false);
         }
 
@@ -35,7 +35,7 @@ public class Close_Open_TradeInven : MonoBehaviour
 
     public void Activate_Trade()
     {
-        playerInventory.GetComponent<InventoryController>().enabled = false;
+        playerInventory.GetComponent<Inven_Controller>().enabled = false;
         playerInventory.GetComponent<SellItem>().enabled = true;
         playerActions.tradeInventory.SetActive(true);
         playerActions.Enable_Inventory(true);

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace FarrokhGames.Inventory
 {
-    public class InventoryDraggedItem
+    public class Inven_DraggedItem
     {
         public enum DropMode
         {
@@ -14,13 +14,13 @@ namespace FarrokhGames.Inventory
             Dropped,
         }
 
-        public InventoryController originalController { get; private set; }
+        public Inven_Controller originalController { get; private set; }
 
         public Vector2Int originPoint { get; private set; }
 
         public IInven_Item item { get; private set; }
 
-        public InventoryController currentController;
+        public Inven_Controller currentController;
 
         private readonly Canvas _canvas;
         private readonly RectTransform _canvasRect;
@@ -28,13 +28,13 @@ namespace FarrokhGames.Inventory
         private Vector2 _offset;
 
         [SuppressMessage("ReSharper", "Unity.InefficientPropertyAccess")]
-        public InventoryDraggedItem(
+        public Inven_DraggedItem(
             Canvas canvas,
-            InventoryController originalController,
+            Inven_Controller originalController,
             Vector2Int originPoint,
             IInven_Item item,
             Vector2 offset,
-            InventoryRenderer renderer)
+            Inven_Renderer renderer)
         {
             this.originalController = originalController;
             currentController = this.originalController;
@@ -49,7 +49,7 @@ namespace FarrokhGames.Inventory
             CreateImageForDrag(renderer);
         }
 
-        void CreateImageForDrag(InventoryRenderer renderer)
+        void CreateImageForDrag(Inven_Renderer renderer)
         {
             _image = new GameObject("DraggedItem").AddComponent<Image>();
             _image.raycastTarget = false;
@@ -142,7 +142,7 @@ namespace FarrokhGames.Inventory
         /*
          * Returns the offset between dragged item and the grid 
          */
-        private Vector2 GetDraggedItemOffset(InventoryRenderer renderer, IInven_Item item)
+        private Vector2 GetDraggedItemOffset(Inven_Renderer renderer, IInven_Item item)
         {
             var scale = new Vector2(
                 Screen.width / _canvasRect.sizeDelta.x,

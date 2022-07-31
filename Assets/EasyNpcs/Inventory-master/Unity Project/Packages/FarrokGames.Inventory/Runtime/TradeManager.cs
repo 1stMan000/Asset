@@ -6,6 +6,6 @@ namespace FarrokhGames.Inventory
 {
     public static class TradeManager 
     {
-        public static InventoryController originalController;
+        public static Inven_Controller originalController;
     }
 }

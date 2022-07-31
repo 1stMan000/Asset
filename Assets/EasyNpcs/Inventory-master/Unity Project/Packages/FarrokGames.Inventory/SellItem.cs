@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FarrokhGames.Inventory
 {
-    public class SellItem : InventoryController
+    public class SellItem : Inven_Controller
     {
         PlayerActions playerActions;
 

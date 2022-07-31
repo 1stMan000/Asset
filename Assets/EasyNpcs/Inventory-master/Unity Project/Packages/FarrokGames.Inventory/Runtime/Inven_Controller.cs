@@ -14,13 +14,13 @@ namespace FarrokhGames.Inventory
         Action<IInven_Item> onItemDropped { get; set; }
     }
 
-    [RequireComponent(typeof(InventoryRenderer))]
-    public class InventoryController : MonoBehaviour,
+    [RequireComponent(typeof(Inven_Renderer))]
+    public class Inven_Controller : MonoBehaviour,
         IPointerDownHandler, IBeginDragHandler, IDragHandler,
         IEndDragHandler, IPointerExitHandler, IPointerEnterHandler,
         IInven_Controller
     {
-        protected static InventoryDraggedItem _draggedItem;
+        protected static Inven_DraggedItem _draggedItem;
 
             public Action<IInven_Item> onItemHovered { get; set; }
             public Action<IInven_Item> onItemPickedUp { get; set; }
@@ -30,8 +30,8 @@ namespace FarrokhGames.Inventory
             public Action<IInven_Item> onItemDropped { get; set; }
 
             private Canvas _canvas;
-            internal InventoryRenderer inventoryRenderer;
-            public InventoryManager inventory => (InventoryManager) inventoryRenderer.inventory;
+            internal Inven_Renderer inventoryRenderer;
+            public Inven_Manager inventory => (Inven_Manager) inventoryRenderer.inventory;
 
             protected IInven_Item _itemToDrag;
             private PointerEventData _currentEventData;
@@ -39,7 +39,7 @@ namespace FarrokhGames.Inventory
 
             void Awake()
             {
-                inventoryRenderer = GetComponent<InventoryRenderer>();
+                inventoryRenderer = GetComponent<Inven_Renderer>();
                 if (inventoryRenderer == null) { throw new NullReferenceException("Could not find a renderer. This is not allowed!"); }
 
                 var canvases = GetComponentsInParent<Canvas>();
@@ -81,7 +81,7 @@ namespace FarrokhGames.Inventory
                 var itemOffest = inventoryRenderer.GetItemOffset(_itemToDrag);
                 var offset = itemOffest - localPosition;
 
-                _draggedItem = new InventoryDraggedItem(
+                _draggedItem = new Inven_DraggedItem(
                     _canvas,
                     this,
                     _itemToDrag.position,
@@ -108,16 +108,16 @@ namespace FarrokhGames.Inventory
 
                 switch (mode)
                 {
-                    case InventoryDraggedItem.DropMode.Added:
+                    case Inven_DraggedItem.DropMode.Added:
                         onItemAdded?.Invoke(_itemToDrag);
                         break;
-                    case InventoryDraggedItem.DropMode.Swapped:
+                    case Inven_DraggedItem.DropMode.Swapped:
                         onItemSwapped?.Invoke(_itemToDrag);
                         break;
-                    case InventoryDraggedItem.DropMode.Returned:
+                    case Inven_DraggedItem.DropMode.Returned:
                         onItemReturned?.Invoke(_itemToDrag);
                         break;
-                    case InventoryDraggedItem.DropMode.Dropped:
+                    case Inven_DraggedItem.DropMode.Dropped:
                         Item_Dropped();
                         break;
                 }

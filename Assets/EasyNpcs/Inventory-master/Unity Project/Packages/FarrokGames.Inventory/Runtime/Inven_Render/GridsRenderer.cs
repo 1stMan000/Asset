@@ -9,10 +9,10 @@ namespace FarrokhGames.Inventory
         public Pool<Image> imagePool;
         public Vector2 cellSize;
         private Image[] grids;
-        InventoryManager inventory;
+        Inven_Manager inventory;
         Sprite cellSpriteEmpty;
 
-        public GridsRenderer(Image[] _grids, Pool<Image> _imagePool, Vector2 _cellSize, InventoryManager _inventory, Sprite _cellSpriteEmpty)
+        public GridsRenderer(Image[] _grids, Pool<Image> _imagePool, Vector2 _cellSize, Inven_Manager _inventory, Sprite _cellSpriteEmpty)
         {
             grids = _grids;
             imagePool = _imagePool;

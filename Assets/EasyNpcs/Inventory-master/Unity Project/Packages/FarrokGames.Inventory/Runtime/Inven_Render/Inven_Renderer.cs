@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace FarrokhGames.Inventory
 {
     [RequireComponent(typeof(RectTransform))]
-    public class InventoryRenderer : MonoBehaviour
+    public class Inven_Renderer : MonoBehaviour
     {
         [SerializeField, Tooltip("The size of the cells building up the inventory")]
         private Vector2Int _cellSize = new Vector2Int(32, 32);
@@ -23,8 +23,8 @@ namespace FarrokhGames.Inventory
 
         public Pool<Image> imagePool;
         public Vector2 cellSize;
-        internal InventoryManager inventory;
-        InventoryRenderMode _renderMode;
+        internal Inven_Manager inventory;
+        Inven_RenderMode _renderMode;
         private bool _haveListeners;
         private Image[] _grids;
         private Dictionary<IInven_Item, Image> _items = new Dictionary<IInven_Item, Image>();
@@ -43,7 +43,7 @@ namespace FarrokhGames.Inventory
                 });
         }
 
-        public void SetInventory(InventoryManager inventoryManager, InventoryRenderMode renderMode)
+        public void SetInventory(Inven_Manager inventoryManager, Inven_RenderMode renderMode)
         {
             OnDisable();
             inventory = inventoryManager ?? throw new ArgumentNullException(nameof(inventoryManager)); 
@@ -101,7 +101,7 @@ namespace FarrokhGames.Inventory
 
             switch (_renderMode)
             {
-                case InventoryRenderMode.Single:
+                case Inven_RenderMode.Single:
                     gridsRenderer.OnReRenderGrid_Single(containerSize, grid, out _grids);
                     break;
                 default:
@@ -142,7 +142,7 @@ namespace FarrokhGames.Inventory
         {
             var img = BaseRenderer.CreateImage(item.sprite, imagePool, cellSize, false);
 
-            if (_renderMode == InventoryRenderMode.Single)
+            if (_renderMode == Inven_RenderMode.Single)
             {
                 img.rectTransform.localPosition = rectTransform.rect.center;
             }
@@ -185,7 +185,7 @@ namespace FarrokhGames.Inventory
 
             switch (_renderMode)
             {
-                case InventoryRenderMode.Single:
+                case Inven_RenderMode.Single:
                     ColorGrid(0, blocked, color);
                     break;
                 default:

@@ -5,11 +5,11 @@ namespace FarrokhGames.Inventory
     public class TestItem : IInven_Item
     {
         bool _canDrop = true;
-        private readonly InventoryShape _shape;
+        private readonly Inven_Shape _shape;
         GameObject _gameObject;
         int _price;
         
-        public TestItem(Sprite sprite, InventoryShape shape, bool canDrop)
+        public TestItem(Sprite sprite, Inven_Shape shape, bool canDrop)
         {
             this.sprite = sprite;
             _shape = shape;

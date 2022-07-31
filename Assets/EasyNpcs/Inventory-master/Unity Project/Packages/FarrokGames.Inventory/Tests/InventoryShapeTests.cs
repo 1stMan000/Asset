@@ -8,7 +8,7 @@ namespace FarrokhGames.Inventory
         [Test]
         public void CTOR_WidthAndHeightSet()
         {
-            var shape = new InventoryShape(8, 12);
+            var shape = new Inven_Shape(8, 12);
 
             Assert.That(shape.width, Is.EqualTo(8));
             Assert.That(shape.height, Is.EqualTo(12));

@@ -7,7 +7,7 @@ namespace FarrokhGames.Inventory
     /// Class for storing the shape of an inventory item
     /// </summary>
     [Serializable]
-    public class InventoryShape
+    public class Inven_Shape
     {
         [SerializeField] int _width;
         [SerializeField] int _height;
@@ -18,7 +18,7 @@ namespace FarrokhGames.Inventory
         /// </summary>
         /// <param name="width">The maximum width of the shape</param>
         /// <param name="height">The maximum height of the shape</param>
-        public InventoryShape(int width, int height)
+        public Inven_Shape(int width, int height)
         {
             _width = width;
             _height = height;
@@ -29,7 +29,7 @@ namespace FarrokhGames.Inventory
         /// Constructor
         /// </summary>
         /// <param name="shape">A custom shape</param>
-        public InventoryShape(bool[, ] shape)
+        public Inven_Shape(bool[, ] shape)
         {
             _width = shape.GetLength(0);
             _height = shape.GetLength(1);

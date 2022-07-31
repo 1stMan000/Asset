@@ -8,7 +8,7 @@ namespace FarrokhGames.Inventory.Examples
         private int _maximumAlowedItemCount;
         ItemType _allowedItem;
 
-        public InventoryProvider(InventoryRenderMode renderMode, int maximumAlowedItemCount = -1, ItemType allowedItem = ItemType.Any)
+        public InventoryProvider(Inven_RenderMode renderMode, int maximumAlowedItemCount = -1, ItemType allowedItem = ItemType.Any)
         {
             inventoryRenderMode = renderMode;
             _maximumAlowedItemCount = maximumAlowedItemCount;
@@ -17,7 +17,7 @@ namespace FarrokhGames.Inventory.Examples
 
         public int inventoryItemCount => _items.Count;
 
-        public InventoryRenderMode inventoryRenderMode { get; private set; }
+        public Inven_RenderMode inventoryRenderMode { get; private set; }
 
         public bool isInventoryFull
         {

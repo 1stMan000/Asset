@@ -1,6 +1,6 @@
 namespace FarrokhGames.Inventory
 {
-    public enum InventoryRenderMode
+    public enum Inven_RenderMode
     {
         Grid,
         Single,

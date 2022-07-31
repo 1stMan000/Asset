@@ -6,8 +6,8 @@ namespace FarrokhGames.Inventory
     /// <summary>
     /// Custom Property Drawer for InventoryShape
     /// </summary>
-    [CustomPropertyDrawer(typeof(InventoryShape))]
-    public class InventoryShapePropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(Inven_Shape))]
+    public class ShapePropertyDrawer : PropertyDrawer
     {
         const int GridSize = 16; // The size between the boold-fields that make up the shape matrix
 

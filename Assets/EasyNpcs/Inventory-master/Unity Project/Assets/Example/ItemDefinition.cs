@@ -6,7 +6,7 @@ namespace FarrokhGames.Inventory.Examples
     public class ItemDefinition : ScriptableObject, IInven_Item
     {
         [SerializeField] private Sprite _sprite = null;
-        [SerializeField] private InventoryShape _shape = null;
+        [SerializeField] private Inven_Shape _shape = null;
         [SerializeField] private ItemType _type = ItemType.Utility;
         [SerializeField] private bool _canDrop = true;
         [SerializeField] private GameObject _gameObject;

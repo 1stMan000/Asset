@@ -2,7 +2,7 @@ namespace FarrokhGames.Inventory
 {
     public interface IInven_Provider
     {
-        InventoryRenderMode inventoryRenderMode { get; }
+        Inven_RenderMode inventoryRenderMode { get; }
         int inventoryItemCount { get; }
         bool isInventoryFull { get; }
         IInven_Item GetInventoryItem(int index);

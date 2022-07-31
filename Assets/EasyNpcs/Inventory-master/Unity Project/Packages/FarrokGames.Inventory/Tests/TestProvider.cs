@@ -10,7 +10,7 @@ namespace FarrokhGames.Inventory
         /// <summary>
         /// CTOR
         /// </summary>
-        public TestProvider(InventoryRenderMode renderMode = InventoryRenderMode.Grid, int maximumAlowedItemCount = -1)
+        public TestProvider(Inven_RenderMode renderMode = Inven_RenderMode.Grid, int maximumAlowedItemCount = -1)
         {
             inventoryRenderMode = renderMode;
             _maximumAlowedItemCount = maximumAlowedItemCount;
@@ -18,7 +18,7 @@ namespace FarrokhGames.Inventory
 
         public int inventoryItemCount => _items.Count;
 
-        public InventoryRenderMode inventoryRenderMode { get; }
+        public Inven_RenderMode inventoryRenderMode { get; }
 
         public bool isInventoryFull
         {

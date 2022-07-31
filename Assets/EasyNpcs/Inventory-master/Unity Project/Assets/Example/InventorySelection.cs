@@ -12,7 +12,7 @@ namespace FarrokhGames.Inventory.Examples
             _text = GetComponentInChildren<Text>();
             _text.text = string.Empty;
 
-            var allControllers = GameObject.FindObjectsOfType<InventoryController>();
+            var allControllers = GameObject.FindObjectsOfType<Inven_Controller>();
 
             foreach (var controller in allControllers)
             {
