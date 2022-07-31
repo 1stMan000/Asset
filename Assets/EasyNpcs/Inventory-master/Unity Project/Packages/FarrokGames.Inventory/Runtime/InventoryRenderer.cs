@@ -27,7 +27,7 @@ namespace FarrokhGames.Inventory
         InventoryRenderMode _renderMode;
         private bool _haveListeners;
         private Image[] _grids;
-        private Dictionary<IInventoryItem, Image> _items = new Dictionary<IInventoryItem, Image>();
+        private Dictionary<IInven_Item, Image> _items = new Dictionary<IInven_Item, Image>();
 
         private void Awake()
         {
@@ -138,7 +138,7 @@ namespace FarrokhGames.Inventory
             imagePool.Set_Image_To_Inactive(image);
         }
 
-        private void HandleItemAdded(IInventoryItem item)
+        private void HandleItemAdded(IInven_Item item)
         {
             var img = BaseRenderer.CreateImage(item.sprite, imagePool, cellSize, false);
 
@@ -154,14 +154,14 @@ namespace FarrokhGames.Inventory
             _items.Add(item, img);
         }
 
-        internal Vector2 GetItemOffset(IInventoryItem item)
+        internal Vector2 GetItemOffset(IInven_Item item)
         {
             var x = (-(inventory.width * 0.5f) + item.position.x + item.width * 0.5f) * cellSize.x;
             var y = (-(inventory.height * 0.5f) + item.position.y + item.height * 0.5f) * cellSize.y;
             return new Vector2(x, y);
         }
 
-        private void HandleItemRemoved(IInventoryItem item)
+        private void HandleItemRemoved(IInven_Item item)
         {
             if (_items.ContainsKey(item))
             {
@@ -178,7 +178,7 @@ namespace FarrokhGames.Inventory
             ReRenderAllItems();
         }
 
-        public void SelectItem(IInventoryItem item, bool blocked, Color color)
+        public void SelectItem(IInven_Item item, bool blocked, Color color)
         {
             if (item == null) { return; }
             ClearSelection();
@@ -194,7 +194,7 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        private void Color_All_Grids_Item_Is_On(IInventoryItem item, bool blocked, Color color)
+        private void Color_All_Grids_Item_Is_On(IInven_Item item, bool blocked, Color color)
         {
             for (var x = 0; x < item.width; x++)
             {

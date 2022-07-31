@@ -18,7 +18,7 @@ namespace FarrokhGames.Inventory
 
         public Vector2Int originPoint { get; private set; }
 
-        public IInventoryItem item { get; private set; }
+        public IInven_Item item { get; private set; }
 
         public InventoryController currentController;
 
@@ -32,7 +32,7 @@ namespace FarrokhGames.Inventory
             Canvas canvas,
             InventoryController originalController,
             Vector2Int originPoint,
-            IInventoryItem item,
+            IInven_Item item,
             Vector2 offset,
             InventoryRenderer renderer)
         {
@@ -142,7 +142,7 @@ namespace FarrokhGames.Inventory
         /*
          * Returns the offset between dragged item and the grid 
          */
-        private Vector2 GetDraggedItemOffset(InventoryRenderer renderer, IInventoryItem item)
+        private Vector2 GetDraggedItemOffset(InventoryRenderer renderer, IInven_Item item)
         {
             var scale = new Vector2(
                 Screen.width / _canvasRect.sizeDelta.x,

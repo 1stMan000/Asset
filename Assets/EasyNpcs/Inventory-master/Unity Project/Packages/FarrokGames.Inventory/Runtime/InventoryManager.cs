@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace FarrokhGames.Inventory
 {
-    public class InventoryManager : IInventoryManager
+    public class InventoryManager : IInven_Manager
     {
         private Vector2Int _size = Vector2Int.one;
-        public IInventoryProvider _provider { get; private set;}
+        public IInven_Provider _provider { get; private set;}
         public Rect _fullRect { get; private set; }
 
-        public InventoryManager(IInventoryProvider provider, int width, int height)
+        public InventoryManager(IInven_Provider provider, int width, int height)
         {
             _provider = provider;
             Rebuild();
@@ -22,11 +22,11 @@ namespace FarrokhGames.Inventory
             Rebuild(false);
         }
 
-        public IInventoryItem[] allItems { get; private set; }
+        public IInven_Item[] allItems { get; private set; }
 
         private void Rebuild(bool notFromScratch)
         {
-            allItems = new IInventoryItem[_provider.inventoryItemCount];
+            allItems = new IInven_Item[_provider.inventoryItemCount];
             for (var i = 0; i < _provider.inventoryItemCount; i++)
             {
                 allItems[i] = _provider.GetInventoryItem(i);
@@ -93,7 +93,7 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        public IInventoryItem GetAtPoint(Vector2Int point)
+        public IInven_Item GetAtPoint(Vector2Int point)
         {
             if (GetAtPoint_SingleRender_Inventory())
             {
@@ -120,7 +120,7 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        public bool TryRemove(IInventoryItem item)
+        public bool TryRemove(IInven_Item item)
         {
             if (!CanRemove(item)) return false;
             if (!_provider.RemoveInventoryItem(item)) return false;
@@ -130,7 +130,7 @@ namespace FarrokhGames.Inventory
             return true;
         }
 
-        public bool TryDrop(IInventoryItem item)
+        public bool TryDrop(IInven_Item item)
         {
             if (!CanDrop(item) || !_provider.DropInventoryItem(item)) 
 			{
@@ -143,7 +143,7 @@ namespace FarrokhGames.Inventory
             return true;
         }
 
-		internal bool TryForceDrop(IInventoryItem item)
+		internal bool TryForceDrop(IInven_Item item)
 		{
 			if(!item.canDrop)
 			{
@@ -155,7 +155,7 @@ namespace FarrokhGames.Inventory
 			return true;
 		}
 
-        public bool TryAddAt(IInventoryItem item, Vector2Int point)
+        public bool TryAddAt(IInven_Item item, Vector2Int point)
         {
             if (!ItemAddable_Check.CanAddAt(item, point, this) || !_provider.AddInventoryItem(item)) 
 			{
@@ -178,7 +178,7 @@ namespace FarrokhGames.Inventory
             return true;
         }
 
-        public bool CanAdd(IInventoryItem item)
+        public bool CanAdd(IInven_Item item)
         {
             Vector2Int point;
             if (!Contains(item) && GetFirstPointThatFitsItem(item, out point))
@@ -188,14 +188,14 @@ namespace FarrokhGames.Inventory
             return false;
         }
 
-        public bool TryAdd(IInventoryItem item)
+        public bool TryAdd(IInven_Item item)
         {
             if (!CanAdd(item))return false;
             Vector2Int point;
             return GetFirstPointThatFitsItem(item, out point) && TryAddAt(item, point);
         }
 
-        public bool CanSwap(IInventoryItem item)
+        public bool CanSwap(IInven_Item item)
         {
             return _provider.inventoryRenderMode == InventoryRenderMode.Single &&
                 DoesItemFit(item) &&
@@ -219,13 +219,13 @@ namespace FarrokhGames.Inventory
             }
         }
 
-        public bool Contains(IInventoryItem item) => allItems.Contains(item);
+        public bool Contains(IInven_Item item) => allItems.Contains(item);
         
-        public bool CanRemove(IInventoryItem item) => Contains(item) && _provider.CanRemoveInventoryItem(item);
+        public bool CanRemove(IInven_Item item) => Contains(item) && _provider.CanRemoveInventoryItem(item);
 
-        public bool CanDrop(IInventoryItem item) => Contains(item) && _provider.CanDropInventoryItem(item) && item.canDrop;
+        public bool CanDrop(IInven_Item item) => Contains(item) && _provider.CanDropInventoryItem(item) && item.canDrop;
         
-        private bool GetFirstPointThatFitsItem(IInventoryItem item, out Vector2Int point)
+        private bool GetFirstPointThatFitsItem(IInven_Item item, out Vector2Int point)
         {
             if (DoesItemFit(item))
             {
@@ -242,9 +242,9 @@ namespace FarrokhGames.Inventory
             return false;
         }
 
-        private bool DoesItemFit(IInventoryItem item) => item.width <= width && item.height <= height;
+        private bool DoesItemFit(IInven_Item item) => item.width <= width && item.height <= height;
 
-        private Vector2Int GetCenterPosition(IInventoryItem item)
+        private Vector2Int GetCenterPosition(IInven_Item item)
         {
             return new Vector2Int(
                 (_size.x - item.width) / 2,

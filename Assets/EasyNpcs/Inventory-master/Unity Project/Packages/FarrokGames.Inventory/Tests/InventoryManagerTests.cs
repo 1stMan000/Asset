@@ -8,7 +8,7 @@ namespace FarrokhGames.Inventory
     [TestFixture]
     public class InventoryManagerTests
     {
-        IInventoryItem CreateFullItem(int width, int height, bool canBeDropped = true)
+        IInven_Item CreateFullItem(int width, int height, bool canBeDropped = true)
         {
             var shape = new bool[width, height];
             for (var x = 0; x < width; x++)
@@ -163,7 +163,7 @@ namespace FarrokhGames.Inventory
         {
             var inventory = new InventoryManager(new TestProvider(), 3, 3);
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemAdded += (i) =>
             {
                 callbacks++;
@@ -245,7 +245,7 @@ namespace FarrokhGames.Inventory
             var inventory = new InventoryManager(new TestProvider(), 2, 2);
 
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemAddedFailed += (i) =>
             {
                 callbacks++;
@@ -275,7 +275,7 @@ namespace FarrokhGames.Inventory
             var inventory = new InventoryManager(new TestProvider(), 3, 3);
 
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemAddedFailed += (i) =>
             {
                 callbacks++;
@@ -326,7 +326,7 @@ namespace FarrokhGames.Inventory
         {
             var inventory = new InventoryManager(new TestProvider(), 3, 3);
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemAdded += (i) =>
             {
                 callbacks++;
@@ -400,7 +400,7 @@ namespace FarrokhGames.Inventory
         {
             var inventory = new InventoryManager(new TestProvider(), 1, 1);
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemRemoved += (i) =>
             {
                 lastItem = i;
@@ -451,7 +451,7 @@ namespace FarrokhGames.Inventory
             var inventory = new InventoryManager(new TestProvider(), 1, 1);
             
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemDroppedFailed += (i) =>
             {
                 lastItem = i;
@@ -474,7 +474,7 @@ namespace FarrokhGames.Inventory
             var inventory = new InventoryManager(new TestProvider(), 1, 1);
 
             var callbacks = 0;
-            IInventoryItem lastItem = null;
+            IInven_Item lastItem = null;
             inventory.onItemDropped += (i) =>
             {
                 lastItem = i;
@@ -516,7 +516,7 @@ namespace FarrokhGames.Inventory
         {
             var inventory = new InventoryManager(new TestProvider(), 3, 3);
 
-            var droppedItems = new List<IInventoryItem>();
+            var droppedItems = new List<IInven_Item>();
             inventory.onItemDropped += (i) =>
             {
                 droppedItems.Add(i);
@@ -635,7 +635,7 @@ namespace FarrokhGames.Inventory
         public void Resize_SomeItemsNoLongerFits_ItemsRemoved()
         {
             var inventory = new InventoryManager(new TestProvider(), 3, 3);
-            var droppedItems = new List<IInventoryItem>();
+            var droppedItems = new List<IInven_Item>();
             inventory.onItemDropped += (i) =>
             {
                 droppedItems.Add(i);

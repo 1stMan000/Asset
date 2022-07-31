@@ -5,7 +5,7 @@ namespace FarrokhGames.Inventory
 {
     public static class ItemAddable_Check 
     {
-        public static bool CanAddAt(IInventoryItem item, Vector2Int point, InventoryManager manager)
+        public static bool CanAddAt(IInven_Item item, Vector2Int point, InventoryManager manager)
         {
             if (!manager._provider.CanAddInventoryItem(item) || manager._provider.isInventoryFull)
             {

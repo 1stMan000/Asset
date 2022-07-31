@@ -13,7 +13,7 @@ namespace FarrokhGames.Inventory
             playerActions = FindObjectOfType(typeof(PlayerActions)) as PlayerActions;
         }
 
-        void RecieveCoins(IInventoryItem item)
+        void RecieveCoins(IInven_Item item)
         {
             if (TradeManager.originalController == this)
                 playerActions.totalCoins = playerActions.totalCoins + item.price;

@@ -20,7 +20,7 @@ namespace FarrokhGames.Inventory.Examples
             }
         }
 
-        private void HandleItemHover(IInventoryItem item)
+        private void HandleItemHover(IInven_Item item)
         {
             if (item != null)
             {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace FarrokhGames.Inventory
 {
-    public class TestItem : IInventoryItem
+    public class TestItem : IInven_Item
     {
         bool _canDrop = true;
         private readonly InventoryShape _shape;

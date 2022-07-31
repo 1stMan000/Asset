@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace FarrokhGames.Inventory
 {
-    public interface IInventoryItem
+    public interface IInven_Item
     {
         Sprite sprite { get; }
 
@@ -23,17 +23,17 @@ namespace FarrokhGames.Inventory
 
     internal static class InventoryItemExtensions
     {
-        internal static Vector2Int GetLowerLeftPoint(this IInventoryItem item)
+        internal static Vector2Int GetLowerLeftPoint(this IInven_Item item)
         {
             return item.position;
         }
 
-        internal static Vector2Int GetTopRightPoint(this IInventoryItem item)
+        internal static Vector2Int GetTopRightPoint(this IInven_Item item)
         {
             return item.position + new Vector2Int(item.width, item.height);
         }
 
-        internal static bool Contains(this IInventoryItem item, Vector2Int inventoryPoint)
+        internal static bool Contains(this IInven_Item item, Vector2Int inventoryPoint)
         {
             for (var iX = 0; iX < item.width; iX++)
             {
@@ -47,7 +47,7 @@ namespace FarrokhGames.Inventory
             return false;
         }
 
-        internal static bool Overlaps(this IInventoryItem item, IInventoryItem otherItem)
+        internal static bool Overlaps(this IInven_Item item, IInven_Item otherItem)
         {
             for (var iX = 0; iX < item.width; iX++)
             {

@@ -4,38 +4,38 @@ using UnityEngine.EventSystems;
 
 namespace FarrokhGames.Inventory
 {
-    public interface IInventoryController
+    public interface IInven_Controller
     {
-        Action<IInventoryItem> onItemHovered { get; set; }
-        Action<IInventoryItem> onItemPickedUp { get; set; }
-        Action<IInventoryItem> onItemAdded { get; set; }
-        Action<IInventoryItem> onItemSwapped { get; set; }
-        Action<IInventoryItem> onItemReturned { get; set; }
-        Action<IInventoryItem> onItemDropped { get; set; }
+        Action<IInven_Item> onItemHovered { get; set; }
+        Action<IInven_Item> onItemPickedUp { get; set; }
+        Action<IInven_Item> onItemAdded { get; set; }
+        Action<IInven_Item> onItemSwapped { get; set; }
+        Action<IInven_Item> onItemReturned { get; set; }
+        Action<IInven_Item> onItemDropped { get; set; }
     }
 
     [RequireComponent(typeof(InventoryRenderer))]
     public class InventoryController : MonoBehaviour,
         IPointerDownHandler, IBeginDragHandler, IDragHandler,
         IEndDragHandler, IPointerExitHandler, IPointerEnterHandler,
-        IInventoryController
+        IInven_Controller
     {
         protected static InventoryDraggedItem _draggedItem;
 
-            public Action<IInventoryItem> onItemHovered { get; set; }
-            public Action<IInventoryItem> onItemPickedUp { get; set; }
-            public Action<IInventoryItem> onItemAdded { get; set; }
-            public Action<IInventoryItem> onItemSwapped { get; set; }
-            public Action<IInventoryItem> onItemReturned { get; set; }
-            public Action<IInventoryItem> onItemDropped { get; set; }
+            public Action<IInven_Item> onItemHovered { get; set; }
+            public Action<IInven_Item> onItemPickedUp { get; set; }
+            public Action<IInven_Item> onItemAdded { get; set; }
+            public Action<IInven_Item> onItemSwapped { get; set; }
+            public Action<IInven_Item> onItemReturned { get; set; }
+            public Action<IInven_Item> onItemDropped { get; set; }
 
             private Canvas _canvas;
             internal InventoryRenderer inventoryRenderer;
             public InventoryManager inventory => (InventoryManager) inventoryRenderer.inventory;
 
-            protected IInventoryItem _itemToDrag;
+            protected IInven_Item _itemToDrag;
             private PointerEventData _currentEventData;
-            private IInventoryItem _lastHoveredItem;
+            private IInven_Item _lastHoveredItem;
 
             void Awake()
             {
@@ -50,7 +50,7 @@ namespace FarrokhGames.Inventory
                 onItemPickedUp += Store_OriginalController;
             }   
 
-            void DropItemToWorld(IInventoryItem item)
+            void DropItemToWorld(IInven_Item item)
             {
                 _draggedItem = null;
 
@@ -58,7 +58,7 @@ namespace FarrokhGames.Inventory
                 item.dropObject.transform.position = GameObject.Find("Player").transform.position + Vector3.forward;
             }
 
-            void Store_OriginalController(IInventoryItem item)
+            void Store_OriginalController(IInven_Item item)
             {
                 TradeManager.originalController = _draggedItem.currentController;
             }

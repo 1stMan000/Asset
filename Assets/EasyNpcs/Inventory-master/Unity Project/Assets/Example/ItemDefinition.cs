@@ -3,7 +3,7 @@
 namespace FarrokhGames.Inventory.Examples
 {
     [CreateAssetMenu(fileName = "Item", menuName = "Inventory/Item", order = 1)]
-    public class ItemDefinition : ScriptableObject, IInventoryItem
+    public class ItemDefinition : ScriptableObject, IInven_Item
     {
         [SerializeField] private Sprite _sprite = null;
         [SerializeField] private InventoryShape _shape = null;
@@ -35,7 +35,7 @@ namespace FarrokhGames.Inventory.Examples
 
         public bool canDrop => _canDrop;
 
-        public IInventoryItem CreateInstance()
+        public IInven_Item CreateInstance()
         {
             var clone = ScriptableObject.Instantiate(this);
             clone.name = clone.name.Substring(0, clone.name.Length - 7); 

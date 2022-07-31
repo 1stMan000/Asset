@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace FarrokhGames.Inventory.Examples
 {
-    public class InventoryProvider : IInventoryProvider
+    public class InventoryProvider : IInven_Provider
     {
-        private List<IInventoryItem> _items = new List<IInventoryItem>();
+        private List<IInven_Item> _items = new List<IInven_Item>();
         private int _maximumAlowedItemCount;
         ItemType _allowedItem;
 
@@ -28,7 +28,7 @@ namespace FarrokhGames.Inventory.Examples
             }
         }
 
-        public bool AddInventoryItem(IInventoryItem item)
+        public bool AddInventoryItem(IInven_Item item)
         {
             if (!_items.Contains(item))
             {
@@ -39,33 +39,33 @@ namespace FarrokhGames.Inventory.Examples
             return false;
         }
 
-        public bool DropInventoryItem(IInventoryItem item)
+        public bool DropInventoryItem(IInven_Item item)
         {
             return RemoveInventoryItem(item);
         }
 
-        public IInventoryItem GetInventoryItem(int index)
+        public IInven_Item GetInventoryItem(int index)
         {
             return _items[index];
         }
 
-        public bool CanAddInventoryItem(IInventoryItem item)
+        public bool CanAddInventoryItem(IInven_Item item)
         {
             if (_allowedItem == ItemType.Any)return true;
             return (item as ItemDefinition).Type == _allowedItem;
         }
 
-        public bool CanRemoveInventoryItem(IInventoryItem item)
+        public bool CanRemoveInventoryItem(IInven_Item item)
         {
             return true;
         }
 
-        public bool CanDropInventoryItem(IInventoryItem item)
+        public bool CanDropInventoryItem(IInven_Item item)
         {
             return true;
         }
 
-        public bool RemoveInventoryItem(IInventoryItem item)
+        public bool RemoveInventoryItem(IInven_Item item)
         {
             return _items.Remove(item);
         }

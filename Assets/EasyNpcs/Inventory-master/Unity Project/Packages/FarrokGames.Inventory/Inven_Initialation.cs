@@ -4,7 +4,7 @@ using Player_Actions;
 
 namespace FarrokhGames.Inventory.Examples
 {
-    public class InventoryInitialation : MonoBehaviour
+    public class Inven_Initialation : MonoBehaviour
     {
         bool isFirst_Time;
         HorizontalLayoutGroup horizontalLayout;
