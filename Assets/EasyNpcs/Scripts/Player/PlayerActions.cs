@@ -12,6 +12,7 @@ namespace Player_Actions
         public Camera playerCamera;
         public GameObject dialogueWindow;
         public GameObject inventory;
+        public GameObject tradeInventory;
 
         public KeyCode InteractButton = KeyCode.E;
         public KeyCode InventoryButton = KeyCode.Tab;
@@ -35,6 +36,8 @@ namespace Player_Actions
                 textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
             }
 
+            inventory = FindObjectOfType<Inven_Initialation>().gameObject;
+            tradeInventory = inventory.transform.GetChild(1).gameObject;
             inventoryActions = gameObject.AddComponent<Close_Open_TradeInven>();
         }
 
@@ -89,8 +92,6 @@ namespace Player_Actions
                 }
             }
         }
-
-        public GameObject tradeInventory;
 
         void NpcInteract(GameObject npc)
         {
