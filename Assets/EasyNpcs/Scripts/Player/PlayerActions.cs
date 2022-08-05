@@ -10,14 +10,17 @@ namespace Player_Actions
     public class PlayerActions : MonoBehaviour
     {
         public Camera playerCamera;
+
         public GameObject dialogueWindow;
+        TextAndButtons textAndButtons;
+
+        [HideInInspector]
         public GameObject inventory;
+        [HideInInspector]
         public GameObject tradeInventory;
 
         public KeyCode InteractButton = KeyCode.E;
         public KeyCode InventoryButton = KeyCode.Tab;
-
-        TextAndButtons textAndButtons;
 
         public LayerMask mask;
 
@@ -31,10 +34,9 @@ namespace Player_Actions
         private void Start()
         {
             playerState = PlayerState.Normal;
-            if (dialogueWindow != null)
-            {
-                textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
-            }
+            
+            dialogueWindow = FindObjectOfType<TextAndButtons>().gameObject;
+            textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
 
             inventory = FindObjectOfType<Inven_Initialation>().gameObject;
             tradeInventory = inventory.transform.GetChild(1).gameObject;
@@ -179,7 +181,7 @@ namespace Player_Actions
             else
                 playerState = PlayerState.Normal;
             Set_Character_Script(on);
-            dialogueWindow.SetActive(on);
+            textAndButtons.text.SetActive(on);
 
             Npc_Dialogue.enabled = on;
             Npc_Dialogue.GetComponent<NpcAI>().enabled = !on;
