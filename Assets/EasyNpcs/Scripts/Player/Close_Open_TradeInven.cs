@@ -12,9 +12,9 @@ public class Close_Open_TradeInven : MonoBehaviour
     void Start()
     {
         playerActions = GetComponent<PlayerActions>();
-        playerInventory = playerActions.inventory.transform.GetChild(0).gameObject;
-        inventoryInitialation = playerActions.inventory.GetComponent<Inven_Initialation>();
-        playerActions.tradeInventory.gameObject.SetActive(false);
+        playerInventory = playerActions.inventoriesParent.transform.GetChild(0).gameObject;
+        inventoryInitialation = playerActions.inventoriesParent.GetComponent<Inven_Initialation>();
+        playerActions.tradeInventory_Object.gameObject.SetActive(false);
     }
 
     public void Activate_Inventory(bool on)
@@ -27,17 +27,17 @@ public class Close_Open_TradeInven : MonoBehaviour
         {
             playerInventory.GetComponent<SellItem>().enabled = false;
             playerInventory.GetComponent<Inven_Controller>().enabled = true;
-            playerActions.tradeInventory.gameObject.SetActive(false);
+            playerActions.tradeInventory_Object.gameObject.SetActive(false);
         }
 
-        playerActions.inventory.SetActive(on);
+        playerActions.inventoriesParent.SetActive(on);
     }
 
     public void Activate_Trade()
     {
         playerInventory.GetComponent<Inven_Controller>().enabled = false;
         playerInventory.GetComponent<SellItem>().enabled = true;
-        playerActions.tradeInventory.SetActive(true);
+        playerActions.tradeInventory_Object.SetActive(true);
         playerActions.Enable_Inventory(true);
     }
 }

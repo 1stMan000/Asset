@@ -13,13 +13,13 @@ namespace FarrokhGames.Inventory.Examples
         [SerializeField] private ItemDefinition[] _definitions = null;
         [SerializeField] private bool _fillRandomly = true; 
         [SerializeField] private bool _fillEmpty = false; 
-        public Inven_Manager inventory;
+        public Inven_Manager inven_Manager;
         InventoryProvider provider;
 
         void Start()
         {
             provider = new InventoryProvider(_renderMode, _maximumAlowedItemCount, _allowedItem);
-            inventory = new Inven_Manager(provider, _width, _height);
+            inven_Manager = new Inven_Manager(provider, _width, _height);
 
             RenderInventory();
 
@@ -31,7 +31,7 @@ namespace FarrokhGames.Inventory.Examples
 
         public void RenderInventory()
         {
-            GetComponent<Inven_Renderer>().SetInventory(inventory, provider.inventoryRenderMode);
+            GetComponent<Inven_Renderer>().SetInventory(inven_Manager, provider.inventoryRenderMode);
             transform.GetChild(0).gameObject.SetActive(true);
         }
 
@@ -42,7 +42,7 @@ namespace FarrokhGames.Inventory.Examples
                 var tries = (_width * _height) / 3;
                 for (var i = 0; i < tries; i++)
                 {
-                    inventory.TryAdd(_definitions[Random.Range(0, _definitions.Length)].CreateInstance());
+                    inven_Manager.TryAdd(_definitions[Random.Range(0, _definitions.Length)].CreateInstance());
                 }
             }
         }
@@ -53,24 +53,24 @@ namespace FarrokhGames.Inventory.Examples
             {
                 for (var i = 0; i < _width * _height; i++)
                 {
-                    inventory.TryAdd(_definitions[0].CreateInstance());
+                    inven_Manager.TryAdd(_definitions[0].CreateInstance());
                 }
             }
         }
 
         void Tests()
         {
-            inventory.onItemDropped += (item) =>
+            inven_Manager.onItemDropped += (item) =>
             {
                 Debug.Log((item as ItemDefinition).Name + " was dropped on the ground");
             };
 
-            inventory.onItemDroppedFailed += (item) =>
+            inven_Manager.onItemDroppedFailed += (item) =>
             {
                 Debug.Log($"You're not allowed to drop {(item as ItemDefinition).Name} on the ground");
             };
 
-            inventory.onItemAddedFailed += (item) =>
+            inven_Manager.onItemAddedFailed += (item) =>
             {
                 Debug.Log($"You can't put {(item as ItemDefinition).Name} there!");
             };

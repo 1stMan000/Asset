@@ -15,9 +15,10 @@ namespace Player_Actions
         TextAndButtons textAndButtons;
 
         [HideInInspector]
-        public GameObject inventory;
+        public GameObject inventoriesParent;
         [HideInInspector]
-        public GameObject tradeInventory;
+        public GameObject tradeInventory_Object;
+        GameObject playerInventory_Object;
 
         public KeyCode InteractButton = KeyCode.E;
         public KeyCode InventoryButton = KeyCode.Tab;
@@ -38,8 +39,9 @@ namespace Player_Actions
             dialogueWindow = FindObjectOfType<TextAndButtons>().gameObject;
             textAndButtons = dialogueWindow.GetComponent<TextAndButtons>();
 
-            inventory = FindObjectOfType<Inven_Initialation>().gameObject;
-            tradeInventory = inventory.transform.GetChild(1).gameObject;
+            inventoriesParent = FindObjectOfType<Inven_Initialation>().gameObject;
+            playerInventory_Object = inventoriesParent.transform.GetChild(0).gameObject;
+            tradeInventory_Object = inventoriesParent.transform.GetChild(1).gameObject;
             inventoryActions = gameObject.AddComponent<Close_Open_TradeInven>();
         }
 
@@ -88,7 +90,8 @@ namespace Player_Actions
                     }
                     else
                     {
-                        inventory.transform.GetChild(0).GetComponent<SizeInventoryExample>().inventory.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition.CreateInstance());
+                        SizeInventoryExample  player_inventoryExample = playerInventory_Object.GetComponent<SizeInventoryExample>();
+                        player_inventoryExample.inven_Manager.TryAdd(chosenObject.GetComponent<Item>().ItemDefinition.CreateInstance());
                         Destroy(chosenObject);
                     }
                 }
@@ -117,7 +120,7 @@ namespace Player_Actions
                 Npc_Dialogue = npc.GetComponentInParent<DialogueManager>();
                 if (CheckState.Check_State(npc))
                 {
-                    Switch_To_DialogueState(true);
+                    Turn_DialogueState(true);
                     dialogueWindow.GetComponent<TextAndButtons>().text.GetComponent<Text>().text = Npc_Dialogue.currentSentence.npcText;
                 }
             }
@@ -143,7 +146,7 @@ namespace Player_Actions
             }
             else
             {
-                Switch_To_DialogueState(false);
+                Turn_DialogueState(false);
             }
         }
 
@@ -174,17 +177,23 @@ namespace Player_Actions
             }
         }
 
-        void Switch_To_DialogueState(bool on)
+        void Turn_DialogueState(bool on)
         {
-            if (on)
-                playerState = PlayerState.Dialogue;
-            else
-                playerState = PlayerState.Normal;
+            Change_State_To_Dialogue(on);
+
             Set_Character_Script(on);
             textAndButtons.text.SetActive(on);
 
             Npc_Dialogue.enabled = on;
             Npc_Dialogue.GetComponent<NpcAI>().enabled = !on;
+        }
+
+        void Change_State_To_Dialogue(bool on)
+        {
+            if (on)
+                playerState = PlayerState.Dialogue;
+            else
+                playerState = PlayerState.Normal;
         }
 
         void On_InventoryButton_Down(bool on)
