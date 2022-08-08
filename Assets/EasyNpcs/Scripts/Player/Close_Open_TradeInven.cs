@@ -35,6 +35,8 @@ public class Close_Open_TradeInven : MonoBehaviour
 
     public void Activate_Trade()
     {
+        inventoryInitialation.Inventory_Initialization();
+
         playerInventory.GetComponent<Inven_Controller>().enabled = false;
         playerInventory.GetComponent<SellItem>().enabled = true;
         playerActions.tradeInventory_Object.SetActive(true);
