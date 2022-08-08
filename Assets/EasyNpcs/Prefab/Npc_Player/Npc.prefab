@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 3533866932084139170}
   - component: {fileID: 699092563044135393}
   - component: {fileID: 699092563044135394}
+  - component: {fileID: 7356393523149620593}
   m_Layer: 8
   m_Name: Npc
   m_TagString: Npc
@@ -463,6 +464,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be2294942a3d464eac4271fb8a08cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7356393523149620593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699092563044135396}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f473c7a8ab7e1484285cb6e61fc68f4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentSentence: {fileID: 0}
 --- !u!1 &2997629724474551404
 GameObject:
   m_ObjectHideFlags: 0

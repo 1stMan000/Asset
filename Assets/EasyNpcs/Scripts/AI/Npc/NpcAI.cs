@@ -38,7 +38,7 @@ namespace Npc_AI
             base.Start();
             Text = GetComponentInChildren<TextMesh>();
             DayAndNightCycle_Initialize();
-            workScript = GetComponent<IWork>().GetScript();
+            workScript = GetComponent<Work>();
         }
 
         void DayAndNightCycle_Initialize()

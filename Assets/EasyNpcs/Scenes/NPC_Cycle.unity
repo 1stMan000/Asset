@@ -321,7 +321,8 @@ PrefabInstance:
       propertyPath: converChoose
       value: 5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7356393523149620593, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b86cc184d031bd2459e823476bddbfc9, type: 3}
 --- !u!1 &354726284 stripped
 GameObject:
